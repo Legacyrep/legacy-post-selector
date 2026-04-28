@@ -1,0 +1,5515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Legacy Real Estate Partners — Weekly Post Selector</title>
+<style>
+  :root {
+    --navy: #0a2540;
+    --navy-light: #1a3a5c;
+    --gold: #c9a961;
+    --gold-light: #e0c680;
+    --gold-dark: #a68843;
+    --cream: #faf8f3;
+    --gray-muted: #9aa3ad;
+    --gray-bg: #eef0f3;
+    --gray-text: #8a94a0;
+    --border: #d9dde3;
+    --green: #2d8a5f;
+    --shadow: 0 4px 14px rgba(10, 37, 64, 0.08);
+    --shadow-lg: 0 10px 30px rgba(10, 37, 64, 0.15);
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, sans-serif;
+    background: var(--cream);
+    color: var(--navy);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+  }
+
+  .hidden { display: none !important; }
+
+  /* ===== Brand header ===== */
+  .brand-header {
+    background: var(--navy);
+    color: white;
+    padding: 22px 20px;
+    text-align: center;
+    border-bottom: 4px solid var(--gold);
+  }
+  .brand-name {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 22px;
+    letter-spacing: 1.5px;
+    margin: 0;
+    font-weight: 600;
+    color: var(--gold);
+  }
+  .brand-tagline {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold-light);
+    margin-top: 4px;
+  }
+
+  .container {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 22px 16px 60px;
+  }
+
+  /* ===== Page transitions ===== */
+  .page {
+    animation: fadeIn 0.25s ease;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ===== Home page ===== */
+  .home-title {
+    text-align: center;
+    font-size: 28px;
+    margin: 18px 0 6px;
+    font-weight: 600;
+  }
+  .home-subtitle {
+    text-align: center;
+    color: var(--gray-muted);
+    margin-bottom: 28px;
+    font-size: 15px;
+  }
+  .agent-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .agent-card {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    padding: 22px 22px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    transition: all 0.18s ease;
+    box-shadow: var(--shadow);
+    text-align: left;
+    width: 100%;
+    font-family: inherit;
+    color: inherit;
+    min-height: 80px;
+  }
+  .agent-card:hover, .agent-card:focus {
+    border-color: var(--gold);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    outline: none;
+  }
+  .agent-card:active { transform: translateY(0); }
+  .agent-avatar {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: var(--navy);
+    color: var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 21px;
+    flex-shrink: 0;
+    border: 2px solid var(--gold);
+  }
+  .agent-info { flex: 1; min-width: 0; }
+  .agent-name {
+    font-size: 18px;
+    font-weight: 600;
+  }
+  .agent-cta {
+    font-size: 12px;
+    color: var(--gray-muted);
+    margin-top: 3px;
+  }
+  .agent-arrow {
+    color: var(--gold);
+    font-size: 26px;
+    font-weight: bold;
+  }
+
+  /* ===== Back bar ===== */
+  .back-bar {
+    display: flex;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+  .back-btn {
+    background: transparent;
+    border: 2px solid var(--navy);
+    color: var(--navy);
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: inherit;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .back-btn:hover {
+    background: var(--navy);
+    color: white;
+  }
+
+  /* ===== Week navigation ===== */
+  .week-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    background: var(--navy);
+    color: white;
+    border-radius: 12px;
+    padding: 10px;
+    margin-bottom: 18px;
+    box-shadow: var(--shadow);
+  }
+  .week-arrow {
+    background: var(--gold);
+    color: var(--navy);
+    border: none;
+    width: 52px;
+    height: 52px;
+    border-radius: 10px;
+    font-size: 24px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s ease;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .week-arrow:hover:not(:disabled) {
+    background: var(--gold-light);
+    transform: scale(1.04);
+  }
+  .week-arrow:active:not(:disabled) { transform: scale(0.96); }
+  .week-arrow:disabled {
+    background: var(--navy-light);
+    color: var(--gray-muted);
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+  .week-range {
+    flex: 1;
+    text-align: center;
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--gold);
+    padding: 0 6px;
+  }
+  .week-range-sub {
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    color: var(--gold-light);
+    text-transform: uppercase;
+    font-weight: 500;
+    opacity: 0.8;
+    margin-top: 2px;
+  }
+
+  /* ===== Form header ===== */
+  .form-header {
+    text-align: center;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--gold);
+  }
+  .form-agent-name {
+    font-size: 26px;
+    color: var(--navy);
+    margin: 0 0 6px;
+    font-weight: 600;
+  }
+  .form-week {
+    color: var(--gold-dark);
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+  }
+
+  /* ===== Day card ===== */
+  .day-card {
+    background: white;
+    border: 2px solid var(--border);
+    border-left: 6px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 16px;
+    margin-bottom: 14px;
+    transition: all 0.18s ease;
+    box-shadow: var(--shadow);
+  }
+  .day-card.is-today {
+    border-left-color: var(--gold);
+    background: #fffbf2;
+    box-shadow: 0 0 0 2px rgba(201, 169, 97, 0.2), var(--shadow);
+  }
+  .day-card.is-active {
+    border-color: var(--navy);
+    border-left-color: var(--navy);
+  }
+  .day-card.is-active.is-today {
+    border-left-color: var(--gold);
+  }
+  .day-card.is-complete {
+    border-color: var(--green);
+    border-left-color: var(--green);
+    background: #f4faf6;
+  }
+  .day-card.is-blank {
+    background: var(--gray-bg);
+    opacity: 0.78;
+  }
+  .day-card.is-blank .day-name,
+  .day-card.is-blank .day-date {
+    color: var(--gray-text);
+  }
+
+  .day-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .day-title {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .day-name {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--navy);
+  }
+  .day-date {
+    font-size: 14px;
+    color: var(--gray-muted);
+  }
+  .badge-slot {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .today-badge, .blank-badge, .complete-badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .today-badge { background: var(--gold); color: var(--navy); }
+  .blank-badge { background: var(--gray-muted); color: white; letter-spacing: 0.5px; }
+  .complete-badge {
+    background: var(--green);
+    color: white;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    letter-spacing: 0.8px;
+  }
+
+  /* ===== Fields ===== */
+  .field-group { margin-top: 12px; }
+  .field-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 6px;
+    letter-spacing: 0.3px;
+  }
+
+  select, input[type="text"], textarea {
+    width: 100%;
+    padding: 14px;
+    font-size: 16px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    background: white;
+    color: var(--navy);
+    font-family: inherit;
+    min-height: 48px;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  select {
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230a2540' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 18px;
+    padding-right: 42px;
+  }
+  select:focus, input:focus, textarea:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201, 169, 97, 0.2);
+  }
+  textarea {
+    resize: vertical;
+    min-height: 72px;
+    line-height: 1.4;
+  }
+
+  /* ===== Template grid ===== */
+  .template-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-top: 8px;
+  }
+  .template-card {
+    background: var(--navy);
+    color: var(--gold);
+    border: 2px solid var(--navy);
+    border-radius: 10px;
+    padding: 18px 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    position: relative;
+    min-height: 78px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: inherit;
+    user-select: none;
+  }
+  .template-card:hover {
+    background: var(--navy-light);
+    transform: translateY(-2px);
+  }
+  .template-card:active { transform: translateY(0); }
+  .template-card.selected {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 2px var(--gold), 0 4px 12px rgba(201, 169, 97, 0.3);
+  }
+  .template-card .num {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+  .template-card .check {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--gold);
+    color: var(--navy);
+    font-size: 14px;
+    font-weight: 700;
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+  .template-card.selected .check { display: flex; }
+
+  /* ===== Favorites system ===== */
+  .favorites-section {
+    margin-top: 8px;
+  }
+  .favorites-header {
+    background: linear-gradient(90deg, var(--gold), var(--gold-light));
+    color: var(--navy);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 2px 6px rgba(201, 169, 97, 0.25);
+  }
+  .more-section {
+    margin-top: 14px;
+  }
+  .more-header {
+    background: var(--gray-bg);
+    color: var(--navy);
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.4px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+  .favorites-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  @media (min-width: 600px) {
+    .favorites-grid { grid-template-columns: repeat(5, 1fr); }
+  }
+  .favorite-empty-slot {
+    border: 2px dashed var(--gold);
+    border-radius: 10px;
+    padding: 6px;
+    aspect-ratio: 1 / 1.25;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: var(--gold-dark);
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 1.3;
+    background: #fffbf2;
+    opacity: 0.7;
+  }
+  .favorites-full-msg {
+    background: #fff8e5;
+    border: 1px solid var(--gold);
+    color: var(--navy);
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: 10px;
+    display: none;
+    transition: opacity 0.4s ease;
+  }
+  .favorites-full-msg.visible { display: block; }
+  .favorites-full-msg.fading { opacity: 0; }
+
+  .fav-star {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    color: #c7ccd3;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    font-family: inherit;
+    padding: 0;
+    transition: transform 0.15s ease, color 0.15s ease, background 0.15s ease;
+    -webkit-text-stroke: 0;
+  }
+  .fav-star:hover {
+    transform: scale(1.1);
+    color: var(--gold-dark);
+  }
+  .fav-star.is-fav {
+    background: var(--gold);
+    color: var(--navy);
+    box-shadow: 0 2px 6px rgba(201, 169, 97, 0.4);
+  }
+  .fav-star.is-fav:hover {
+    transform: scale(1.1);
+  }
+
+  .template-card .crown {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--gold);
+    color: var(--navy);
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  }
+  .template-card .num {
+    font-family: Georgia, serif;
+    letter-spacing: 1px;
+  }
+  .template-card.rerolling {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  .template-card.rerolled-in {
+    animation: tmplFadeIn 0.35s ease forwards;
+  }
+  @keyframes tmplFadeIn {
+    from { opacity: 0; transform: scale(0.92); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  .template-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 4px;
+    flex-wrap: wrap;
+  }
+  .template-hint {
+    font-size: 11px;
+    color: var(--gray-muted);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .template-hint .crown-mini {
+    color: var(--gold-dark);
+    font-size: 12px;
+  }
+
+  .reroll-btn {
+    margin-top: 12px;
+    width: 100%;
+    background: white;
+    border: 2px solid var(--navy);
+    color: var(--navy);
+    padding: 12px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: inherit;
+    min-height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.15s ease;
+  }
+  .reroll-btn:hover { background: var(--navy); color: var(--gold); }
+  .reroll-btn .refresh-icon {
+    display: inline-block;
+    transition: transform 0.5s ease;
+    font-size: 18px;
+  }
+  .reroll-btn.spinning .refresh-icon {
+    transform: rotate(360deg);
+  }
+
+  @media (min-width: 600px) {
+    .template-grid { grid-template-columns: repeat(5, 1fr); }
+  }
+
+  /* ===== Submit ===== */
+  .submit-wrap {
+    margin-top: 28px;
+    display: flex;
+    justify-content: center;
+  }
+  .submit-btn {
+    background: var(--navy);
+    color: var(--gold);
+    border: 3px solid var(--gold);
+    padding: 18px 36px;
+    font-size: 17px;
+    font-weight: 700;
+    border-radius: 12px;
+    cursor: pointer;
+    font-family: inherit;
+    min-height: 58px;
+    letter-spacing: 0.5px;
+    box-shadow: var(--shadow);
+    transition: all 0.18s ease;
+    width: 100%;
+    max-width: 340px;
+  }
+  .submit-btn:hover {
+    background: var(--gold);
+    color: var(--navy);
+    border-color: var(--navy);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+  }
+  .submit-btn:active { transform: translateY(0); }
+
+  /* ===== Success message (inline on form page) ===== */
+  .success-banner {
+    background: #f4faf6;
+    border: 2px solid var(--green);
+    border-radius: 12px;
+    padding: 22px 20px;
+    margin-top: 22px;
+    text-align: center;
+    box-shadow: var(--shadow);
+  }
+  .success-banner .check-circle {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: var(--green);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 12px;
+    font-size: 26px;
+    font-weight: bold;
+  }
+  .success-banner h3 {
+    margin: 0 0 8px;
+    color: var(--navy);
+    font-size: 18px;
+  }
+  .success-banner p {
+    margin: 0;
+    color: var(--navy-light);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .success-banner strong { color: var(--navy); }
+
+  @media (max-width: 480px) {
+    .brand-name { font-size: 17px; letter-spacing: 0.8px; }
+    .brand-tagline { font-size: 10px; letter-spacing: 2px; }
+    .home-title { font-size: 24px; }
+    .form-agent-name { font-size: 22px; }
+    .container { padding: 16px 12px 40px; }
+    .day-card { padding: 14px 12px; }
+    .agent-card { padding: 18px 14px; }
+    .week-range { font-size: 14px; }
+    .week-arrow { width: 46px; height: 46px; font-size: 22px; }
+  }
+
+  /* ===== Hamburger menu (admin access) ===== */
+  .brand-header { position: relative; }
+  .hamburger-btn {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: transparent;
+    border: none;
+    padding: 6px 8px 4px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    font-family: inherit;
+    border-radius: 6px;
+    transition: background 0.15s ease;
+  }
+  .hamburger-btn:hover { background: rgba(201, 169, 97, 0.15); }
+  .hamburger-lines {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    width: 22px;
+    padding: 3px 0;
+  }
+  .hamburger-lines span {
+    display: block;
+    height: 2px;
+    background: var(--navy);
+    border-radius: 2px;
+  }
+  .hamburger-btn .hamburger-lines span {
+    background: var(--gold);
+  }
+  .hamburger-label {
+    font-size: 9px;
+    color: var(--gold);
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  /* ===== Drawer ===== */
+  .drawer-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0);
+    z-index: 90;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease, background 0.25s ease;
+  }
+  .drawer-overlay.open {
+    opacity: 1;
+    pointer-events: auto;
+    background: rgba(0,0,0,0.4);
+  }
+  .drawer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 280px;
+    max-width: 85vw;
+    background: #061a30;
+    color: white;
+    z-index: 100;
+    transform: translateX(-100%);
+    transition: transform 0.28s ease;
+    padding: 20px 18px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 8px 0 24px rgba(0,0,0,0.35);
+  }
+  .drawer.open { transform: translateX(0); }
+  .drawer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 14px;
+    border-bottom: 2px solid var(--gold);
+    margin-bottom: 20px;
+  }
+  .drawer-title {
+    font-family: Georgia, serif;
+    color: var(--gold);
+    font-size: 16px;
+    letter-spacing: 1px;
+    margin: 0;
+  }
+  .drawer-close {
+    background: transparent;
+    border: none;
+    color: var(--gold);
+    font-size: 28px;
+    cursor: pointer;
+    padding: 4px 12px;
+    font-family: inherit;
+    line-height: 1;
+  }
+  .drawer-close:hover { color: white; }
+  .drawer-link {
+    background: transparent;
+    border: 2px solid var(--gold);
+    color: var(--gold);
+    padding: 16px 18px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-align: left;
+    transition: all 0.15s ease;
+  }
+  .drawer-link:hover {
+    background: var(--gold);
+    color: var(--navy);
+  }
+
+  /* ===== Admin page ===== */
+  .admin-header {
+    text-align: center;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--gold);
+  }
+  .admin-title {
+    font-size: 28px;
+    color: var(--navy);
+    margin: 0 0 4px;
+    font-weight: 600;
+  }
+  .admin-subtitle {
+    color: var(--gold-dark);
+    font-size: 13px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  .admin-section {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 22px 18px;
+    margin-bottom: 18px;
+    box-shadow: var(--shadow);
+  }
+  .admin-section-title {
+    font-size: 18px;
+    color: var(--navy);
+    margin: 0 0 14px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .admin-agent-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 4px;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .admin-agent-row:last-child { border-bottom: none; }
+  .admin-agent-name-cell {
+    font-weight: 600;
+    color: var(--navy);
+    font-size: 16px;
+    flex: 1;
+    min-width: 0;
+  }
+  .admin-remove-btn {
+    background: #c2392e;
+    color: white;
+    border: 2px solid #c2392e;
+    padding: 9px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    min-height: 40px;
+    transition: all 0.15s ease;
+  }
+  .admin-remove-btn:hover {
+    background: #a6322a;
+    border-color: #a6322a;
+  }
+  .admin-confirm-row {
+    width: 100%;
+    background: #fdebe9;
+    border: 2px solid #c2392e;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .admin-confirm-message {
+    color: #8a271f;
+    font-weight: 600;
+    font-size: 14px;
+    flex: 1;
+    min-width: 180px;
+  }
+  .admin-confirm-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .admin-confirm-actions button {
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    min-height: 38px;
+    border: 2px solid;
+  }
+  .admin-confirm-yes {
+    background: #c2392e;
+    border-color: #c2392e;
+    color: white;
+  }
+  .admin-confirm-yes:hover { background: #a6322a; border-color: #a6322a; }
+  .admin-confirm-cancel {
+    background: white;
+    border-color: var(--navy);
+    color: var(--navy);
+  }
+  .admin-confirm-cancel:hover { background: var(--navy); color: white; }
+
+  .admin-add-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .admin-add-btn {
+    background: var(--navy);
+    color: var(--gold);
+    border: 2px solid var(--navy);
+    padding: 14px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    min-height: 48px;
+    letter-spacing: 0.5px;
+    transition: all 0.15s ease;
+  }
+  .admin-add-btn:hover {
+    background: var(--gold);
+    color: var(--navy);
+    border-color: var(--navy);
+  }
+  .admin-error {
+    color: #c2392e;
+    background: #fdebe9;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid #c2392e;
+    display: none;
+  }
+  .admin-error.visible { display: block; }
+  .admin-success {
+    background: #e8f5ef;
+    border: 2px solid var(--green);
+    color: var(--green);
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    display: none;
+    transition: opacity 0.4s ease;
+  }
+  .admin-success.visible { display: block; }
+  .admin-success.fading { opacity: 0; }
+  .admin-success strong { color: var(--green); }
+
+  .admin-empty {
+    text-align: center;
+    color: var(--gray-muted);
+    padding: 20px 0;
+    font-style: italic;
+  }
+
+  input.input-error { border-color: #c2392e !important; }
+
+  /* ===== Admin PIN management ===== */
+  .admin-agent-row {
+    flex-wrap: wrap;
+  }
+  .admin-agent-main-line {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    min-width: 0;
+    flex-wrap: wrap;
+  }
+  .admin-pin-display {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--cream);
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-family: "Courier New", monospace;
+    font-weight: 700;
+    color: var(--navy);
+    font-size: 16px;
+    letter-spacing: 4px;
+    min-width: 70px;
+    justify-content: center;
+  }
+  .admin-pin-toggle {
+    background: transparent;
+    border: 1px solid var(--navy);
+    color: var(--navy);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 5px 10px;
+    border-radius: 6px;
+    min-height: 30px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .admin-pin-toggle:hover { background: var(--navy); color: white; }
+
+  .admin-change-pin-btn {
+    background: var(--navy);
+    color: var(--gold);
+    border: 2px solid var(--navy);
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    min-height: 38px;
+    transition: all 0.15s ease;
+  }
+  .admin-change-pin-btn:hover {
+    background: var(--gold);
+    color: var(--navy);
+  }
+  .admin-agent-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .admin-pin-edit-form {
+    width: 100%;
+    margin-top: 12px;
+    padding: 16px;
+    background: var(--cream);
+    border: 2px solid var(--gold);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .admin-pin-edit-row {
+    display: flex;
+    gap: 8px;
+    align-items: stretch;
+  }
+  .admin-pin-edit-row input {
+    flex: 1;
+    min-width: 0;
+    font-family: "Courier New", monospace;
+    letter-spacing: 4px;
+    font-weight: 700;
+  }
+  .admin-pin-edit-toggle {
+    background: white;
+    border: 2px solid var(--navy);
+    color: var(--navy);
+    padding: 0 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    min-height: 48px;
+    min-width: 60px;
+  }
+  .admin-pin-edit-toggle:hover { background: var(--navy); color: white; }
+
+  .admin-pin-edit-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+  }
+  .admin-pin-save {
+    background: var(--navy);
+    color: var(--gold);
+    border: 2px solid var(--navy);
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    min-height: 42px;
+    transition: all 0.15s ease;
+  }
+  .admin-pin-save:hover { background: var(--gold); color: var(--navy); }
+  .admin-pin-cancel {
+    background: transparent;
+    color: var(--navy);
+    border: 2px solid var(--navy);
+    padding: 9px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    min-height: 42px;
+  }
+  .admin-pin-cancel:hover { background: var(--navy); color: white; }
+  .admin-pin-edit-error {
+    color: #c2392e;
+    background: #fdebe9;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #c2392e;
+    display: none;
+  }
+  .admin-pin-edit-error.visible { display: block; }
+  .admin-row-success {
+    width: 100%;
+    background: #e8f5ef;
+    border: 1px solid var(--green);
+    color: var(--green);
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: 10px;
+    transition: opacity 0.4s ease;
+  }
+  .admin-row-success.fading { opacity: 0; }
+  .admin-row-info {
+    width: 100%;
+    background: #fff8e5;
+    border: 1px solid var(--gold-dark);
+    color: #7a5e18;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: 10px;
+  }
+
+  .admin-add-pin-row {
+    display: flex;
+    gap: 8px;
+    align-items: stretch;
+  }
+  .admin-add-pin-row input {
+    flex: 1;
+    min-width: 0;
+    font-family: "Courier New", monospace;
+    letter-spacing: 4px;
+    font-weight: 700;
+  }
+  .admin-add-pin-toggle, .admin-generate-pin-btn {
+    background: white;
+    border: 2px solid var(--navy);
+    color: var(--navy);
+    padding: 0 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    min-height: 48px;
+    white-space: nowrap;
+  }
+  .admin-add-pin-toggle:hover, .admin-generate-pin-btn:hover {
+    background: var(--navy);
+    color: white;
+  }
+
+  /* ===== Admin password entry ===== */
+  .admin-password-card {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    padding: 32px 24px;
+    max-width: 460px;
+    margin: 20px auto 0;
+    box-shadow: var(--shadow-lg);
+    text-align: center;
+  }
+  .admin-password-title {
+    font-size: 26px;
+    color: var(--navy);
+    margin: 0 0 4px;
+    font-weight: 600;
+  }
+  .admin-password-subtitle {
+    color: var(--gold-dark);
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 22px;
+  }
+  .admin-password-row {
+    display: flex;
+    gap: 8px;
+    align-items: stretch;
+  }
+  .admin-password-row input {
+    flex: 1;
+    min-width: 0;
+  }
+  .admin-password-toggle {
+    background: white;
+    border: 2px solid var(--navy);
+    color: var(--navy);
+    padding: 0 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    min-height: 48px;
+    min-width: 64px;
+    transition: all 0.15s ease;
+  }
+  .admin-password-toggle:hover { background: var(--navy); color: white; }
+  .admin-password-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 18px;
+  }
+  .admin-password-submit {
+    background: var(--navy);
+    color: var(--gold);
+    border: 2px solid var(--navy);
+    padding: 14px 22px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 700;
+    min-height: 50px;
+    letter-spacing: 0.5px;
+    transition: all 0.15s ease;
+  }
+  .admin-password-submit:hover:not(:disabled) {
+    background: var(--gold);
+    color: var(--navy);
+  }
+  .admin-password-submit:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  .admin-password-cancel {
+    background: transparent;
+    color: var(--navy);
+    border: 2px solid var(--navy);
+    padding: 12px 22px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    min-height: 46px;
+    transition: all 0.15s ease;
+  }
+  .admin-password-cancel:hover { background: var(--navy); color: white; }
+  .admin-password-error {
+    color: #c2392e;
+    background: #fdebe9;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid #c2392e;
+    margin-top: 10px;
+    display: none;
+    text-align: left;
+  }
+  .admin-password-error.visible { display: block; }
+  .admin-lockout-box {
+    background: #fdebe9;
+    border: 2px solid #c2392e;
+    color: #8a271f;
+    padding: 14px 16px;
+    border-radius: 10px;
+    margin-bottom: 16px;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+  }
+  .admin-logout-link {
+    background: transparent;
+    border: none;
+    color: var(--gold-dark);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 10px;
+    text-decoration: underline;
+    min-height: 40px;
+  }
+  .admin-logout-link:hover { color: var(--navy); }
+  .admin-back-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+
+  /* ===== Agent PIN entry ===== */
+  .agent-pin-card {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    padding: 32px 24px;
+    max-width: 460px;
+    margin: 20px auto 0;
+    box-shadow: var(--shadow-lg);
+    text-align: center;
+  }
+  .agent-pin-name {
+    font-size: 26px;
+    color: var(--navy);
+    margin: 0 0 6px;
+    font-weight: 600;
+  }
+  .agent-pin-subtitle {
+    color: var(--gray-muted);
+    font-size: 14px;
+    margin-bottom: 24px;
+  }
+  .agent-pin-boxes {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin: 10px auto 6px;
+  }
+  .agent-pin-box {
+    width: 60px;
+    height: 66px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    font-size: 28px;
+    font-weight: 700;
+    text-align: center;
+    font-family: inherit;
+    color: var(--navy);
+    background: white;
+    -webkit-appearance: none;
+    appearance: none;
+    padding: 0;
+  }
+  .agent-pin-box:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201, 169, 97, 0.25);
+  }
+  .agent-pin-box.filled {
+    background: var(--navy);
+    color: var(--gold);
+    border-color: var(--navy);
+  }
+  .agent-pin-box.error {
+    border-color: #c2392e;
+    background: #fdebe9;
+  }
+  .agent-pin-error {
+    color: #c2392e;
+    background: #fdebe9;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid #c2392e;
+    margin-top: 14px;
+    display: none;
+    text-align: center;
+  }
+  .agent-pin-error.visible { display: block; }
+  .agent-pin-lockout {
+    background: #fdebe9;
+    border: 2px solid #c2392e;
+    color: #8a271f;
+    padding: 14px 16px;
+    border-radius: 10px;
+    margin-bottom: 18px;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+  }
+  .agent-pin-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  .agent-pin-submit {
+    background: var(--navy);
+    color: var(--gold);
+    border: 2px solid var(--navy);
+    padding: 14px 22px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 700;
+    min-height: 50px;
+    letter-spacing: 0.5px;
+    transition: all 0.15s ease;
+  }
+  .agent-pin-submit:hover:not(:disabled) {
+    background: var(--gold);
+    color: var(--navy);
+  }
+  .agent-pin-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+  .agent-pin-clear, .agent-pin-back-inline {
+    background: transparent;
+    color: var(--navy);
+    border: 2px solid var(--navy);
+    padding: 12px 22px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    min-height: 46px;
+    transition: all 0.15s ease;
+  }
+  .agent-pin-clear:hover, .agent-pin-back-inline:hover {
+    background: var(--navy);
+    color: white;
+  }
+
+  .form-back-bar {
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  .agent-logout-link {
+    background: transparent;
+    border: none;
+    color: var(--gold-dark);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 10px;
+    text-decoration: underline;
+    min-height: 40px;
+  }
+  .agent-logout-link:hover { color: var(--navy); }
+
+  /* ===== Quick Questions ===== */
+  .quick-questions {
+    margin-top: 28px;
+    padding-top: 24px;
+    border-top: 2px dashed var(--border);
+  }
+  .qq-header {
+    color: var(--navy);
+    font-weight: 700;
+    font-size: 20px;
+    margin: 0 0 4px;
+  }
+  .qq-subtitle {
+    color: var(--gray-muted);
+    font-size: 13px;
+    font-style: italic;
+    margin-bottom: 14px;
+  }
+  .qq-note {
+    color: var(--gray-muted);
+    font-size: 12px;
+    font-style: italic;
+    margin: 8px 0 18px;
+    line-height: 1.5;
+  }
+  .qq-question { margin-top: 16px; }
+  .qq-label {
+    display: block;
+    color: var(--navy);
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
+  .qq-pill-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .qq-pill {
+    background: white;
+    border: 2px solid var(--navy);
+    color: var(--gray-text);
+    padding: 10px 16px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    min-height: 44px;
+    transition: all 0.15s ease;
+    line-height: 1.2;
+  }
+  .qq-pill:hover { background: var(--cream); }
+  .qq-pill.selected {
+    background: var(--gold);
+    color: var(--navy);
+    border-color: var(--gold);
+    box-shadow: 0 2px 6px rgba(201, 169, 97, 0.3);
+  }
+  .qq-textarea {
+    min-height: 60px;
+  }
+
+  /* ===== Inactivity timeout ===== */
+  .inactivity-warning {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: var(--gold);
+    color: var(--navy);
+    border: 2px solid var(--gold-dark);
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 14px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: var(--shadow);
+  }
+  .inactivity-warning strong { color: var(--navy); }
+
+  .restored-banner {
+    background: #e8f5ef;
+    border: 2px solid var(--green);
+    color: var(--green);
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 14px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    transition: opacity 0.4s ease;
+  }
+  .restored-banner strong { color: var(--green); }
+  .restored-banner.fading { opacity: 0; }
+
+  /* ===== Admin tabs ===== */
+  .admin-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 18px;
+    border-bottom: 2px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .admin-tab {
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    padding: 12px 18px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--gray-muted);
+    min-height: 44px;
+    margin-bottom: -2px;
+    letter-spacing: 0.3px;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+  .admin-tab:hover { color: var(--navy); }
+  .admin-tab.active {
+    color: var(--navy);
+    border-bottom-color: var(--gold);
+  }
+
+  /* ===== Post Type rows ===== */
+  .pt-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 12px 4px;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .pt-row:last-child { border-bottom: none; }
+  .pt-name {
+    flex: 1;
+    min-width: 160px;
+    font-weight: 600;
+    color: var(--navy);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .pt-row.inactive .pt-name { color: var(--gray-muted); }
+  .pt-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+  .pt-dot.active { background: var(--green); }
+  .pt-dot.inactive { background: #c2392e; }
+  .pt-code-label {
+    font-family: "Courier New", monospace;
+    background: var(--cream);
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: 0.5px;
+  }
+  .pt-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .pt-toggle {
+    position: relative;
+    display: inline-block;
+    width: 46px;
+    height: 26px;
+    flex-shrink: 0;
+  }
+  .pt-toggle input { opacity: 0; width: 0; height: 0; }
+  .pt-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: #c7ccd3;
+    transition: 0.25s;
+    border-radius: 26px;
+  }
+  .pt-slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 3px;
+    bottom: 3px;
+    background: white;
+    transition: 0.25s;
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+  .pt-toggle input:checked + .pt-slider { background: var(--green); }
+  .pt-toggle input:checked + .pt-slider:before { transform: translateX(20px); }
+
+  /* ===== Template Library ===== */
+  .tl-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 14px 4px;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .tl-row:last-child { border-bottom: none; }
+  .tl-main {
+    flex: 1;
+    min-width: 180px;
+  }
+  .tl-name { font-weight: 600; color: var(--navy); font-size: 15px; }
+  .tl-sub { font-size: 12px; color: var(--gray-muted); margin-top: 2px; }
+  .tl-count {
+    background: var(--navy);
+    color: var(--gold);
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+  }
+  .tl-edit-form {
+    width: 100%;
+    margin-top: 10px;
+    padding: 14px;
+    background: var(--cream);
+    border: 2px solid var(--gold);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .pt-add-helper {
+    font-size: 11px;
+    color: var(--gray-muted);
+    margin-top: 4px;
+  }
+
+  /* ===== Template Upload Center ===== */
+  .uc-note {
+    font-size: 12px;
+    color: var(--navy-light);
+    font-style: italic;
+    background: var(--cream);
+    padding: 12px 14px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    line-height: 1.5;
+    border-left: 3px solid var(--gold);
+  }
+  .uc-subtitle {
+    font-size: 13px;
+    color: var(--gray-muted);
+    font-style: italic;
+    margin: 0 0 16px;
+  }
+  .uc-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  @media (min-width: 900px) {
+    .uc-grid { grid-template-columns: 1.4fr 1fr 1.2fr; }
+    .uc-grid.uc-grid-2col { grid-template-columns: 1.4fr 1fr; }
+  }
+  .uc-area {
+    background: var(--cream);
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 14px;
+  }
+  .uc-area-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--navy);
+    margin: 0 0 10px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .uc-dropzone {
+    border: 2px dashed var(--navy);
+    border-radius: 12px;
+    background: white;
+    padding: 22px 14px;
+    text-align: center;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    min-height: 180px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .uc-dropzone.drag-over {
+    border-color: var(--gold);
+    background: #fff8e5;
+    transform: scale(1.005);
+  }
+  .uc-dropzone-icon {
+    font-size: 36px;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .uc-dropzone-text {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 4px;
+  }
+  .uc-dropzone-sub {
+    font-size: 12px;
+    color: var(--gray-muted);
+    margin: 2px 0;
+  }
+  .uc-file-input { display: none; }
+
+  .uc-preview-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-top: 12px;
+  }
+  @media (min-width: 600px) {
+    .uc-preview-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  .uc-preview-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .uc-preview-img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 6px;
+    background: var(--gray-bg);
+    display: block;
+  }
+  .uc-preview-name-input {
+    width: 100%;
+    padding: 6px 8px;
+    font-size: 12px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-family: inherit;
+    color: var(--navy);
+    min-height: 32px;
+    background: white;
+  }
+  .uc-preview-meta {
+    font-size: 10px;
+    color: var(--gray-muted);
+    text-align: center;
+  }
+  .uc-preview-remove {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #c2392e;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1;
+    z-index: 2;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  }
+  .uc-preview-remove:hover { background: #a6322a; }
+
+  .uc-agent-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 320px;
+    overflow-y: auto;
+  }
+  .uc-agent-card {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .uc-agent-card:hover { border-color: var(--gold); }
+  .uc-agent-card.selected {
+    border-color: var(--gold);
+    background: #fff8e5;
+  }
+  .uc-agent-checkbox {
+    width: 22px;
+    height: 22px;
+    border: 2px solid var(--navy);
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    color: var(--navy);
+    flex-shrink: 0;
+    font-size: 14px;
+    font-weight: 700;
+  }
+  .uc-agent-card.selected .uc-agent-checkbox {
+    background: var(--navy);
+    color: var(--gold);
+  }
+  .uc-agent-card.selected .uc-agent-checkbox:after { content: "\2713"; }
+  .uc-agent-info { flex: 1; min-width: 0; }
+  .uc-agent-name {
+    font-weight: 600;
+    color: var(--navy);
+    font-size: 14px;
+  }
+  .uc-agent-count {
+    font-size: 11px;
+    color: var(--gray-muted);
+    margin-top: 2px;
+  }
+  .uc-agent-shortcuts {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .uc-agent-shortcut {
+    background: white;
+    border: 1px solid var(--navy);
+    color: var(--navy);
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: inherit;
+    min-height: 32px;
+  }
+  .uc-agent-shortcut:hover { background: var(--navy); color: white; }
+
+  .uc-upload-row {
+    margin-top: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .uc-upload-btn {
+    background: var(--navy);
+    color: var(--gold);
+    border: 2px solid var(--navy);
+    padding: 16px 22px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 700;
+    min-height: 56px;
+    letter-spacing: 0.3px;
+    transition: all 0.15s ease;
+  }
+  .uc-upload-btn:hover:not(:disabled) {
+    background: var(--gold);
+    color: var(--navy);
+  }
+  .uc-upload-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  .uc-upload-progress {
+    background: #fff8e5;
+    border: 1px solid var(--gold);
+    color: var(--navy);
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    display: none;
+  }
+  .uc-upload-progress.visible { display: block; }
+  .uc-upload-success {
+    background: #e8f5ef;
+    border: 2px solid var(--green);
+    color: var(--green);
+    padding: 14px 18px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    display: none;
+    transition: opacity 0.4s ease;
+  }
+  .uc-upload-success.visible { display: block; }
+  .uc-upload-success.fading { opacity: 0; }
+  .uc-upload-success ul { margin: 6px 0 0 18px; padding: 0; }
+
+  .uc-error {
+    color: #c2392e;
+    background: #fdebe9;
+    border: 1px solid #c2392e;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    display: none;
+    margin-top: 8px;
+  }
+  .uc-error.visible { display: block; }
+
+  /* ===== Agent Template Manager ===== */
+  .atm-section {
+    margin-top: 22px;
+  }
+  .atm-bulk {
+    background: var(--cream);
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 16px;
+  }
+  .atm-bulk-title {
+    font-weight: 700;
+    color: var(--navy);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0 0 10px;
+  }
+  .atm-bulk-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: stretch;
+  }
+  .atm-bulk-row select { min-width: 0; flex: 1 1 160px; }
+  .atm-bulk-go {
+    background: var(--navy);
+    color: var(--gold);
+    border: 2px solid var(--navy);
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    min-height: 48px;
+  }
+  .atm-bulk-go:hover { background: var(--gold); color: var(--navy); }
+  .atm-bulk-extra {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .atm-agent {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 10px;
+    overflow: hidden;
+  }
+  .atm-agent-header {
+    background: white;
+    border: none;
+    width: 100%;
+    text-align: left;
+    padding: 14px 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    font-family: inherit;
+    color: var(--navy);
+    font-size: 15px;
+    font-weight: 600;
+  }
+  .atm-agent-header:hover { background: #f6f4ee; }
+  .atm-agent-header .atm-toggle { color: var(--gold); font-size: 18px; }
+  .atm-agent-body {
+    padding: 4px 14px 14px;
+    border-top: 1px solid var(--border);
+    background: #fafafa;
+  }
+  .atm-pt-section { margin-top: 12px; }
+  .atm-pt-title {
+    font-weight: 700;
+    color: var(--navy);
+    font-size: 13px;
+    margin: 0 0 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .atm-pt-count {
+    background: var(--cream);
+    color: var(--navy);
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 11px;
+    letter-spacing: 0.3px;
+  }
+  .atm-add-here-btn {
+    margin-left: auto;
+    background: white;
+    border: 1px solid var(--navy);
+    color: var(--navy);
+    padding: 4px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 600;
+    font-family: inherit;
+    min-height: 28px;
+  }
+  .atm-add-here-btn:hover { background: var(--navy); color: white; }
+  .atm-thumb-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  @media (min-width: 600px) {
+    .atm-thumb-grid { grid-template-columns: repeat(5, 1fr); }
+  }
+  .atm-thumb {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 6px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .atm-thumb-img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 4px;
+    background: var(--gray-bg);
+    display: block;
+  }
+  .atm-thumb-name {
+    font-size: 10px;
+    color: var(--navy);
+    text-align: center;
+    word-break: break-word;
+    line-height: 1.2;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+  .atm-thumb-remove {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #c2392e;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+  }
+  .atm-thumb-remove:hover { background: #a6322a; }
+  .atm-thumb-copy {
+    width: 100%;
+    background: white;
+    border: 1px solid var(--navy);
+    color: var(--navy);
+    padding: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    font-family: inherit;
+    border-radius: 4px;
+    cursor: pointer;
+    min-height: 26px;
+  }
+  .atm-thumb-copy:hover { background: var(--navy); color: white; }
+  .atm-copy-dropdown {
+    position: absolute;
+    top: 30px;
+    right: 6px;
+    z-index: 5;
+    background: white;
+    border: 2px solid var(--navy);
+    border-radius: 6px;
+    box-shadow: var(--shadow-lg);
+    padding: 4px;
+    display: flex;
+    flex-direction: column;
+    min-width: 140px;
+    max-height: 220px;
+    overflow-y: auto;
+  }
+  .atm-copy-option {
+    background: transparent;
+    border: none;
+    text-align: left;
+    padding: 6px 8px;
+    font-size: 12px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-family: inherit;
+    color: var(--navy);
+  }
+  .atm-copy-option:hover { background: var(--cream); }
+  .atm-empty-pt {
+    color: var(--gray-muted);
+    font-size: 12px;
+    font-style: italic;
+    padding: 4px 0;
+  }
+
+  .pin-inactivity-msg {
+    color: var(--gold-dark);
+    font-style: italic;
+    font-size: 14px;
+    margin-bottom: 16px;
+    padding: 10px 14px;
+    background: #fff8e5;
+    border: 1px solid var(--gold);
+    border-radius: 8px;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<div class="brand-header">
+  <button class="hamburger-btn" id="hamburgerBtn" type="button" aria-label="Open menu">
+    <span class="hamburger-lines"><span></span><span></span><span></span></span>
+    <span class="hamburger-label">Admin</span>
+  </button>
+  <h1 class="brand-name">LEGACY REAL ESTATE PARTNERS</h1>
+  <div class="brand-tagline">Weekly Post Selector</div>
+</div>
+
+<div class="drawer-overlay" id="drawerOverlay"></div>
+<aside class="drawer" id="drawer" aria-hidden="true">
+  <div class="drawer-header">
+    <h2 class="drawer-title">Menu</h2>
+    <button class="drawer-close" id="drawerClose" type="button" aria-label="Close menu">&times;</button>
+  </div>
+  <button class="drawer-link" id="adminMenuLink" type="button">Admin Panel</button>
+</aside>
+
+<!-- PAGE 1: HOME -->
+<div id="homePage" class="container page">
+  <h2 class="home-title">Select Your Name</h2>
+  <p class="home-subtitle">Choose your profile to begin your weekly post selection</p>
+  <div class="agent-grid" id="agentGrid"></div>
+</div>
+
+<!-- PAGE 1B: AGENT PIN ENTRY -->
+<div id="agentPinPage" class="container page hidden">
+  <div class="back-bar">
+    <button class="back-btn" id="agentPinBackBtn" type="button">&larr; Back to Home</button>
+  </div>
+  <div class="agent-pin-card">
+    <h2 class="agent-pin-name" id="agentPinName"></h2>
+    <div class="agent-pin-subtitle">Enter your PIN to continue</div>
+
+    <div class="pin-inactivity-msg hidden" id="agentPinInactivityMsg">
+      Your session expired due to inactivity. Enter your PIN to continue where you left off.
+    </div>
+
+    <div class="agent-pin-lockout hidden" id="agentPinLockout">
+      Too many incorrect attempts. Please wait <strong id="agentPinCountdown">5:00</strong> before trying again.
+    </div>
+
+    <div class="agent-pin-boxes" id="agentPinBoxes">
+      <input type="password" inputmode="numeric" maxlength="1" class="agent-pin-box" data-idx="0">
+      <input type="password" inputmode="numeric" maxlength="1" class="agent-pin-box" data-idx="1">
+      <input type="password" inputmode="numeric" maxlength="1" class="agent-pin-box" data-idx="2">
+      <input type="password" inputmode="numeric" maxlength="1" class="agent-pin-box" data-idx="3">
+    </div>
+
+    <div class="agent-pin-error" id="agentPinError"></div>
+
+    <div class="agent-pin-buttons">
+      <button class="agent-pin-submit" id="agentPinSubmit" type="button">Submit PIN</button>
+      <button class="agent-pin-clear" id="agentPinClear" type="button">Clear</button>
+      <button class="agent-pin-back-inline" id="agentPinBackInline" type="button">Back to Home</button>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 2: WEEKLY FORM -->
+<div id="formPage" class="container page hidden">
+  <div class="back-bar form-back-bar">
+    <button class="back-btn" id="backBtn" type="button">&larr; Back to Agents</button>
+    <button class="agent-logout-link" id="agentLogoutLink" type="button">Log out</button>
+  </div>
+
+  <div class="inactivity-warning hidden" id="inactivityWarning">
+    You have been inactive for a while. For security your session will expire in <strong>2 minutes</strong>. Tap anywhere to stay logged in.
+  </div>
+
+  <div class="restored-banner hidden" id="restoredBanner">
+    <strong>Your selections have been restored.</strong> Pick up right where you left off.
+  </div>
+
+  <div class="form-header">
+    <h2 class="form-agent-name" id="formAgentName"></h2>
+    <div class="form-week" id="formWeek"></div>
+  </div>
+
+  <div class="week-nav">
+    <button class="week-arrow" id="prevWeekBtn" type="button" aria-label="Previous week">&larr;</button>
+    <div>
+      <div class="week-range" id="weekRangeLabel"></div>
+      <div class="week-range-sub" id="weekRangeSub"></div>
+    </div>
+    <button class="week-arrow" id="nextWeekBtn" type="button" aria-label="Next week">&rarr;</button>
+  </div>
+
+  <div id="daysContainer"></div>
+
+  <div class="quick-questions" id="quickQuestions">
+    <h3 class="qq-header">Quick Questions</h3>
+    <div class="qq-subtitle">Optional — helps us write posts that sound more like you</div>
+    <div class="qq-note">These are optional. Skip any you do not want to answer. Your answers help Claude write posts that sound more like you.</div>
+
+    <div class="qq-question">
+      <label class="qq-label">How are you feeling about your market this week?</label>
+      <div class="qq-pill-row" id="qqMarketPills">
+        <button type="button" class="qq-pill" data-value="🔥 On fire">🔥 On fire</button>
+        <button type="button" class="qq-pill" data-value="😊 Pretty good">😊 Pretty good</button>
+        <button type="button" class="qq-pill" data-value="😐 Steady">😐 Steady</button>
+        <button type="button" class="qq-pill" data-value="🤔 A little slow">🤔 A little slow</button>
+        <button type="button" class="qq-pill" data-value="😤 Frustrated but pushing">😤 Frustrated but pushing</button>
+      </div>
+    </div>
+
+    <div class="qq-question">
+      <label class="qq-label" for="qqContext">Is there anything specific happening in your life or business this week you want woven into your posts?</label>
+      <textarea id="qqContext" class="qq-textarea" placeholder="e.g. just closed a big deal, kids going back to school, been really busy with showings… Leave blank to skip. One or two sentences max."></textarea>
+    </div>
+
+    <div class="qq-question">
+      <label class="qq-label" for="qqPhrases">Any words or phrases you want used or avoided in your posts this week?</label>
+      <textarea id="qqPhrases" class="qq-textarea" placeholder="e.g. use the word exciting this week / avoid mentioning interest rates / keep it light and funny… Leave blank to skip."></textarea>
+    </div>
+
+    <div class="qq-question">
+      <label class="qq-label" for="qqRequest">Want to request a new post type for future weeks?</label>
+      <textarea id="qqRequest" class="qq-textarea" placeholder="e.g. I would love a post about pet friendly neighborhoods / can we do something about new construction homes… Leave blank to skip."></textarea>
+      <div class="qq-note" style="margin-top:6px;margin-bottom:0;">We review all requests and add popular ones to the system.</div>
+    </div>
+  </div>
+
+  <div class="submit-wrap">
+    <button class="submit-btn" id="submitBtn" type="button">Submit My Week</button>
+  </div>
+
+  <div class="success-banner hidden" id="successBanner">
+    <div class="check-circle">&#10003;</div>
+    <h3>Thank you!</h3>
+    <p>
+      Your selections for the week of <strong id="successWeek"></strong> have been received.<br>
+      Legacy will have your posts ready within 24 hours.
+    </p>
+  </div>
+</div>
+
+<!-- PAGE 3A: ADMIN PASSWORD ENTRY -->
+<div id="adminPasswordPage" class="container page hidden">
+  <div class="back-bar">
+    <button class="back-btn" id="adminPasswordBackBtn" type="button">&larr; Back to Home</button>
+  </div>
+  <div class="admin-password-card">
+    <h2 class="admin-password-title">Admin Access</h2>
+    <div class="admin-password-subtitle">Legacy Real Estate Partners</div>
+
+    <div class="admin-lockout-box hidden" id="adminLockoutBox">
+      Too many incorrect attempts. Please wait <strong id="adminLockoutCountdown">10:00</strong> before trying again.
+    </div>
+
+    <div style="text-align: left;">
+      <label class="field-label" for="adminPasswordInput">Password</label>
+      <div class="admin-password-row">
+        <input type="password" id="adminPasswordInput" placeholder="Enter password" autocomplete="current-password">
+        <button class="admin-password-toggle" id="adminPasswordToggle" type="button">Show</button>
+      </div>
+      <div class="admin-password-error" id="adminPasswordError"></div>
+    </div>
+
+    <div class="admin-password-buttons">
+      <button class="admin-password-submit" id="adminPasswordSubmit" type="button">Submit</button>
+      <button class="admin-password-cancel" id="adminPasswordCancel" type="button">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 3: ADMIN -->
+<div id="adminPage" class="container page hidden">
+  <div class="admin-back-bar">
+    <button class="back-btn" id="adminBackBtn" type="button">&larr; Back to Home</button>
+    <button class="admin-logout-link" id="adminLogoutLink" type="button">Log out</button>
+  </div>
+
+  <div class="admin-header">
+    <h2 class="admin-title">Admin Panel</h2>
+    <div class="admin-subtitle">Legacy Real Estate Partners</div>
+  </div>
+
+  <div class="admin-tabs">
+    <button class="admin-tab active" id="adminTabBtnAgents" type="button">Manage Agents</button>
+    <button class="admin-tab" id="adminTabBtnContent" type="button">Content Manager</button>
+  </div>
+
+  <div class="admin-tab-panel" id="adminTabAgents">
+  <div class="admin-section">
+    <h3 class="admin-section-title">Current Agents</h3>
+    <div id="adminAgentList"></div>
+  </div>
+
+  <div class="admin-section">
+    <h3 class="admin-section-title">Add New Agent</h3>
+    <div class="admin-add-form">
+      <div>
+        <label class="field-label" for="addAgentName">Agent Name</label>
+        <input type="text" id="addAgentName" placeholder="Full name — e.g. Brett McLaughlin">
+        <div class="admin-error" id="addAgentError"></div>
+      </div>
+      <div>
+        <label class="field-label" for="addAgentPin">PIN (4 digits)</label>
+        <div class="admin-add-pin-row">
+          <input type="password" id="addAgentPin" maxlength="4" inputmode="numeric" placeholder="Set a 4 digit PIN" value="1234">
+          <button class="admin-add-pin-toggle" id="addAgentPinToggle" type="button">Show</button>
+          <button class="admin-generate-pin-btn" id="addAgentPinGenerate" type="button">Generate</button>
+        </div>
+        <div class="admin-error" id="addAgentPinError"></div>
+      </div>
+      <button class="admin-add-btn" id="addAgentBtn" type="button">Add Agent</button>
+      <div class="admin-success" id="addAgentSuccess"></div>
+    </div>
+  </div>
+  </div>
+
+  <div class="admin-tab-panel hidden" id="adminTabContent">
+    <div class="admin-section">
+      <h3 class="admin-section-title">Post Types</h3>
+      <p style="font-size:13px;color:var(--gray-muted);margin:0 0 12px;">Toggle post types on or off. When off they disappear from the agent weekly form dropdown immediately.</p>
+      <div id="postTypeList"></div>
+
+      <h4 style="margin:22px 0 12px;color:var(--navy);font-size:15px;">Add New Post Type</h4>
+      <div class="admin-add-form">
+        <div>
+          <label class="field-label" for="addTypeName">Post Type Name</label>
+          <input type="text" id="addTypeName" placeholder="e.g. House of the Week">
+          <div class="admin-error" id="addTypeNameError"></div>
+        </div>
+        <div>
+          <label class="field-label" for="addTypeCode">Post Type Code (2 letters)</label>
+          <input type="text" id="addTypeCode" placeholder="e.g. HW" maxlength="2" style="text-transform: uppercase; letter-spacing: 3px; font-family: 'Courier New', monospace;">
+          <div class="pt-add-helper">Used in template IDs like HW_001 through HW_100.</div>
+          <div class="admin-error" id="addTypeCodeError"></div>
+        </div>
+        <div>
+          <label class="field-label" for="addTypeCount">Number of Templates</label>
+          <input type="number" id="addTypeCount" min="1" value="100">
+          <div class="admin-error" id="addTypeCountError"></div>
+        </div>
+        <button class="admin-add-btn" id="addPostTypeBtn" type="button">Add Post Type</button>
+        <div class="admin-success" id="addPostTypeSuccess"></div>
+      </div>
+
+      <div class="admin-note">Note: Adding a new post type here only updates the website. You will also need to add it to each agent's Notion folder and create Canva templates for it separately.</div>
+    </div>
+
+    <div class="admin-section">
+      <h3 class="admin-section-title">Template Library</h3>
+      <p style="font-size:13px;color:var(--gray-muted);margin:0 0 12px;">Summary of templates available for each active post type. Edit the count after you create new templates in Canva.</p>
+      <div id="templateLibraryList"></div>
+      <div class="admin-note">Note: Editing the count here only updates how many templates the picker shows. You still need to create the actual new templates in Canva separately — the IDs stay the same so agent preference history remains valid.</div>
+    </div>
+
+    <div class="admin-section">
+      <h3 class="admin-section-title">Template Upload Center</h3>
+      <p class="uc-subtitle">Drag and drop templates from your computer and assign them to specific agents. Each agent only sees the templates you assign to them.</p>
+
+      <div class="uc-note">
+        Templates uploaded here are stored in your browser. To make them permanent across all devices connect the website to your Cloudinary account. Talk to your developer when you are ready to go live.
+      </div>
+
+      <div class="uc-grid uc-grid-2col">
+        <div class="uc-area">
+          <h4 class="uc-area-title">1. Drop Files</h4>
+          <div class="uc-dropzone" id="ucDropzone">
+            <div class="uc-dropzone-icon">&uarr;</div>
+            <div class="uc-dropzone-text">Drag templates here</div>
+            <div class="uc-dropzone-text" style="font-size:13px;font-weight:500;">or click to browse</div>
+            <div class="uc-dropzone-sub" style="margin-top:8px;">Naming: LRP_001.png – LRP_1000.png</div>
+            <div class="uc-dropzone-sub">PNG or JPG. Max 5MB per file. Multiple files OK.</div>
+          </div>
+          <input type="file" id="ucFileInput" class="uc-file-input" multiple accept="image/png,image/jpeg">
+          <div class="uc-preview-grid" id="ucPreviewGrid"></div>
+        </div>
+
+        <div class="uc-area">
+          <h4 class="uc-area-title">2. Assign to Agents</h4>
+          <div class="uc-agent-shortcuts">
+            <button type="button" class="uc-agent-shortcut" id="ucSelectAll">Select All</button>
+            <button type="button" class="uc-agent-shortcut" id="ucClearAll">Clear All</button>
+          </div>
+          <div class="uc-agent-list" id="ucAgentList"></div>
+          <div class="uc-error" id="ucAgentError"></div>
+        </div>
+      </div>
+
+      <div class="uc-upload-row">
+        <button type="button" class="uc-upload-btn" id="ucUploadBtn" disabled>Upload 0 Templates to 0 Agents</button>
+        <div class="uc-upload-progress" id="ucProgress"></div>
+        <div class="uc-upload-success" id="ucSuccess"></div>
+        <div class="uc-error" id="ucGeneralError"></div>
+      </div>
+
+      <div class="atm-section">
+        <h3 class="admin-section-title" style="margin-top: 22px;">Agent Template Manager</h3>
+        <p style="font-size:13px;color:var(--gray-muted);margin:0 0 12px;">Click an agent to expand and view exactly what they see on their weekly form.</p>
+
+        <div class="atm-bulk">
+          <div class="atm-bulk-title">Bulk Actions</div>
+          <div class="atm-bulk-row">
+            <select id="atmActionSelect">
+              <option value="">Select action…</option>
+              <option value="copy">Copy all templates from one agent to another</option>
+              <option value="removeAll">Remove all templates for a specific agent</option>
+            </select>
+            <button type="button" class="atm-bulk-go" id="atmBulkGo">Go</button>
+          </div>
+          <div class="atm-bulk-extra" id="atmBulkExtra"></div>
+        </div>
+
+        <div id="atmAgentSections"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  /* ============================================================
+     CONFIG
+  ============================================================ */
+  const AGENTS = [
+    { id: "john-doe",   name: "John Doe" },
+    { id: "jane-smith", name: "Jane Smith" },
+    { id: "amy-houser", name: "Amy Houser" }
+  ];
+
+  /* Load persisted agents from localStorage on startup (admin-panel edits). */
+  const AGENTS_STORAGE_KEY = "legacy_agents_data";
+  (function loadPersistedAgents() {
+    try {
+      const raw = localStorage.getItem(AGENTS_STORAGE_KEY);
+      if (!raw) return;
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) {
+        AGENTS.length = 0;
+        parsed.forEach(function (a) {
+          if (a && a.id && a.name) {
+            const obj = { id: a.id, name: a.name };
+            if (a.pin) obj.pin = a.pin;
+            AGENTS.push(obj);
+          }
+        });
+      }
+    } catch (e) { /* ignore */ }
+  })();
+  function saveAgents() {
+    try { localStorage.setItem(AGENTS_STORAGE_KEY, JSON.stringify(AGENTS)); }
+    catch (e) { /* ignore */ }
+  }
+  function slugify(name) {
+    return String(name || "").toLowerCase().trim()
+      .replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+  }
+  function uniqueAgentId(name) {
+    let base = slugify(name) || "agent";
+    let id = base, i = 2;
+    const existing = new Set(AGENTS.map(function (a) { return a.id; }));
+    while (existing.has(id)) { id = base + "-" + i; i++; }
+    return id;
+  }
+
+  /* ============================================================
+     ADMIN PASSWORD / SESSION / LOCKOUT
+  ============================================================ */
+  const ADMIN_PASSWORD = "TeamLegacy1!";
+  const ADMIN_AUTH_KEY = "legacy_admin_auth";
+  const ADMIN_LOCKOUT_KEY = "legacy_admin_lockout";
+  const ADMIN_SESSION_MS = 4 * 60 * 60 * 1000;   // 4 hours
+  const ADMIN_LOCKOUT_MS = 10 * 60 * 1000;       // 10 minutes
+  const ADMIN_MAX_ATTEMPTS = 5;
+
+  function hasValidAdminSession() {
+    try {
+      const raw = localStorage.getItem(ADMIN_AUTH_KEY);
+      if (!raw) return false;
+      const ts = parseInt(raw, 10);
+      if (isNaN(ts)) { localStorage.removeItem(ADMIN_AUTH_KEY); return false; }
+      if (Date.now() - ts < ADMIN_SESSION_MS) return true;
+      localStorage.removeItem(ADMIN_AUTH_KEY);
+    } catch (e) { /* ignore */ }
+    return false;
+  }
+  function setAdminSession() {
+    try { localStorage.setItem(ADMIN_AUTH_KEY, String(Date.now())); } catch (e) {}
+  }
+  function clearAdminSession() {
+    try { localStorage.removeItem(ADMIN_AUTH_KEY); } catch (e) {}
+  }
+  function getAdminLockoutRemaining() {
+    try {
+      const raw = localStorage.getItem(ADMIN_LOCKOUT_KEY);
+      if (!raw) return 0;
+      const until = parseInt(raw, 10);
+      if (isNaN(until) || Date.now() >= until) {
+        localStorage.removeItem(ADMIN_LOCKOUT_KEY);
+        return 0;
+      }
+      return until - Date.now();
+    } catch (e) { return 0; }
+  }
+  function setAdminLockout() {
+    try { localStorage.setItem(ADMIN_LOCKOUT_KEY, String(Date.now() + ADMIN_LOCKOUT_MS)); } catch (e) {}
+  }
+  function formatLockoutCountdown(ms) {
+    const s = Math.ceil(ms / 1000);
+    const m = Math.floor(s / 60);
+    const r = s % 60;
+    return m + ":" + (r < 10 ? "0" + r : r);
+  }
+
+  /* ============================================================
+     AGENT PIN / SESSION / LOCKOUT
+  ============================================================ */
+  const DEFAULT_AGENT_PIN = "1234";
+  const AGENT_SESSION_MS = 8 * 60 * 60 * 1000;  // 8 hours
+  const AGENT_LOCKOUT_MS = 5 * 60 * 1000;       // 5 minutes
+  const AGENT_MAX_ATTEMPTS = 3;
+
+  function agentAuthKey(slug)    { return "legacy_auth_" + slug; }
+  function agentLockoutKey(slug) { return "legacy_lockout_" + slug; }
+
+  function hasValidAgentSession(slug) {
+    try {
+      const raw = localStorage.getItem(agentAuthKey(slug));
+      if (!raw) return false;
+      const ts = parseInt(raw, 10);
+      if (isNaN(ts)) { localStorage.removeItem(agentAuthKey(slug)); return false; }
+      if (Date.now() - ts < AGENT_SESSION_MS) return true;
+      localStorage.removeItem(agentAuthKey(slug));
+    } catch (e) { /* ignore */ }
+    return false;
+  }
+  function setAgentSession(slug) {
+    try { localStorage.setItem(agentAuthKey(slug), String(Date.now())); } catch (e) {}
+  }
+  function clearAgentSession(slug) {
+    try { localStorage.removeItem(agentAuthKey(slug)); } catch (e) {}
+  }
+  function getAgentLockoutRemaining(slug) {
+    try {
+      const raw = localStorage.getItem(agentLockoutKey(slug));
+      if (!raw) return 0;
+      const until = parseInt(raw, 10);
+      if (isNaN(until) || Date.now() >= until) {
+        localStorage.removeItem(agentLockoutKey(slug));
+        return 0;
+      }
+      return until - Date.now();
+    } catch (e) { return 0; }
+  }
+  function setAgentLockout(slug) {
+    try { localStorage.setItem(agentLockoutKey(slug), String(Date.now() + AGENT_LOCKOUT_MS)); } catch (e) {}
+  }
+
+  /* ============================================================
+     TEMPLATE LIBRARY + PREFERENCES
+  ============================================================ */
+  const TOPIC_PREFIX = {
+    "Just Listed": "JL",
+    "Just Sold": "JS",
+    "Open House": "OH",
+    "Tip of the Week": "TW",
+    "Market Update": "MU",
+    "Myth Busting": "MB",
+    "Neighborhood Spotlight": "NS",
+    "Client Testimonial": "CT",
+    "Staging Tips": "ST",
+    "Community Feature": "CF"
+  };
+  const TEMPLATES_PER_TOPIC = 100;
+  const GRID_SIZE = 10;
+  const FAVORITE_COUNT = 3;
+
+  /* Build 1000 templates dynamically: 100 per post type. */
+  const TEMPLATE_LIBRARY = {};
+  Object.keys(TOPIC_PREFIX).forEach(function (topic) {
+    const prefix = TOPIC_PREFIX[topic];
+    TEMPLATE_LIBRARY[topic] = [];
+    for (let i = 1; i <= TEMPLATES_PER_TOPIC; i++) {
+      const idNum = i < 10 ? ("00" + i) : (i < 100 ? ("0" + i) : String(i));
+      TEMPLATE_LIBRARY[topic].push({ id: prefix + "_" + idNum });
+    }
+  });
+
+  function agentPrefsSlug(agent) {
+    return String((agent && agent.name) || "").toLowerCase().replace(/\s+/g, "");
+  }
+  function topicPrefsSlug(topic) {
+    return String(topic || "").toLowerCase().replace(/\s+/g, "");
+  }
+  function prefsKey(agent, topic) {
+    return "legacy_prefs_" + agentPrefsSlug(agent) + "_" + topicPrefsSlug(topic);
+  }
+  function loadPrefs(agent, topic) {
+    try {
+      const raw = localStorage.getItem(prefsKey(agent, topic));
+      if (!raw) return {};
+      const parsed = JSON.parse(raw);
+      const out = {};
+      for (const id in parsed) {
+        const v = parsed[id];
+        if (typeof v === "number") out[id] = { score: v, lastSelected: 0 };
+        else if (v && typeof v === "object") out[id] = { score: v.score || 0, lastSelected: v.lastSelected || 0 };
+      }
+      return out;
+    } catch (e) { return {}; }
+  }
+  function savePrefs(agent, topic, prefs) {
+    try { localStorage.setItem(prefsKey(agent, topic), JSON.stringify(prefs)); } catch (e) {}
+  }
+  function recordTemplateSelection(agent, topic, id) {
+    const prefs = loadPrefs(agent, topic);
+    const cur = prefs[id] || { score: 0, lastSelected: 0 };
+    prefs[id] = { score: cur.score + 1, lastSelected: Date.now() };
+    savePrefs(agent, topic, prefs);
+  }
+  function getTopFavoriteIds(agent, topic, n) {
+    const prefs = loadPrefs(agent, topic);
+    const entries = [];
+    for (const id in prefs) {
+      const v = prefs[id];
+      if (v.score > 0) entries.push({ id: id, score: v.score, lastSelected: v.lastSelected });
+    }
+    entries.sort(function (a, b) {
+      return b.score - a.score || b.lastSelected - a.lastSelected;
+    });
+    return entries.slice(0, n).map(function (e) { return e.id; });
+  }
+  function shuffleArray(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+  /* ============================================================
+     INACTIVITY TIMEOUT + DRAFT AUTOSAVE
+  ============================================================ */
+  const INACTIVITY_TOTAL_MS   = 10 * 60 * 1000; // 10 minutes
+  const INACTIVITY_WARNING_MS = 2 * 60 * 1000;  // warn when 2 min remain
+  const DRAFT_MAX_AGE_MS      = 7 * 24 * 60 * 60 * 1000; // 7 days
+
+  let inactivityWarnTimerId = null;
+  let inactivityLogoutTimerId = null;
+  let inactivityResumePending = false; // set when PIN shown after timeout
+  let lastActivityResetAt = 0;
+
+  function mondayISO(date) {
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, "0");
+    const d = String(date.getDate()).padStart(2, "0");
+    return y + "-" + m + "-" + d;
+  }
+  function isoToDate(iso) {
+    return new Date(iso + "T00:00:00");
+  }
+  function offsetFromMondayISO(iso) {
+    const todayMonday = getMondayOfWeek(new Date());
+    const target = isoToDate(iso);
+    const diffDays = Math.round((target.getTime() - todayMonday.getTime()) / 86400000);
+    return Math.round(diffDays / 7);
+  }
+  function draftKey(agent, iso) {
+    return "legacy_draft_" + agentPrefsSlug(agent) + "_" + iso;
+  }
+  function draftCurrentKey(agent) {
+    return "legacy_draft_current_" + agentPrefsSlug(agent);
+  }
+  function serializeDay(day) {
+    return {
+      topic: day.topic || "",
+      tone: day.tone || "",
+      selectedTemplate: day.selectedTemplate || null,
+      url: day.url || "",
+      notes: day.notes || "",
+      templateIds: (day.templateIds || []).slice(),
+      favoriteIds: Object.keys(day.favoriteSet || {})
+    };
+  }
+  function weekHasData(days) {
+    if (!days) return false;
+    return days.some(function (d) {
+      return d.topic || d.selectedTemplate || (d.url && d.url.length) || (d.notes && d.notes.length);
+    });
+  }
+
+  function saveDraftForAgent(agent, viewingOffset) {
+    if (!agent) return;
+    let savedAny = false;
+    for (const key in weekState) {
+      const offset = Number(key);
+      if (!isFinite(offset)) continue;
+      const days = weekState[offset];
+      if (!weekHasData(days)) continue;
+      const monday = getWeekMonday(offset);
+      const iso = mondayISO(monday);
+      const payload = {
+        savedAt: Date.now(),
+        monday: iso,
+        weekOffset: offset,
+        days: days.map(serializeDay)
+      };
+      try { localStorage.setItem(draftKey(agent, iso), JSON.stringify(payload)); savedAny = true; } catch (e) {}
+    }
+    /* Always mark which week they were viewing, even if no data in it */
+    try {
+      const viewingMonday = mondayISO(getWeekMonday(viewingOffset));
+      localStorage.setItem(draftCurrentKey(agent), viewingMonday);
+    } catch (e) {}
+    return savedAny;
+  }
+
+  function loadDraftsForAgent(agent) {
+    const slug = agentPrefsSlug(agent);
+    const prefix = "legacy_draft_" + slug + "_";
+    const drafts = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (!key || key.indexOf(prefix) !== 0) continue;
+      if (key === draftCurrentKey(agent)) continue; // skip marker
+      try {
+        const parsed = JSON.parse(localStorage.getItem(key));
+        if (parsed && parsed.monday && parsed.days) drafts.push(parsed);
+      } catch (e) {}
+    }
+    let currentMonday = null;
+    try { currentMonday = localStorage.getItem(draftCurrentKey(agent)); } catch (e) {}
+    return { drafts: drafts, currentMonday: currentMonday };
+  }
+
+  function clearDraftForWeek(agent, offset) {
+    if (!agent) return;
+    const iso = mondayISO(getWeekMonday(offset));
+    try { localStorage.removeItem(draftKey(agent, iso)); } catch (e) {}
+    try {
+      if (localStorage.getItem(draftCurrentKey(agent)) === iso) {
+        localStorage.removeItem(draftCurrentKey(agent));
+      }
+    } catch (e) {}
+  }
+
+  function clearAllDraftsForAgent(agent) {
+    if (!agent) return;
+    const slug = agentPrefsSlug(agent);
+    const prefix = "legacy_draft_" + slug + "_";
+    const toRemove = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && key.indexOf(prefix) === 0) toRemove.push(key);
+    }
+    toRemove.forEach(function (k) { try { localStorage.removeItem(k); } catch (e) {} });
+    try { localStorage.removeItem(draftCurrentKey(agent)); } catch (e) {}
+  }
+
+  function cleanupOldDrafts() {
+    const cutoff = Date.now() - DRAFT_MAX_AGE_MS;
+    const toRemove = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (!key || key.indexOf("legacy_draft_") !== 0) continue;
+      try {
+        const v = localStorage.getItem(key);
+        const parsed = JSON.parse(v);
+        if (parsed && parsed.savedAt && parsed.savedAt < cutoff) toRemove.push(key);
+      } catch (e) { /* non-JSON markers like legacy_draft_current_* are fine */ }
+    }
+    toRemove.forEach(function (k) { try { localStorage.removeItem(k); } catch (e) {} });
+  }
+
+  function restoreDraftsIntoWeekState(agent) {
+    const loaded = loadDraftsForAgent(agent);
+    if (!loaded.drafts.length && !loaded.currentMonday) return { restored: false, navigateOffset: 0 };
+    let restoredCount = 0;
+    loaded.drafts.forEach(function (d) {
+      const offset = offsetFromMondayISO(d.monday);
+      if (offset < 0) return; // past week; ignore
+      const days = d.days.map(function (raw) {
+        const favSet = {};
+        (raw.favoriteIds || []).forEach(function (id) { favSet[id] = true; });
+        return {
+          topic: raw.topic || "",
+          tone: raw.tone || "",
+          selectedTemplate: raw.selectedTemplate || null,
+          url: raw.url || "",
+          notes: raw.notes || "",
+          templateIds: (raw.templateIds && raw.templateIds.length) ? raw.templateIds.slice() : [],
+          favoriteSet: favSet
+        };
+      });
+      /* Ensure the selected template is actually in the displayed grid */
+      days.forEach(function (day) {
+        if (day.selectedTemplate && day.templateIds.indexOf(day.selectedTemplate) === -1) {
+          day.templateIds.unshift(day.selectedTemplate);
+        }
+      });
+      weekState[offset] = days;
+      restoredCount++;
+    });
+    let navigateOffset = 0;
+    if (loaded.currentMonday) {
+      const targetOffset = offsetFromMondayISO(loaded.currentMonday);
+      if (targetOffset >= 0) navigateOffset = targetOffset;
+    }
+    return { restored: restoredCount > 0, navigateOffset: navigateOffset };
+  }
+
+  /* ===== Inactivity timer ===== */
+  function clearInactivityTimers() {
+    if (inactivityWarnTimerId) { clearTimeout(inactivityWarnTimerId); inactivityWarnTimerId = null; }
+    if (inactivityLogoutTimerId) { clearTimeout(inactivityLogoutTimerId); inactivityLogoutTimerId = null; }
+  }
+  function hideInactivityWarning() {
+    const el = document.getElementById("inactivityWarning");
+    if (el) el.classList.add("hidden");
+  }
+  function showInactivityWarning() {
+    const el = document.getElementById("inactivityWarning");
+    if (el) el.classList.remove("hidden");
+  }
+  function startInactivityTimer() {
+    clearInactivityTimers();
+    hideInactivityWarning();
+    inactivityWarnTimerId = setTimeout(function () {
+      showInactivityWarning();
+      inactivityLogoutTimerId = setTimeout(triggerInactivityLogout, INACTIVITY_WARNING_MS);
+    }, INACTIVITY_TOTAL_MS - INACTIVITY_WARNING_MS);
+  }
+  function resetInactivityTimer() {
+    if (!currentAgent) return;
+    if (document.getElementById("formPage").classList.contains("hidden")) return;
+    const now = Date.now();
+    if (now - lastActivityResetAt < 800) return; // throttle
+    lastActivityResetAt = now;
+    startInactivityTimer();
+  }
+  function stopInactivityTimer() {
+    clearInactivityTimers();
+    hideInactivityWarning();
+  }
+  function triggerInactivityLogout() {
+    if (!currentAgent) return;
+    /* Save drafts for all touched weeks + mark the viewing week */
+    saveDraftForAgent(currentAgent, weekOffset);
+    /* Clear session */
+    clearAgentSession(currentAgent.id);
+    /* Stop timer + hide warning */
+    clearInactivityTimers();
+    hideInactivityWarning();
+    /* Show PIN screen with inactivity message */
+    inactivityResumePending = true;
+    openAgentPinPage(currentAgent);
+    const msg = document.getElementById("agentPinInactivityMsg");
+    if (msg) msg.classList.remove("hidden");
+  }
+
+  /* Activity listeners — bubble-up, only react if form page visible */
+  (function installActivityListeners() {
+    function on(evt, opts) {
+      document.addEventListener(evt, resetInactivityTimer, opts || false);
+    }
+    on("click");
+    on("keydown");
+    on("touchstart", { passive: true });
+    on("scroll", { passive: true });
+    on("input");
+    on("change");
+    on("mousemove");
+  })();
+
+  /* ===== User favorites (manual, up to 5 per agent per post type) ===== */
+  const USER_FAV_MAX = 5;
+  function userFavoritesKey(agent, topic) {
+    return "legacy_favorites_" + agentPrefsSlug(agent) + "_" + topicPrefsSlug(topic);
+  }
+  function loadUserFavorites(agent, topic) {
+    try {
+      const raw = localStorage.getItem(userFavoritesKey(agent, topic));
+      if (!raw) return [];
+      const arr = JSON.parse(raw);
+      return Array.isArray(arr) ? arr.slice(0, USER_FAV_MAX) : [];
+    } catch (e) { return []; }
+  }
+  function saveUserFavorites(agent, topic, ids) {
+    try {
+      localStorage.setItem(userFavoritesKey(agent, topic), JSON.stringify(ids.slice(0, USER_FAV_MAX)));
+    } catch (e) {}
+  }
+  function toggleUserFavorite(agent, topic, id) {
+    const ids = loadUserFavorites(agent, topic);
+    const i = ids.indexOf(id);
+    if (i >= 0) {
+      ids.splice(i, 1);
+      saveUserFavorites(agent, topic, ids);
+      return { added: false, full: false };
+    }
+    if (ids.length >= USER_FAV_MAX) {
+      return { added: false, full: true };
+    }
+    ids.push(id);
+    saveUserFavorites(agent, topic, ids);
+    return { added: true, full: false };
+  }
+
+  function pickTemplatesForTopic(agent, topic, excludeIds) {
+    /* Section 2 is fully random with no weighting. Every template in the
+       agent's assigned library that is not already a user favorite has an
+       equal chance of appearing. */
+    const library = TEMPLATE_LIBRARY[topic] || [];
+    const placeholderIds = library.map(function (t) { return t.id; });
+
+    /* Custom templates assigned to this agent are part of the same pool
+       (not pinned to the head). */
+    let customIds = [];
+    try {
+      const slug = agentPrefsSlug(agent);
+      customIds = (typeof getCustomTemplatesFor === "function")
+        ? getCustomTemplatesFor(slug).map(function (t) { return t.id; })
+        : [];
+    } catch (e) { customIds = []; }
+
+    const exclude = {};
+    if (excludeIds && excludeIds.length) {
+      excludeIds.forEach(function (id) { exclude[id] = true; });
+    }
+    /* User-toggled favorites are pinned in Section 1 — exclude them from Section 2 */
+    let userFavIds = [];
+    try { userFavIds = loadUserFavorites(agent, topic); } catch (e) {}
+    userFavIds.forEach(function (id) { exclude[id] = true; });
+
+    const seen = {};
+    const pool = [];
+    placeholderIds.concat(customIds).forEach(function (id) {
+      if (!exclude[id] && !seen[id]) { seen[id] = true; pool.push(id); }
+    });
+    const fillers = shuffleArray(pool).slice(0, GRID_SIZE);
+    return { ids: fillers, favoriteSet: {} };
+  }
+
+  const TOPICS = [
+    "Just Listed",
+    "Just Sold",
+    "Open House",
+    "Tip of the Week",
+    "Market Update",
+    "Myth Busting",
+    "Neighborhood Spotlight",
+    "Client Testimonial",
+    "Staging Tips",
+    "Community Feature"
+  ];
+
+  const TONES = ["Educational", "Funny", "Serious", "Inspirational", "Casual", "Storytelling"];
+
+  const URL_TOPICS = new Set(["Just Listed", "Just Sold", "Open House", "Pending"]);
+
+  const DAY_NAMES = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+  const MONTH_NAMES = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+  /* ============================================================
+     STATE
+  ============================================================ */
+  let currentAgent = null;
+  let weekOffset = 0;          // 0 = current week; never negative
+  let weekState = {};          // weekState[offset] = array of 7 day objects
+
+  /* ============================================================
+     HELPERS
+  ============================================================ */
+  function initials(name) {
+    return name.split(/\s+/).filter(Boolean).map(s => s[0]).join("").toUpperCase().slice(0, 2);
+  }
+
+  function getMondayOfWeek(date) {
+    const d = new Date(date);
+    d.setHours(0, 0, 0, 0);
+    const day = d.getDay();
+    d.setDate(d.getDate() + (day === 0 ? -6 : 1 - day));
+    return d;
+  }
+
+  function getWeekMonday(offset) {
+    const m = getMondayOfWeek(new Date());
+    m.setDate(m.getDate() + offset * 7);
+    return m;
+  }
+
+  function formatShort(d) {
+    return MONTH_NAMES[d.getMonth()] + " " + d.getDate();
+  }
+
+  function formatWeekRangeShort(a, b) {
+    return a.getMonth() === b.getMonth()
+      ? MONTH_NAMES[a.getMonth()] + " " + a.getDate() + " \u2013 " + b.getDate()
+      : MONTH_NAMES[a.getMonth()] + " " + a.getDate() + " \u2013 " + MONTH_NAMES[b.getMonth()] + " " + b.getDate();
+  }
+
+  function formatWeekRangeFull(a, b) {
+    return a.getMonth() === b.getMonth()
+      ? "Week of " + MONTH_NAMES[a.getMonth()] + " " + a.getDate() + "\u2013" + b.getDate() + ", " + b.getFullYear()
+      : "Week of " + MONTH_NAMES[a.getMonth()] + " " + a.getDate() + " \u2013 " + MONTH_NAMES[b.getMonth()] + " " + b.getDate() + ", " + b.getFullYear();
+  }
+
+  function isSameDay(a, b) {
+    return a.getFullYear() === b.getFullYear()
+      && a.getMonth() === b.getMonth()
+      && a.getDate() === b.getDate();
+  }
+
+  function ensureWeekState(offset) {
+    if (!weekState[offset]) {
+      weekState[offset] = Array.from({ length: 7 }, () => ({
+        topic: "",
+        tone: "",
+        selectedTemplate: null,
+        url: "",
+        notes: "",
+        templateIds: [],
+        favoriteSet: {}
+      }));
+    }
+    return weekState[offset];
+  }
+
+  /* ============================================================
+     PAGE SWITCHING
+  ============================================================ */
+  function showPage(id) {
+    const pages = ["homePage", "agentPinPage", "formPage", "adminPage", "adminPasswordPage"];
+    pages.forEach(function (p) {
+      const el = document.getElementById(p);
+      if (!el) return;
+      if (p === id) el.classList.remove("hidden");
+      else el.classList.add("hidden");
+    });
+    window.scrollTo(0, 0);
+  }
+
+  /* ============================================================
+     HOME PAGE
+  ============================================================ */
+  function renderHome() {
+    const grid = document.getElementById("agentGrid");
+    grid.innerHTML = "";
+    AGENTS.forEach(function (agent) {
+      const btn = document.createElement("button");
+      btn.className = "agent-card";
+      btn.type = "button";
+      btn.innerHTML =
+        '<div class="agent-avatar">' + initials(agent.name) + '</div>' +
+        '<div class="agent-info">' +
+          '<div class="agent-name">' + agent.name + '</div>' +
+          '<div class="agent-cta">Tap to start your weekly selection</div>' +
+        '</div>' +
+        '<div class="agent-arrow">&rsaquo;</div>';
+      btn.addEventListener("click", function () { requestAgentAccess(agent); });
+      grid.appendChild(btn);
+    });
+  }
+
+  /* ============================================================
+     FORM PAGE
+  ============================================================ */
+  function openForm(agent) {
+    currentAgent = agent;
+    weekOffset = 0;
+    weekState = {};
+    /* Restore any saved drafts before rendering */
+    const restore = restoreDraftsIntoWeekState(agent);
+    if (restore.navigateOffset > 0) weekOffset = restore.navigateOffset;
+    document.getElementById("formAgentName").textContent = agent.name;
+    document.getElementById("successBanner").classList.add("hidden");
+    renderWeek();
+    showPage("formPage");
+    /* Show restored banner if we loaded any saved work */
+    const restoredBanner = document.getElementById("restoredBanner");
+    if (restore.restored) {
+      restoredBanner.classList.remove("hidden", "fading");
+      setTimeout(function () {
+        restoredBanner.classList.add("fading");
+        setTimeout(function () {
+          restoredBanner.classList.add("hidden");
+          restoredBanner.classList.remove("fading");
+        }, 420);
+      }, 4000);
+    } else {
+      restoredBanner.classList.add("hidden");
+    }
+    /* Start inactivity timer */
+    inactivityResumePending = false;
+    lastActivityResetAt = Date.now();
+    startInactivityTimer();
+  }
+
+  function goBackHome() {
+    stopInactivityTimer();
+    currentAgent = null;
+    document.getElementById("successBanner").classList.add("hidden");
+    showPage("homePage");
+  }
+
+  function renderWeek() {
+    const monday = getWeekMonday(weekOffset);
+    const sunday = new Date(monday);
+    sunday.setDate(monday.getDate() + 6);
+
+    document.getElementById("weekRangeLabel").textContent = formatWeekRangeShort(monday, sunday);
+    document.getElementById("weekRangeSub").textContent =
+      weekOffset === 0 ? "Current week" :
+      weekOffset === 1 ? "Next week" :
+      ("+" + weekOffset + " weeks");
+    document.getElementById("formWeek").textContent = formatWeekRangeFull(monday, sunday);
+    document.getElementById("prevWeekBtn").disabled = (weekOffset <= 0);
+
+    const today = new Date();
+    const state = ensureWeekState(weekOffset);
+    const container = document.getElementById("daysContainer");
+    container.innerHTML = "";
+
+    for (let i = 0; i < 7; i++) {
+      const dayDate = new Date(monday);
+      dayDate.setDate(monday.getDate() + i);
+      const isToday = isSameDay(dayDate, today);
+      container.appendChild(buildDayCard(DAY_NAMES[i], dayDate, isToday, i, state[i]));
+    }
+
+    /* Load Quick Questions for this (agent, week) and populate the inputs */
+    if (typeof loadWeeklyNotesIntoForm === "function") loadWeeklyNotesIntoForm();
+  }
+
+  /* ============================================================
+     QUICK QUESTIONS (per agent, per week)
+  ============================================================ */
+  function weeklyNotesKey(agent, weekOffset) {
+    return "legacy_weekly_notes_" + agentPrefsSlug(agent) + "_" + mondayISO(getWeekMonday(weekOffset));
+  }
+  function getWeeklyNotesFromForm() {
+    const sel = document.querySelector("#qqMarketPills .qq-pill.selected");
+    const market = sel ? sel.dataset.value : "";
+    return {
+      marketFeeling: market || "",
+      weeklyContext: (document.getElementById("qqContext").value || "").trim(),
+      phrasePreferences: (document.getElementById("qqPhrases").value || "").trim(),
+      postTypeRequest: (document.getElementById("qqRequest").value || "").trim()
+    };
+  }
+  function loadWeeklyNotesIntoForm() {
+    if (!currentAgent) return;
+    let saved = null;
+    try {
+      const raw = localStorage.getItem(weeklyNotesKey(currentAgent, weekOffset));
+      if (raw) saved = JSON.parse(raw);
+    } catch (e) {}
+    const ctx = document.getElementById("qqContext");
+    const phrases = document.getElementById("qqPhrases");
+    const req = document.getElementById("qqRequest");
+    /* Reset pills */
+    document.querySelectorAll("#qqMarketPills .qq-pill").forEach(function (p) {
+      p.classList.remove("selected");
+    });
+    if (ctx) ctx.value = "";
+    if (phrases) phrases.value = "";
+    if (req) req.value = "";
+    if (saved) {
+      if (saved.marketFeeling) {
+        document.querySelectorAll("#qqMarketPills .qq-pill").forEach(function (p) {
+          if (p.dataset.value === saved.marketFeeling) p.classList.add("selected");
+        });
+      }
+      if (ctx) ctx.value = saved.weeklyContext || "";
+      if (phrases) phrases.value = saved.phrasePreferences || "";
+      if (req) req.value = saved.postTypeRequest || "";
+    }
+  }
+  function saveWeeklyNotes() {
+    if (!currentAgent) return;
+    try {
+      localStorage.setItem(weeklyNotesKey(currentAgent, weekOffset), JSON.stringify(getWeeklyNotesFromForm()));
+    } catch (e) {}
+  }
+  function clearWeeklyNotes(agent, offset) {
+    try { localStorage.removeItem(weeklyNotesKey(agent, offset)); } catch (e) {}
+  }
+  /* Wire up pill toggle (single-select, deselectable) and live save on input */
+  (function () {
+    const pills = document.querySelectorAll("#qqMarketPills .qq-pill");
+    pills.forEach(function (p) {
+      p.addEventListener("click", function () {
+        const wasSelected = p.classList.contains("selected");
+        pills.forEach(function (x) { x.classList.remove("selected"); });
+        if (!wasSelected) p.classList.add("selected");
+        saveWeeklyNotes();
+      });
+    });
+    ["qqContext", "qqPhrases", "qqRequest"].forEach(function (id) {
+      const el = document.getElementById(id);
+      if (el) el.addEventListener("input", saveWeeklyNotes);
+    });
+  })();
+
+  function buildDayCard(dayName, dayDate, isToday, dayIndex, dayState) {
+    const card = document.createElement("div");
+    card.className = "day-card";
+    card.dataset.dayIndex = dayIndex;
+
+    card.innerHTML =
+      '<div class="day-header">' +
+        '<div class="day-title">' +
+          '<span class="day-name">' + dayName + '</span>' +
+          '<span class="day-date">' + formatShort(dayDate) + '</span>' +
+        '</div>' +
+        '<div class="badge-slot"></div>' +
+      '</div>' +
+
+      '<div class="field-group">' +
+        '<label class="field-label">Post Topic</label>' +
+        '<select class="topic-select">' +
+          '<option value="">Leave blank to skip this day</option>' +
+          TOPICS.map(function (t) { return '<option value="' + t + '">' + t + '</option>'; }).join("") +
+        '</select>' +
+      '</div>' +
+
+      '<div class="tone-group field-group hidden">' +
+        '<label class="field-label">Tone</label>' +
+        '<select class="tone-select">' +
+          '<option value="">\u2014 Select a tone \u2014</option>' +
+          TONES.map(function (t) { return '<option value="' + t + '">' + t + '</option>'; }).join("") +
+        '</select>' +
+      '</div>' +
+
+      '<div class="template-group field-group hidden">' +
+        '<div class="template-header-row">' +
+          '<label class="field-label" style="margin: 0;">Choose a Template</label>' +
+          '<span class="template-hint">Tap \u2605 to favorite</span>' +
+        '</div>' +
+        '<div class="favorites-section hidden">' +
+          '<div class="favorites-header">\u2b50 Your Favorites</div>' +
+          '<div class="favorites-grid"></div>' +
+          '<div class="favorites-full-msg"></div>' +
+        '</div>' +
+        '<div class="more-section">' +
+          '<div class="more-header">More Templates</div>' +
+          '<div class="template-grid"></div>' +
+          '<button type="button" class="reroll-btn">' +
+            '<span class="refresh-icon">\u21bb</span>' +
+            '<span>Show Different Templates</span>' +
+          '</button>' +
+        '</div>' +
+      '</div>' +
+
+      '<div class="url-group field-group hidden">' +
+        '<label class="field-label">Listing URL</label>' +
+        '<input type="text" class="url-input" placeholder="Paste listing URL here \u2014 optional">' +
+      '</div>' +
+
+      '<div class="notes-group field-group hidden">' +
+        '<label class="field-label">Special Notes</label>' +
+        '<textarea class="notes-input" placeholder="Any special notes \u2014 optional"></textarea>' +
+      '</div>';
+
+    const topicSelect = card.querySelector(".topic-select");
+    const toneSelect = card.querySelector(".tone-select");
+    const urlInput = card.querySelector(".url-input");
+    const notesInput = card.querySelector(".notes-input");
+    const rerollBtn = card.querySelector(".reroll-btn");
+
+    /* Restore prior state when navigating between weeks */
+    topicSelect.value = dayState.topic || "";
+    toneSelect.value = dayState.tone || "";
+    urlInput.value = dayState.url || "";
+    notesInput.value = dayState.notes || "";
+
+    /* If a topic is set but no templates picked yet, pick them now */
+    if (dayState.topic && TEMPLATE_LIBRARY[dayState.topic] && (!dayState.templateIds || dayState.templateIds.length === 0)) {
+      const picked = pickTemplatesForTopic(currentAgent, dayState.topic, []);
+      dayState.templateIds = picked.ids;
+      dayState.favoriteSet = picked.favoriteSet;
+    }
+
+    topicSelect.addEventListener("change", function () {
+      const newTopic = topicSelect.value;
+      const topicChanged = dayState.topic !== newTopic;
+      dayState.topic = newTopic;
+      if (!dayState.topic) {
+        dayState.tone = "";
+        dayState.selectedTemplate = null;
+        dayState.url = "";
+        dayState.notes = "";
+        dayState.templateIds = [];
+        dayState.favoriteSet = {};
+        toneSelect.value = "";
+        urlInput.value = "";
+        notesInput.value = "";
+      } else if (topicChanged && TEMPLATE_LIBRARY[dayState.topic]) {
+        const picked = pickTemplatesForTopic(currentAgent, dayState.topic, []);
+        dayState.templateIds = picked.ids;
+        dayState.favoriteSet = picked.favoriteSet;
+        dayState.selectedTemplate = null;
+      }
+      updateDayState(card, isToday, dayState);
+    });
+
+    toneSelect.addEventListener("change", function () {
+      dayState.tone = toneSelect.value;
+      updateDayState(card, isToday, dayState);
+    });
+
+    urlInput.addEventListener("input", function () { dayState.url = urlInput.value; });
+    notesInput.addEventListener("input", function () { dayState.notes = notesInput.value; });
+
+    rerollBtn.addEventListener("click", function () {
+      if (!dayState.topic || !TEMPLATE_LIBRARY[dayState.topic]) return;
+      const currentFillers = (dayState.templateIds || []).filter(function (id) {
+        return !dayState.favoriteSet[id];
+      });
+      const grid = card.querySelector(".template-grid");
+      const fillerCards = Array.prototype.slice.call(grid.querySelectorAll(".template-card"))
+        .filter(function (c) { return !dayState.favoriteSet[c.dataset.templateId]; });
+      rerollBtn.classList.add("spinning");
+      fillerCards.forEach(function (c) { c.classList.add("rerolling"); });
+      setTimeout(function () {
+        const picked = pickTemplatesForTopic(currentAgent, dayState.topic, currentFillers);
+        dayState.templateIds = picked.ids;
+        dayState.favoriteSet = picked.favoriteSet;
+        if (dayState.selectedTemplate && dayState.templateIds.indexOf(dayState.selectedTemplate) === -1) {
+          dayState.selectedTemplate = null;
+        }
+        renderTemplateGrid(card, dayState, true);
+        updateDayState(card, isToday, dayState);
+        setTimeout(function () { rerollBtn.classList.remove("spinning"); }, 500);
+      }, 220);
+    });
+
+    updateDayState(card, isToday, dayState);
+    return card;
+  }
+
+  function buildTemplateCardEl(id, opts, card, dayState) {
+    const isFavorite = !!opts.isFavorite;
+    const isSelected = dayState.selectedTemplate === id;
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "template-card"
+      + (isSelected ? " selected" : "")
+      + (opts.animateIn ? " rerolled-in" : "");
+    btn.dataset.templateId = id;
+    /* If this is a custom-uploaded template, show the actual image */
+    let imgPart;
+    if (id && id.indexOf("CUSTOM_") === 0 && typeof customTemplateById === "function") {
+      const custom = customTemplateById(id);
+      if (custom && custom.image) {
+        imgPart = '<img class="template-img" style="background:#fff;object-fit:cover;" src="' + custom.image + '" alt="' + escapeHtml(custom.name || id) + '">' +
+                  '<span class="num" style="font-size:11px;letter-spacing:0;">' + escapeHtml(custom.name || id) + '</span>';
+      }
+    }
+    if (!imgPart) imgPart = '<span class="num">' + id + '</span>';
+
+    btn.innerHTML =
+      '<button type="button" class="fav-star' + (isFavorite ? ' is-fav' : '') + '" aria-label="' + (isFavorite ? 'Remove from favorites' : 'Add to favorites') + '">' +
+        (isFavorite ? '\u2605' : '\u2606') +
+      '</button>' +
+      '<span class="check">\u2713</span>' +
+      imgPart;
+
+    /* Star toggle (stop propagation so card doesn't get selected) */
+    const starBtn = btn.querySelector(".fav-star");
+    starBtn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      handleFavoriteToggle(card, dayState, id);
+    });
+    /* Card body click selects/deselects template for the day */
+    btn.addEventListener("click", function (e) {
+      if (e.target && (e.target === starBtn || (e.target.closest && e.target.closest(".fav-star")))) return;
+      handleTemplateClick(card, dayState, id);
+    });
+    return btn;
+  }
+
+  function renderTemplateGrid(card, dayState, animateIn) {
+    const favSection = card.querySelector(".favorites-section");
+    const favGrid = card.querySelector(".favorites-grid");
+    const moreGrid = card.querySelector(".template-grid");
+    if (!favSection || !favGrid || !moreGrid) return;
+
+    /* Section 1: user favorites */
+    const userFavs = loadUserFavorites(currentAgent, dayState.topic);
+    favGrid.innerHTML = "";
+    if (userFavs.length === 0) {
+      favSection.classList.add("hidden");
+    } else {
+      favSection.classList.remove("hidden");
+      userFavs.forEach(function (id) {
+        favGrid.appendChild(buildTemplateCardEl(id, { isFavorite: true, animateIn: false }, card, dayState));
+      });
+      /* Empty placeholder slots up to 5 */
+      for (let i = userFavs.length; i < USER_FAV_MAX; i++) {
+        const slot = document.createElement("div");
+        slot.className = "favorite-empty-slot";
+        slot.innerHTML = "Tap \u2605 on any<br>template below<br>to add it here";
+        favGrid.appendChild(slot);
+      }
+    }
+
+    /* Section 2: random / "More Templates" */
+    const userFavSet = {};
+    userFavs.forEach(function (id) { userFavSet[id] = true; });
+    moreGrid.innerHTML = "";
+    (dayState.templateIds || []).forEach(function (id) {
+      if (userFavSet[id]) return; /* defensive \u2014 should already be excluded */
+      moreGrid.appendChild(buildTemplateCardEl(id, { isFavorite: false, animateIn: animateIn }, card, dayState));
+    });
+  }
+
+  function handleFavoriteToggle(card, dayState, id) {
+    if (!currentAgent || !dayState.topic) return;
+    const result = toggleUserFavorite(currentAgent, dayState.topic, id);
+    const msgEl = card.querySelector(".favorites-full-msg");
+    if (result.full) {
+      /* Block \u2014 show the friendly message */
+      if (msgEl) {
+        msgEl.textContent = "You already have " + USER_FAV_MAX + " favorites for this post type. Remove one before adding another.";
+        msgEl.classList.remove("fading");
+        msgEl.classList.add("visible");
+        /* Make sure the favorites section is visible so the message shows */
+        const favSection = card.querySelector(".favorites-section");
+        if (favSection) favSection.classList.remove("hidden");
+        clearTimeout(card._favMsgTimer);
+        card._favMsgTimer = setTimeout(function () {
+          msgEl.classList.add("fading");
+          setTimeout(function () { msgEl.classList.remove("visible", "fading"); }, 400);
+        }, 4000);
+      }
+      return;
+    }
+    /* Refresh the random pool so Section 2 fills the spot if a favorite was removed,
+       and so a newly-favorited template is no longer shown in Section 2. */
+    if (msgEl) { msgEl.classList.remove("visible", "fading"); msgEl.textContent = ""; }
+    const picked = pickTemplatesForTopic(currentAgent, dayState.topic, []);
+    dayState.templateIds = picked.ids;
+    dayState.favoriteSet = picked.favoriteSet;
+    if (dayState.selectedTemplate) {
+      const stillVisible = (dayState.templateIds.indexOf(dayState.selectedTemplate) !== -1)
+        || (loadUserFavorites(currentAgent, dayState.topic).indexOf(dayState.selectedTemplate) !== -1);
+      if (!stillVisible) dayState.selectedTemplate = null;
+    }
+    renderTemplateGrid(card, dayState, false);
+    updateDayState(card, card.classList.contains("is-today"), dayState);
+  }
+
+  function handleTemplateClick(card, dayState, id) {
+    const grid = card.querySelector(".template-grid");
+    const allCards = grid.querySelectorAll(".template-card");
+    if (dayState.selectedTemplate === id) {
+      dayState.selectedTemplate = null;
+      allCards.forEach(function (c) { c.classList.remove("selected"); });
+    } else {
+      dayState.selectedTemplate = id;
+      allCards.forEach(function (c) {
+        if (c.dataset.templateId === id) c.classList.add("selected");
+        else c.classList.remove("selected");
+      });
+      /* No most-used tracking — Section 2 is fully random with equal weighting */
+    }
+    updateDayState(card, card.classList.contains("is-today"), dayState);
+  }
+
+  function updateDayState(card, isToday, dayState) {
+    const badgeSlot = card.querySelector(".badge-slot");
+    const toneGroup = card.querySelector(".tone-group");
+    const templateGroup = card.querySelector(".template-group");
+    const urlGroup = card.querySelector(".url-group");
+    const notesGroup = card.querySelector(".notes-group");
+
+    card.classList.remove("is-blank", "is-active", "is-complete", "is-today");
+    badgeSlot.innerHTML = "";
+
+    if (isToday) {
+      card.classList.add("is-today");
+      const b = document.createElement("span");
+      b.className = "today-badge";
+      b.textContent = "Today";
+      badgeSlot.appendChild(b);
+    }
+
+    const topic = dayState.topic;
+
+    if (!topic) {
+      card.classList.add("is-blank");
+      toneGroup.classList.add("hidden");
+      templateGroup.classList.add("hidden");
+      urlGroup.classList.add("hidden");
+      notesGroup.classList.add("hidden");
+      const b = document.createElement("span");
+      b.className = "blank-badge";
+      b.textContent = "Blank";
+      badgeSlot.appendChild(b);
+      return;
+    }
+
+    card.classList.add("is-active");
+    toneGroup.classList.remove("hidden");
+    templateGroup.classList.remove("hidden");
+    notesGroup.classList.remove("hidden");
+
+    /* Render the template grid for this day's current template list */
+    renderTemplateGrid(card, dayState, false);
+
+    if (URL_TOPICS.has(topic)) {
+      urlGroup.classList.remove("hidden");
+    } else {
+      urlGroup.classList.add("hidden");
+    }
+
+    if (dayState.tone && dayState.selectedTemplate) {
+      card.classList.add("is-complete");
+      const b = document.createElement("span");
+      b.className = "complete-badge";
+      b.innerHTML = "&#10003; Complete";
+      badgeSlot.appendChild(b);
+    }
+  }
+
+  /* ============================================================
+     EVENT HANDLERS
+  ============================================================ */
+  document.getElementById("backBtn").addEventListener("click", goBackHome);
+
+  document.getElementById("prevWeekBtn").addEventListener("click", function () {
+    if (weekOffset > 0) {
+      weekOffset--;
+      renderWeek();
+      document.getElementById("successBanner").classList.add("hidden");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  });
+
+  document.getElementById("nextWeekBtn").addEventListener("click", function () {
+    weekOffset++;
+    renderWeek();
+    document.getElementById("successBanner").classList.add("hidden");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+
+  document.getElementById("submitBtn").addEventListener("click", function () {
+    const monday = getWeekMonday(weekOffset);
+    const sunday = new Date(monday);
+    sunday.setDate(monday.getDate() + 6);
+    /* Final save of weekly notes on submit (ensures latest values are persisted) */
+    if (typeof saveWeeklyNotes === "function") saveWeeklyNotes();
+    document.getElementById("successWeek").textContent = formatWeekRangeShort(monday, sunday);
+    const banner = document.getElementById("successBanner");
+    banner.classList.remove("hidden");
+    banner.scrollIntoView({ behavior: "smooth", block: "center" });
+    /* Clear this week's draft on successful submit + stop timer */
+    if (currentAgent) clearDraftForWeek(currentAgent, weekOffset);
+    stopInactivityTimer();
+  });
+
+  /* ============================================================
+     HAMBURGER + DRAWER
+  ============================================================ */
+  const drawerEl = document.getElementById("drawer");
+  const drawerOverlayEl = document.getElementById("drawerOverlay");
+  function openDrawer() {
+    drawerEl.classList.add("open");
+    drawerOverlayEl.classList.add("open");
+    drawerEl.setAttribute("aria-hidden", "false");
+  }
+  function closeDrawer() {
+    drawerEl.classList.remove("open");
+    drawerOverlayEl.classList.remove("open");
+    drawerEl.setAttribute("aria-hidden", "true");
+  }
+  document.getElementById("hamburgerBtn").addEventListener("click", openDrawer);
+  document.getElementById("drawerClose").addEventListener("click", closeDrawer);
+  drawerOverlayEl.addEventListener("click", closeDrawer);
+  document.getElementById("adminMenuLink").addEventListener("click", function () {
+    closeDrawer();
+    if (hasValidAdminSession()) {
+      openAdminPanel();
+    } else {
+      openAdminPasswordPage();
+    }
+  });
+
+  /* ============================================================
+     ADMIN PASSWORD PAGE
+  ============================================================ */
+  let adminPasswordAttempts = 0;
+  let adminLockoutTimerId = null;
+
+  function openAdminPasswordPage() {
+    const input = document.getElementById("adminPasswordInput");
+    const error = document.getElementById("adminPasswordError");
+    const toggle = document.getElementById("adminPasswordToggle");
+
+    adminPasswordAttempts = 0;
+    input.type = "password";
+    input.value = "";
+    input.classList.remove("input-error");
+    toggle.textContent = "Show";
+    error.classList.remove("visible");
+    error.textContent = "";
+
+    applyAdminLockoutUI();
+    showPage("adminPasswordPage");
+    setTimeout(function () {
+      if (!document.getElementById("adminPasswordSubmit").disabled) input.focus();
+    }, 50);
+  }
+
+  function applyAdminLockoutUI() {
+    const lockoutBox = document.getElementById("adminLockoutBox");
+    const countdownEl = document.getElementById("adminLockoutCountdown");
+    const submitBtn = document.getElementById("adminPasswordSubmit");
+    const input = document.getElementById("adminPasswordInput");
+    const toggle = document.getElementById("adminPasswordToggle");
+
+    const remaining = getAdminLockoutRemaining();
+    if (remaining > 0) {
+      lockoutBox.classList.remove("hidden");
+      countdownEl.textContent = formatLockoutCountdown(remaining);
+      submitBtn.disabled = true;
+      input.disabled = true;
+      toggle.disabled = true;
+      if (!adminLockoutTimerId) {
+        adminLockoutTimerId = setInterval(applyAdminLockoutUI, 1000);
+      }
+    } else {
+      lockoutBox.classList.add("hidden");
+      submitBtn.disabled = false;
+      input.disabled = false;
+      toggle.disabled = false;
+      if (adminLockoutTimerId) {
+        clearInterval(adminLockoutTimerId);
+        adminLockoutTimerId = null;
+      }
+    }
+  }
+
+  function attemptAdminPassword() {
+    if (getAdminLockoutRemaining() > 0) return;
+    const input = document.getElementById("adminPasswordInput");
+    const error = document.getElementById("adminPasswordError");
+    const value = input.value;
+
+    if (value === ADMIN_PASSWORD) {
+      setAdminSession();
+      adminPasswordAttempts = 0;
+      input.value = "";
+      error.classList.remove("visible");
+      error.textContent = "";
+      openAdminPanel();
+      return;
+    }
+    adminPasswordAttempts++;
+    input.value = "";
+    input.classList.add("input-error");
+    if (adminPasswordAttempts >= ADMIN_MAX_ATTEMPTS) {
+      setAdminLockout();
+      error.textContent = "Too many incorrect attempts. Admin access is locked for 10 minutes.";
+      error.classList.add("visible");
+      applyAdminLockoutUI();
+    } else {
+      error.textContent = "Incorrect password. Please try again.";
+      error.classList.add("visible");
+      input.focus();
+    }
+  }
+
+  document.getElementById("adminPasswordSubmit").addEventListener("click", attemptAdminPassword);
+
+  document.getElementById("adminPasswordCancel").addEventListener("click", function () {
+    showPage("homePage");
+  });
+  document.getElementById("adminPasswordBackBtn").addEventListener("click", function () {
+    showPage("homePage");
+  });
+
+  document.getElementById("adminPasswordInput").addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      attemptAdminPassword();
+    }
+  });
+  document.getElementById("adminPasswordInput").addEventListener("input", function () {
+    document.getElementById("adminPasswordInput").classList.remove("input-error");
+  });
+
+  document.getElementById("adminPasswordToggle").addEventListener("click", function () {
+    const input = document.getElementById("adminPasswordInput");
+    const toggle = document.getElementById("adminPasswordToggle");
+    if (input.type === "password") {
+      input.type = "text";
+      toggle.textContent = "Hide";
+    } else {
+      input.type = "password";
+      toggle.textContent = "Show";
+    }
+    input.focus();
+  });
+
+  document.getElementById("adminLogoutLink").addEventListener("click", function () {
+    clearAdminSession();
+    showPage("homePage");
+  });
+
+  /* ============================================================
+     AGENT PIN PAGE
+  ============================================================ */
+  let currentPinAgent = null;
+  let agentPinAttempts = 0;
+  let agentLockoutTimerId = null;
+
+  function requestAgentAccess(agent) {
+    if (hasValidAgentSession(agent.id)) {
+      openForm(agent);
+    } else {
+      openAgentPinPage(agent);
+    }
+  }
+
+  function openAgentPinPage(agent) {
+    currentPinAgent = agent;
+    agentPinAttempts = 0;
+    document.getElementById("agentPinName").textContent = agent.name;
+    resetAgentPinBoxes();
+    const error = document.getElementById("agentPinError");
+    error.classList.remove("visible");
+    error.textContent = "";
+    /* Hide inactivity message unless explicitly re-shown by the caller */
+    const inactMsg = document.getElementById("agentPinInactivityMsg");
+    if (inactMsg && !inactivityResumePending) inactMsg.classList.add("hidden");
+    applyAgentLockoutUI();
+    showPage("agentPinPage");
+    setTimeout(function () {
+      const boxes = document.querySelectorAll("#agentPinBoxes .agent-pin-box");
+      if (boxes[0] && !boxes[0].disabled) boxes[0].focus();
+    }, 50);
+  }
+
+  function resetAgentPinBoxes() {
+    const boxes = document.querySelectorAll("#agentPinBoxes .agent-pin-box");
+    boxes.forEach(function (b) {
+      b.value = "";
+      b.classList.remove("filled", "error");
+    });
+  }
+
+  function getAgentPinValue() {
+    const boxes = document.querySelectorAll("#agentPinBoxes .agent-pin-box");
+    let out = "";
+    boxes.forEach(function (b) { out += b.value; });
+    return out;
+  }
+
+  function applyAgentLockoutUI() {
+    if (!currentPinAgent) return;
+    const lockoutBox = document.getElementById("agentPinLockout");
+    const countdownEl = document.getElementById("agentPinCountdown");
+    const submitBtn = document.getElementById("agentPinSubmit");
+    const clearBtn = document.getElementById("agentPinClear");
+    const boxes = document.querySelectorAll("#agentPinBoxes .agent-pin-box");
+
+    const remaining = getAgentLockoutRemaining(currentPinAgent.id);
+    if (remaining > 0) {
+      lockoutBox.classList.remove("hidden");
+      countdownEl.textContent = formatLockoutCountdown(remaining);
+      submitBtn.disabled = true;
+      clearBtn.disabled = true;
+      boxes.forEach(function (b) { b.disabled = true; });
+      if (!agentLockoutTimerId) {
+        agentLockoutTimerId = setInterval(applyAgentLockoutUI, 1000);
+      }
+    } else {
+      lockoutBox.classList.add("hidden");
+      submitBtn.disabled = false;
+      clearBtn.disabled = false;
+      boxes.forEach(function (b) { b.disabled = false; });
+      if (agentLockoutTimerId) {
+        clearInterval(agentLockoutTimerId);
+        agentLockoutTimerId = null;
+      }
+    }
+  }
+
+  function attemptAgentPin() {
+    if (!currentPinAgent) return;
+    if (getAgentLockoutRemaining(currentPinAgent.id) > 0) return;
+    const pin = getAgentPinValue();
+    const error = document.getElementById("agentPinError");
+    const boxes = document.querySelectorAll("#agentPinBoxes .agent-pin-box");
+
+    if (pin.length !== 4) {
+      error.textContent = "Please enter all 4 digits.";
+      error.classList.add("visible");
+      return;
+    }
+    const expectedPin = (currentPinAgent && currentPinAgent.pin) ? currentPinAgent.pin : DEFAULT_AGENT_PIN;
+    if (pin === expectedPin) {
+      const inactMsg = document.getElementById("agentPinInactivityMsg");
+      if (inactMsg) inactMsg.classList.add("hidden");
+      setAgentSession(currentPinAgent.id);
+      agentPinAttempts = 0;
+      error.classList.remove("visible");
+      error.textContent = "";
+      resetAgentPinBoxes();
+      const agent = currentPinAgent;
+      openForm(agent);
+      return;
+    }
+    agentPinAttempts++;
+    boxes.forEach(function (b) { b.classList.add("error"); });
+    if (agentPinAttempts >= AGENT_MAX_ATTEMPTS) {
+      setAgentLockout(currentPinAgent.id);
+      error.textContent = "Too many incorrect attempts. PIN access is locked for 5 minutes.";
+      error.classList.add("visible");
+      resetAgentPinBoxes();
+      applyAgentLockoutUI();
+    } else {
+      error.textContent = "Incorrect PIN. Please try again.";
+      error.classList.add("visible");
+      setTimeout(function () {
+        resetAgentPinBoxes();
+        if (boxes[0] && !boxes[0].disabled) boxes[0].focus();
+      }, 250);
+    }
+  }
+
+  /* Attach listeners to the PIN boxes */
+  (function () {
+    const boxes = document.querySelectorAll("#agentPinBoxes .agent-pin-box");
+    boxes.forEach(function (box, idx) {
+      box.addEventListener("input", function () {
+        const val = box.value.replace(/\D/g, "");
+        box.value = val.slice(-1);
+        if (box.value) {
+          box.classList.add("filled");
+          box.classList.remove("error");
+          if (idx < 3) boxes[idx + 1].focus();
+        } else {
+          box.classList.remove("filled");
+        }
+        /* Auto-submit when 4th digit entered */
+        if (idx === 3 && box.value) {
+          if (getAgentPinValue().length === 4) {
+            const submitBtn = document.getElementById("agentPinSubmit");
+            if (!submitBtn.disabled) attemptAgentPin();
+          }
+        }
+      });
+      box.addEventListener("keydown", function (e) {
+        if (e.key === "Backspace" && !box.value && idx > 0) {
+          boxes[idx - 1].focus();
+          boxes[idx - 1].value = "";
+          boxes[idx - 1].classList.remove("filled");
+        }
+        if (e.key === "Enter") { e.preventDefault(); attemptAgentPin(); }
+        if (e.key === "ArrowLeft" && idx > 0) boxes[idx - 1].focus();
+        if (e.key === "ArrowRight" && idx < 3) boxes[idx + 1].focus();
+      });
+      box.addEventListener("paste", function (e) {
+        e.preventDefault();
+        const text = ((e.clipboardData && e.clipboardData.getData("text")) || "").replace(/\D/g, "").slice(0, 4);
+        if (!text) return;
+        text.split("").forEach(function (c, i) {
+          if (boxes[i]) {
+            boxes[i].value = c;
+            boxes[i].classList.add("filled");
+            boxes[i].classList.remove("error");
+          }
+        });
+        if (text.length === 4) {
+          boxes[3].focus();
+          const submitBtn = document.getElementById("agentPinSubmit");
+          if (!submitBtn.disabled) attemptAgentPin();
+        } else {
+          boxes[Math.min(text.length, 3)].focus();
+        }
+      });
+    });
+  })();
+
+  document.getElementById("agentPinSubmit").addEventListener("click", attemptAgentPin);
+
+  document.getElementById("agentPinClear").addEventListener("click", function () {
+    resetAgentPinBoxes();
+    const error = document.getElementById("agentPinError");
+    error.classList.remove("visible");
+    error.textContent = "";
+    const boxes = document.querySelectorAll("#agentPinBoxes .agent-pin-box");
+    if (boxes[0] && !boxes[0].disabled) boxes[0].focus();
+  });
+
+  document.getElementById("agentPinBackBtn").addEventListener("click", function () {
+    resetAgentPinBoxes();
+    showPage("homePage");
+  });
+  document.getElementById("agentPinBackInline").addEventListener("click", function () {
+    resetAgentPinBoxes();
+    showPage("homePage");
+  });
+
+  document.getElementById("agentLogoutLink").addEventListener("click", function () {
+    stopInactivityTimer();
+    if (currentAgent && currentAgent.id) clearAgentSession(currentAgent.id);
+    showPage("homePage");
+  });
+
+  /* ============================================================
+     ADMIN PANEL
+  ============================================================ */
+  let adminConfirmingId = null; // currently confirming remove for this agent id
+  let adminSuccessTimer = null;
+
+  function openAdminPanel() {
+    adminConfirmingId = null;
+    clearAdminAddForm();
+    hideAdminSuccess(true);
+    renderAdminAgentList();
+    if (typeof switchAdminTab === "function") switchAdminTab("agents");
+    showPage("adminPage");
+  }
+
+  const adminVisiblePinIds = new Set();   // which agent PINs are currently revealed
+  let adminEditingPinId = null;           // which agent PIN is being edited
+  const adminEditShowState = {};          // { agentId: { new: bool, confirm: bool } }
+  const adminRowMessages = {};            // { agentId: { type: "success"|"info", text: string, timer: id } }
+
+  function agentDisplayPin(agent) {
+    return (agent && agent.pin) ? agent.pin : DEFAULT_AGENT_PIN;
+  }
+
+  function renderAdminAgentList() {
+    const list = document.getElementById("adminAgentList");
+    list.innerHTML = "";
+    if (AGENTS.length === 0) {
+      const empty = document.createElement("div");
+      empty.className = "admin-empty";
+      empty.textContent = "No agents yet. Add one below.";
+      list.appendChild(empty);
+      return;
+    }
+    AGENTS.forEach(function (agent) {
+      const row = document.createElement("div");
+      row.className = "admin-agent-row";
+
+      const mainLine = document.createElement("div");
+      mainLine.className = "admin-agent-main-line";
+
+      const nameCell = document.createElement("div");
+      nameCell.className = "admin-agent-name-cell";
+      nameCell.textContent = agent.name;
+      mainLine.appendChild(nameCell);
+
+      /* PIN display + Show/Hide toggle */
+      const pinWrap = document.createElement("div");
+      pinWrap.style.display = "inline-flex";
+      pinWrap.style.alignItems = "center";
+      pinWrap.style.gap = "6px";
+
+      const pinDisplay = document.createElement("span");
+      pinDisplay.className = "admin-pin-display";
+      const isVisible = adminVisiblePinIds.has(agent.id);
+      pinDisplay.textContent = isVisible ? agentDisplayPin(agent) : "\u25CF\u25CF\u25CF\u25CF";
+
+      const pinToggle = document.createElement("button");
+      pinToggle.type = "button";
+      pinToggle.className = "admin-pin-toggle";
+      pinToggle.textContent = isVisible ? "Hide" : "Show";
+      pinToggle.addEventListener("click", function () {
+        if (adminVisiblePinIds.has(agent.id)) adminVisiblePinIds.delete(agent.id);
+        else adminVisiblePinIds.add(agent.id);
+        renderAdminAgentList();
+      });
+
+      pinWrap.appendChild(pinDisplay);
+      pinWrap.appendChild(pinToggle);
+      mainLine.appendChild(pinWrap);
+      row.appendChild(mainLine);
+
+      /* Actions: Change PIN + Remove */
+      const actions = document.createElement("div");
+      actions.className = "admin-agent-actions";
+
+      const changePinBtn = document.createElement("button");
+      changePinBtn.type = "button";
+      changePinBtn.className = "admin-change-pin-btn";
+      changePinBtn.textContent = "Change PIN";
+      changePinBtn.addEventListener("click", function () {
+        adminEditingPinId = agent.id;
+        adminEditShowState[agent.id] = { new: false, confirm: false };
+        clearRowMessage(agent.id);
+        renderAdminAgentList();
+      });
+      actions.appendChild(changePinBtn);
+
+      const removeBtn = document.createElement("button");
+      removeBtn.className = "admin-remove-btn";
+      removeBtn.type = "button";
+      removeBtn.textContent = "Remove";
+      removeBtn.addEventListener("click", function () {
+        adminConfirmingId = agent.id;
+        renderAdminAgentList();
+      });
+      actions.appendChild(removeBtn);
+      row.appendChild(actions);
+
+      /* Inline PIN-edit form */
+      if (adminEditingPinId === agent.id) {
+        const showState = adminEditShowState[agent.id] || { new: false, confirm: false };
+        const form = document.createElement("div");
+        form.className = "admin-pin-edit-form";
+        form.innerHTML =
+          '<div>' +
+            '<label class="field-label" style="margin-bottom:4px;">New PIN</label>' +
+            '<div class="admin-pin-edit-row">' +
+              '<input type="' + (showState.new ? "text" : "password") + '" class="edit-new-pin" maxlength="4" inputmode="numeric" placeholder="Enter new 4 digit PIN">' +
+              '<button type="button" class="admin-pin-edit-toggle toggle-new">' + (showState.new ? "Hide" : "Show") + '</button>' +
+            '</div>' +
+          '</div>' +
+          '<div>' +
+            '<label class="field-label" style="margin-bottom:4px;">Confirm PIN</label>' +
+            '<div class="admin-pin-edit-row">' +
+              '<input type="' + (showState.confirm ? "text" : "password") + '" class="edit-confirm-pin" maxlength="4" inputmode="numeric" placeholder="Confirm new PIN">' +
+              '<button type="button" class="admin-pin-edit-toggle toggle-confirm">' + (showState.confirm ? "Hide" : "Show") + '</button>' +
+            '</div>' +
+          '</div>' +
+          '<div class="admin-pin-edit-error"></div>' +
+          '<div class="admin-pin-edit-actions">' +
+            '<button type="button" class="admin-pin-save">Save PIN</button>' +
+            '<button type="button" class="admin-pin-cancel">Cancel</button>' +
+          '</div>';
+
+        const newInput = form.querySelector(".edit-new-pin");
+        const confirmInput = form.querySelector(".edit-confirm-pin");
+        const errorEl = form.querySelector(".admin-pin-edit-error");
+
+        [newInput, confirmInput].forEach(function (inp) {
+          inp.addEventListener("input", function () {
+            inp.value = inp.value.replace(/\D/g, "").slice(0, 4);
+            errorEl.classList.remove("visible");
+            errorEl.textContent = "";
+            inp.classList.remove("input-error");
+          });
+        });
+
+        form.querySelector(".toggle-new").addEventListener("click", function () {
+          adminEditShowState[agent.id].new = !adminEditShowState[agent.id].new;
+          /* toggle without full re-render to preserve what's typed */
+          const cur = newInput.value;
+          newInput.type = adminEditShowState[agent.id].new ? "text" : "password";
+          this.textContent = adminEditShowState[agent.id].new ? "Hide" : "Show";
+          newInput.value = cur;
+          newInput.focus();
+        });
+        form.querySelector(".toggle-confirm").addEventListener("click", function () {
+          adminEditShowState[agent.id].confirm = !adminEditShowState[agent.id].confirm;
+          const cur = confirmInput.value;
+          confirmInput.type = adminEditShowState[agent.id].confirm ? "text" : "password";
+          this.textContent = adminEditShowState[agent.id].confirm ? "Hide" : "Show";
+          confirmInput.value = cur;
+          confirmInput.focus();
+        });
+
+        form.querySelector(".admin-pin-save").addEventListener("click", function () {
+          saveAgentPin(agent.id, newInput, confirmInput, errorEl);
+        });
+        form.querySelector(".admin-pin-cancel").addEventListener("click", function () {
+          adminEditingPinId = null;
+          renderAdminAgentList();
+        });
+
+        /* Enter key on either field triggers Save */
+        [newInput, confirmInput].forEach(function (inp) {
+          inp.addEventListener("keydown", function (e) {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              saveAgentPin(agent.id, newInput, confirmInput, errorEl);
+            }
+          });
+        });
+
+        row.appendChild(form);
+      }
+
+      /* Remove confirmation inline (preserved from original) */
+      if (adminConfirmingId === agent.id) {
+        const confirm = document.createElement("div");
+        confirm.className = "admin-confirm-row";
+        confirm.innerHTML =
+          '<div class="admin-confirm-message">Are you sure you want to remove ' +
+          escapeHtml(agent.name) + '?</div>' +
+          '<div class="admin-confirm-actions">' +
+            '<button type="button" class="admin-confirm-yes">Yes, Remove</button>' +
+            '<button type="button" class="admin-confirm-cancel">Cancel</button>' +
+          '</div>';
+        confirm.querySelector(".admin-confirm-yes").addEventListener("click", function () {
+          removeAgent(agent.id);
+        });
+        confirm.querySelector(".admin-confirm-cancel").addEventListener("click", function () {
+          adminConfirmingId = null;
+          renderAdminAgentList();
+        });
+        row.appendChild(confirm);
+      }
+
+      /* Per-row success / info message */
+      const msg = adminRowMessages[agent.id];
+      if (msg) {
+        const msgEl = document.createElement("div");
+        msgEl.className = msg.type === "info" ? "admin-row-info" : "admin-row-success";
+        msgEl.textContent = msg.text;
+        row.appendChild(msgEl);
+      }
+
+      list.appendChild(row);
+    });
+  }
+
+  function clearRowMessage(id) {
+    const msg = adminRowMessages[id];
+    if (msg && msg.timer) clearTimeout(msg.timer);
+    delete adminRowMessages[id];
+  }
+  function setRowMessage(id, type, text, fadeMs) {
+    clearRowMessage(id);
+    const record = { type: type, text: text, timer: null };
+    adminRowMessages[id] = record;
+    if (fadeMs) {
+      record.timer = setTimeout(function () {
+        delete adminRowMessages[id];
+        renderAdminAgentList();
+      }, fadeMs);
+    }
+    renderAdminAgentList();
+  }
+
+  function saveAgentPin(agentId, newInput, confirmInput, errorEl) {
+    const agent = AGENTS.find(function (a) { return a.id === agentId; });
+    if (!agent) return;
+    const newPin = newInput.value.trim();
+    const confirmPin = confirmInput.value.trim();
+    errorEl.classList.remove("visible");
+    errorEl.textContent = "";
+    newInput.classList.remove("input-error");
+    confirmInput.classList.remove("input-error");
+
+    if (!newPin) {
+      errorEl.textContent = "PIN cannot be blank.";
+      errorEl.classList.add("visible");
+      newInput.classList.add("input-error");
+      return;
+    }
+    if (!/^\d{4}$/.test(newPin)) {
+      errorEl.textContent = "New PIN must be exactly 4 digits.";
+      errorEl.classList.add("visible");
+      newInput.classList.add("input-error");
+      return;
+    }
+    if (!/^\d{4}$/.test(confirmPin)) {
+      errorEl.textContent = "Confirm PIN must be exactly 4 digits.";
+      errorEl.classList.add("visible");
+      confirmInput.classList.add("input-error");
+      return;
+    }
+    if (newPin !== confirmPin) {
+      errorEl.textContent = "Confirm PIN does not match New PIN.";
+      errorEl.classList.add("visible");
+      confirmInput.classList.add("input-error");
+      return;
+    }
+    const currentPin = agentDisplayPin(agent);
+    if (newPin === currentPin) {
+      adminEditingPinId = null;
+      setRowMessage(agentId, "info", "That is already their current PIN. No changes were made.", 3000);
+      return;
+    }
+    agent.pin = newPin;
+    saveAgents();
+    adminEditingPinId = null;
+    setRowMessage(agentId, "success", "PIN updated successfully for " + agent.name + ".", 3000);
+  }
+
+  function removeAgent(id) {
+    const idx = AGENTS.findIndex(function (a) { return a.id === id; });
+    if (idx >= 0) {
+      AGENTS.splice(idx, 1);
+      saveAgents();
+      adminConfirmingId = null;
+      renderAdminAgentList();
+      renderHome();
+    }
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"})[c];
+    });
+  }
+
+  function clearAdminAddForm() {
+    const nameInput = document.getElementById("addAgentName");
+    const errorEl = document.getElementById("addAgentError");
+    const pinInput = document.getElementById("addAgentPin");
+    const pinErrorEl = document.getElementById("addAgentPinError");
+    const pinToggle = document.getElementById("addAgentPinToggle");
+    nameInput.value = "";
+    nameInput.classList.remove("input-error");
+    errorEl.classList.remove("visible");
+    errorEl.textContent = "";
+    if (pinInput) {
+      pinInput.value = "1234";
+      pinInput.type = "password";
+      pinInput.classList.remove("input-error");
+    }
+    if (pinErrorEl) {
+      pinErrorEl.classList.remove("visible");
+      pinErrorEl.textContent = "";
+    }
+    if (pinToggle) pinToggle.textContent = "Show";
+  }
+
+  function hideAdminSuccess(immediate) {
+    const successEl = document.getElementById("addAgentSuccess");
+    if (adminSuccessTimer) { clearTimeout(adminSuccessTimer); adminSuccessTimer = null; }
+    if (immediate) {
+      successEl.classList.remove("visible", "fading");
+      successEl.innerHTML = "";
+    } else {
+      successEl.classList.add("fading");
+      setTimeout(function () {
+        successEl.classList.remove("visible", "fading");
+        successEl.innerHTML = "";
+      }, 400);
+    }
+  }
+
+  document.getElementById("adminBackBtn").addEventListener("click", function () {
+    showPage("homePage");
+  });
+
+  document.getElementById("addAgentBtn").addEventListener("click", function () {
+    const nameInput = document.getElementById("addAgentName");
+    const errorEl = document.getElementById("addAgentError");
+    const successEl = document.getElementById("addAgentSuccess");
+    const pinInput = document.getElementById("addAgentPin");
+    const pinErrorEl = document.getElementById("addAgentPinError");
+
+    const name = nameInput.value.trim();
+    const pin = pinInput.value.trim();
+    errorEl.classList.remove("visible");
+    errorEl.textContent = "";
+    pinErrorEl.classList.remove("visible");
+    pinErrorEl.textContent = "";
+    nameInput.classList.remove("input-error");
+    pinInput.classList.remove("input-error");
+
+    let ok = true;
+    if (!name) {
+      errorEl.textContent = "Please enter an agent name.";
+      errorEl.classList.add("visible");
+      nameInput.classList.add("input-error");
+      ok = false;
+    } else {
+      const lower = name.toLowerCase();
+      const exists = AGENTS.some(function (a) { return a.name.toLowerCase() === lower; });
+      if (exists) {
+        errorEl.textContent = "An agent with that name already exists.";
+        errorEl.classList.add("visible");
+        nameInput.classList.add("input-error");
+        ok = false;
+      }
+    }
+    if (!/^\d{4}$/.test(pin)) {
+      pinErrorEl.textContent = "PIN must be exactly 4 digits.";
+      pinErrorEl.classList.add("visible");
+      pinInput.classList.add("input-error");
+      ok = false;
+    }
+    if (!ok) return;
+
+    const id = uniqueAgentId(name);
+    AGENTS.push({ id: id, name: name, pin: pin });
+    saveAgents();
+    renderHome();
+    renderAdminAgentList();
+
+    nameInput.value = "";
+    pinInput.value = "1234";
+    pinInput.type = "password";
+    document.getElementById("addAgentPinToggle").textContent = "Show";
+
+    successEl.innerHTML = "<strong>" + escapeHtml(name) +
+      "</strong> has been added. Their PIN is <strong>" + escapeHtml(pin) +
+      "</strong>. Copy this and send it to them.";
+    successEl.classList.remove("fading");
+    successEl.classList.add("visible");
+    if (adminSuccessTimer) clearTimeout(adminSuccessTimer);
+    adminSuccessTimer = setTimeout(function () { hideAdminSuccess(false); }, 6000);
+  });
+
+  /* Add New Agent: PIN input filters to digits */
+  document.getElementById("addAgentPin").addEventListener("input", function (e) {
+    e.target.value = e.target.value.replace(/\D/g, "").slice(0, 4);
+  });
+
+  /* Add New Agent: Show/Hide PIN toggle */
+  document.getElementById("addAgentPinToggle").addEventListener("click", function () {
+    const input = document.getElementById("addAgentPin");
+    const btn = document.getElementById("addAgentPinToggle");
+    if (input.type === "password") { input.type = "text"; btn.textContent = "Hide"; }
+    else { input.type = "password"; btn.textContent = "Show"; }
+    input.focus();
+  });
+
+  /* Add New Agent: Generate Random 4-digit PIN */
+  document.getElementById("addAgentPinGenerate").addEventListener("click", function () {
+    const pin = String(Math.floor(Math.random() * 10000)).padStart(4, "0");
+    const input = document.getElementById("addAgentPin");
+    input.value = pin;
+    document.getElementById("addAgentPinError").classList.remove("visible");
+    input.classList.remove("input-error");
+  });
+
+  /* Allow Enter to submit the add-agent form */
+  document.getElementById("addAgentName").addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      document.getElementById("addAgentBtn").click();
+    }
+  });
+
+  /* ============================================================
+     CONTENT MANAGER (Post Types + Template Library)
+  ============================================================ */
+  const POST_TYPES_STORAGE_KEY = "legacy_post_types";
+  const DEFAULT_POST_TYPES = [
+    { name: "Just Listed",            code: "JL", active: true, custom: false, templateCount: 100 },
+    { name: "Just Sold",              code: "JS", active: true, custom: false, templateCount: 100 },
+    { name: "Open House",             code: "OH", active: true, custom: false, templateCount: 100 },
+    { name: "Tip of the Week",        code: "TW", active: true, custom: false, templateCount: 100 },
+    { name: "Market Update",          code: "MU", active: true, custom: false, templateCount: 100 },
+    { name: "Myth Busting",           code: "MB", active: true, custom: false, templateCount: 100 },
+    { name: "Neighborhood Spotlight", code: "NS", active: true, custom: false, templateCount: 100 },
+    { name: "Client Testimonial",     code: "CT", active: true, custom: false, templateCount: 100 },
+    { name: "Staging Tips",           code: "ST", active: true, custom: false, templateCount: 100 },
+    { name: "Community Feature",      code: "CF", active: true, custom: false, templateCount: 100 }
+  ];
+  let postTypes = null;
+  let removingPostTypeIdx = null;
+  let editingTemplateIdx = null;
+
+  function loadPostTypes() {
+    try {
+      const raw = localStorage.getItem(POST_TYPES_STORAGE_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed
+            .filter(function (p) { return p && p.name && p.code; })
+            .map(function (p) {
+              return {
+                name: p.name,
+                code: String(p.code).toUpperCase(),
+                active: p.active !== false,
+                custom: !!p.custom,
+                templateCount: (typeof p.templateCount === "number" && p.templateCount >= 1) ? p.templateCount : 100
+              };
+            });
+        }
+      }
+    } catch (e) { /* ignore */ }
+    return DEFAULT_POST_TYPES.map(function (p) {
+      return { name: p.name, code: p.code, active: p.active, custom: p.custom, templateCount: p.templateCount };
+    });
+  }
+  function savePostTypes() {
+    try { localStorage.setItem(POST_TYPES_STORAGE_KEY, JSON.stringify(postTypes)); } catch (e) {}
+  }
+
+  /* Rebuild TOPICS, TOPIC_PREFIX, TEMPLATE_LIBRARY in place from postTypes. */
+  function rebuildTopicData() {
+    TOPICS.length = 0;
+    Object.keys(TOPIC_PREFIX).forEach(function (k) { delete TOPIC_PREFIX[k]; });
+    Object.keys(TEMPLATE_LIBRARY).forEach(function (k) { delete TEMPLATE_LIBRARY[k]; });
+    postTypes.forEach(function (pt) {
+      if (!pt.active) return;
+      TOPICS.push(pt.name);
+      TOPIC_PREFIX[pt.name] = pt.code;
+      TEMPLATE_LIBRARY[pt.name] = [];
+      const count = pt.templateCount || 100;
+      for (let i = 1; i <= count; i++) {
+        const n = i < 10 ? ("00" + i) : (i < 100 ? ("0" + i) : String(i));
+        TEMPLATE_LIBRARY[pt.name].push({ id: pt.code + "_" + n });
+      }
+    });
+  }
+
+  /* ===== Tab switching ===== */
+  function switchAdminTab(tab) {
+    const btnAgents = document.getElementById("adminTabBtnAgents");
+    const btnContent = document.getElementById("adminTabBtnContent");
+    const panelAgents = document.getElementById("adminTabAgents");
+    const panelContent = document.getElementById("adminTabContent");
+    if (!btnAgents || !btnContent || !panelAgents || !panelContent) return;
+    if (tab === "content") {
+      btnAgents.classList.remove("active");
+      btnContent.classList.add("active");
+      panelAgents.classList.add("hidden");
+      panelContent.classList.remove("hidden");
+      removingPostTypeIdx = null;
+      editingTemplateIdx = null;
+      clearAddPostTypeForm();
+      renderPostTypeList();
+      renderTemplateLibraryList();
+    } else {
+      btnAgents.classList.add("active");
+      btnContent.classList.remove("active");
+      panelAgents.classList.remove("hidden");
+      panelContent.classList.add("hidden");
+    }
+  }
+  document.getElementById("adminTabBtnAgents").addEventListener("click", function () { switchAdminTab("agents"); });
+  document.getElementById("adminTabBtnContent").addEventListener("click", function () { switchAdminTab("content"); });
+
+  /* ===== Render Post Types list ===== */
+  function renderPostTypeList() {
+    const list = document.getElementById("postTypeList");
+    list.innerHTML = "";
+    if (postTypes.length === 0) {
+      const empty = document.createElement("div");
+      empty.className = "admin-empty";
+      empty.textContent = "No post types yet. Add one below.";
+      list.appendChild(empty);
+      return;
+    }
+    postTypes.forEach(function (pt, idx) {
+      const row = document.createElement("div");
+      row.className = "pt-row" + (pt.active ? "" : " inactive");
+
+      const nameWrap = document.createElement("div");
+      nameWrap.className = "pt-name";
+      const dot = document.createElement("span");
+      dot.className = "pt-dot " + (pt.active ? "active" : "inactive");
+      nameWrap.appendChild(dot);
+      const nameSpan = document.createElement("span");
+      nameSpan.textContent = pt.name;
+      nameWrap.appendChild(nameSpan);
+      const codeLabel = document.createElement("span");
+      codeLabel.className = "pt-code-label";
+      codeLabel.textContent = pt.code;
+      nameWrap.appendChild(codeLabel);
+      row.appendChild(nameWrap);
+
+      const actions = document.createElement("div");
+      actions.className = "pt-actions";
+
+      /* Toggle */
+      const toggleLabel = document.createElement("label");
+      toggleLabel.className = "pt-toggle";
+      toggleLabel.title = pt.active ? "Active — click to deactivate" : "Inactive — click to activate";
+      const toggleInput = document.createElement("input");
+      toggleInput.type = "checkbox";
+      toggleInput.checked = pt.active;
+      toggleInput.addEventListener("change", function () {
+        postTypes[idx].active = toggleInput.checked;
+        savePostTypes();
+        rebuildTopicData();
+        renderPostTypeList();
+        renderTemplateLibraryList();
+      });
+      const slider = document.createElement("span");
+      slider.className = "pt-slider";
+      toggleLabel.appendChild(toggleInput);
+      toggleLabel.appendChild(slider);
+      actions.appendChild(toggleLabel);
+
+      /* Permanent Delete button — available for ALL post types (built-in and custom) */
+      const deleteBtn = document.createElement("button");
+      deleteBtn.type = "button";
+      deleteBtn.className = "admin-remove-btn";
+      deleteBtn.textContent = "Delete";
+      deleteBtn.addEventListener("click", function () {
+        removingPostTypeIdx = idx;
+        renderPostTypeList();
+      });
+      actions.appendChild(deleteBtn);
+
+      row.appendChild(actions);
+
+      /* Inline permanent-delete confirmation */
+      if (removingPostTypeIdx === idx) {
+        const confirm = document.createElement("div");
+        confirm.className = "admin-confirm-row";
+        confirm.style.flexDirection = "column";
+        confirm.style.alignItems = "stretch";
+        confirm.innerHTML =
+          '<div class="admin-confirm-message" style="margin-bottom:6px;">' +
+            'Are you sure you want to permanently delete <strong>' + escapeHtml(pt.name) + '</strong>?' +
+          '</div>' +
+          '<div style="font-size:12px;color:#8a271f;line-height:1.5;margin-bottom:10px;">This will:' +
+            '<ul style="margin:4px 0 0 18px;padding:0;">' +
+              '<li>Remove it from the agent weekly form dropdown forever</li>' +
+              '<li>Remove all templates assigned to this post type</li>' +
+              '<li>Remove any favorites agents have set for this post type</li>' +
+              '<li>This cannot be undone</li>' +
+            '</ul>' +
+          '</div>' +
+          '<div class="admin-confirm-actions">' +
+            '<button type="button" class="admin-confirm-yes">Yes, Delete Permanently</button>' +
+            '<button type="button" class="admin-confirm-cancel">Cancel</button>' +
+          '</div>';
+        confirm.querySelector(".admin-confirm-yes").addEventListener("click", function () {
+          permanentlyDeletePostType(idx);
+        });
+        confirm.querySelector(".admin-confirm-cancel").addEventListener("click", function () {
+          removingPostTypeIdx = null;
+          renderPostTypeList();
+        });
+        row.appendChild(confirm);
+      }
+
+      list.appendChild(row);
+    });
+  }
+
+  function permanentlyDeletePostType(idx) {
+    const pt = postTypes[idx];
+    if (!pt) return;
+    const ptName = pt.name;
+    const ptSlug = topicPrefsSlug(ptName);
+    /* Remove from postTypes list */
+    postTypes.splice(idx, 1);
+    savePostTypes();
+    rebuildTopicData();
+    /* Remove all custom templates that match this postType */
+    try {
+      const all = loadCustomTemplates();
+      const remaining = all.filter(function (t) { return t.postType !== ptName; });
+      saveCustomTemplates(remaining);
+    } catch (e) {}
+    /* Remove every favorites entry whose key ends with this post type slug */
+    try {
+      const toRemove = [];
+      const favSuffix = "_" + ptSlug;
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (k && k.indexOf("legacy_favorites_") === 0 && k.length > favSuffix.length
+            && k.lastIndexOf(favSuffix) === k.length - favSuffix.length) {
+          toRemove.push(k);
+        }
+      }
+      toRemove.forEach(function (k) { localStorage.removeItem(k); });
+    } catch (e) {}
+    /* Reset confirmation state and re-render UI */
+    removingPostTypeIdx = null;
+    renderPostTypeList();
+    renderTemplateLibraryList();
+    if (typeof renderATM === "function") renderATM();
+    if (typeof refreshUCAgentList === "function") refreshUCAgentList();
+    /* Show green confirmation in the Add Post Type success area */
+    const successEl = document.getElementById("addPostTypeSuccess");
+    if (successEl) {
+      successEl.innerHTML = "<strong>" + escapeHtml(ptName) + "</strong> has been permanently deleted.";
+      successEl.classList.remove("fading");
+      successEl.classList.add("visible");
+      setTimeout(function () {
+        successEl.classList.add("fading");
+        setTimeout(function () {
+          successEl.classList.remove("visible", "fading");
+          successEl.innerHTML = "";
+        }, 400);
+      }, 4000);
+    }
+  }
+
+  /* ===== Add New Post Type ===== */
+  function clearAddPostTypeForm() {
+    const n = document.getElementById("addTypeName");
+    const c = document.getElementById("addTypeCode");
+    const ct = document.getElementById("addTypeCount");
+    const nE = document.getElementById("addTypeNameError");
+    const cE = document.getElementById("addTypeCodeError");
+    const ctE = document.getElementById("addTypeCountError");
+    const s = document.getElementById("addPostTypeSuccess");
+    if (n) { n.value = ""; n.classList.remove("input-error"); }
+    if (c) { c.value = ""; c.classList.remove("input-error"); delete c.dataset.manualEdit; }
+    if (ct) { ct.value = "100"; ct.classList.remove("input-error"); }
+    [nE, cE, ctE].forEach(function (e) {
+      if (!e) return;
+      e.classList.remove("visible");
+      e.textContent = "";
+    });
+    if (s) { s.classList.remove("visible", "fading"); s.innerHTML = ""; }
+  }
+
+  document.getElementById("addTypeName").addEventListener("input", function (e) {
+    const codeInput = document.getElementById("addTypeCode");
+    if (!codeInput.dataset.manualEdit) {
+      const words = e.target.value.trim().split(/\s+/).filter(Boolean);
+      let code = "";
+      if (words.length >= 2) code = (words[0][0] + words[1][0]).toUpperCase();
+      else if (words.length === 1 && words[0].length >= 2) code = (words[0][0] + words[0][1]).toUpperCase();
+      else if (words.length === 1 && words[0].length === 1) code = words[0][0].toUpperCase();
+      codeInput.value = code;
+    }
+  });
+  document.getElementById("addTypeCode").addEventListener("input", function (e) {
+    e.target.dataset.manualEdit = "true";
+    const cleaned = e.target.value.replace(/[^A-Za-z]/g, "").slice(0, 2).toUpperCase();
+    e.target.value = cleaned;
+    if (!cleaned) delete e.target.dataset.manualEdit;
+  });
+
+  document.getElementById("addPostTypeBtn").addEventListener("click", function () {
+    const nameInput = document.getElementById("addTypeName");
+    const codeInput = document.getElementById("addTypeCode");
+    const countInput = document.getElementById("addTypeCount");
+    const nameErr = document.getElementById("addTypeNameError");
+    const codeErr = document.getElementById("addTypeCodeError");
+    const countErr = document.getElementById("addTypeCountError");
+    const successEl = document.getElementById("addPostTypeSuccess");
+
+    const name = nameInput.value.trim();
+    const code = codeInput.value.trim().toUpperCase();
+    const count = parseInt(countInput.value, 10);
+
+    [nameErr, codeErr, countErr].forEach(function (e) { e.classList.remove("visible"); e.textContent = ""; });
+    [nameInput, codeInput, countInput].forEach(function (i) { i.classList.remove("input-error"); });
+
+    let ok = true;
+    if (!name) {
+      nameErr.textContent = "Name is required.";
+      nameErr.classList.add("visible");
+      nameInput.classList.add("input-error");
+      ok = false;
+    } else if (postTypes.some(function (pt) { return pt.name.toLowerCase() === name.toLowerCase(); })) {
+      nameErr.textContent = "A post type with that name already exists.";
+      nameErr.classList.add("visible");
+      nameInput.classList.add("input-error");
+      ok = false;
+    }
+    if (!/^[A-Z]{2}$/.test(code)) {
+      codeErr.textContent = "Code must be exactly 2 letters.";
+      codeErr.classList.add("visible");
+      codeInput.classList.add("input-error");
+      ok = false;
+    } else if (postTypes.some(function (pt) { return pt.code === code; })) {
+      codeErr.textContent = "That code is already in use.";
+      codeErr.classList.add("visible");
+      codeInput.classList.add("input-error");
+      ok = false;
+    }
+    if (!isFinite(count) || count < 1) {
+      countErr.textContent = "Number of templates must be at least 1.";
+      countErr.classList.add("visible");
+      countInput.classList.add("input-error");
+      ok = false;
+    }
+    if (!ok) return;
+
+    postTypes.push({ name: name, code: code, active: true, custom: true, templateCount: count });
+    savePostTypes();
+    rebuildTopicData();
+    renderPostTypeList();
+    renderTemplateLibraryList();
+
+    nameInput.value = "";
+    codeInput.value = "";
+    delete codeInput.dataset.manualEdit;
+    countInput.value = "100";
+
+    successEl.innerHTML = "<strong>" + escapeHtml(name) + "</strong> has been added and is now available on the agent weekly form.";
+    successEl.classList.remove("fading");
+    successEl.classList.add("visible");
+    setTimeout(function () {
+      successEl.classList.add("fading");
+      setTimeout(function () {
+        successEl.classList.remove("visible", "fading");
+        successEl.innerHTML = "";
+      }, 400);
+    }, 4000);
+  });
+
+  /* ===== Template Library ===== */
+  function renderTemplateLibraryList() {
+    const list = document.getElementById("templateLibraryList");
+    list.innerHTML = "";
+    const active = postTypes.filter(function (pt) { return pt.active; });
+    if (active.length === 0) {
+      const empty = document.createElement("div");
+      empty.className = "admin-empty";
+      empty.textContent = "No active post types. Toggle some on in the Post Types section.";
+      list.appendChild(empty);
+      return;
+    }
+    postTypes.forEach(function (pt, idx) {
+      if (!pt.active) return;
+      const row = document.createElement("div");
+      row.className = "tl-row";
+
+      const main = document.createElement("div");
+      main.className = "tl-main";
+      const nameEl = document.createElement("div");
+      nameEl.className = "tl-name";
+      nameEl.textContent = pt.name;
+      const subEl = document.createElement("div");
+      subEl.className = "tl-sub";
+      subEl.innerHTML = "Code: <strong>" + escapeHtml(pt.code) + "</strong> &middot; IDs: " + escapeHtml(pt.code) + "_001 – " + escapeHtml(pt.code) + "_" +
+        (pt.templateCount < 10 ? ("00" + pt.templateCount) : (pt.templateCount < 100 ? ("0" + pt.templateCount) : String(pt.templateCount)));
+      main.appendChild(nameEl);
+      main.appendChild(subEl);
+      row.appendChild(main);
+
+      const countLabel = document.createElement("span");
+      countLabel.className = "tl-count";
+      countLabel.textContent = pt.templateCount + " templates";
+      row.appendChild(countLabel);
+
+      const editBtn = document.createElement("button");
+      editBtn.type = "button";
+      editBtn.className = "admin-change-pin-btn";
+      editBtn.textContent = "Edit Count";
+      editBtn.addEventListener("click", function () {
+        editingTemplateIdx = idx;
+        renderTemplateLibraryList();
+      });
+      row.appendChild(editBtn);
+
+      if (editingTemplateIdx === idx) {
+        const form = document.createElement("div");
+        form.className = "tl-edit-form";
+        form.innerHTML =
+          '<label class="field-label" style="margin-bottom:4px;">New template count for ' + escapeHtml(pt.name) + '</label>' +
+          '<input type="number" class="tl-count-input" min="1" value="' + pt.templateCount + '">' +
+          '<div class="admin-error tl-error"></div>' +
+          '<div style="display:flex;gap:8px;flex-wrap:wrap;">' +
+            '<button type="button" class="admin-pin-save tl-save">Save</button>' +
+            '<button type="button" class="admin-pin-cancel tl-cancel">Cancel</button>' +
+          '</div>';
+        const input = form.querySelector(".tl-count-input");
+        const err = form.querySelector(".tl-error");
+        form.querySelector(".tl-save").addEventListener("click", function () {
+          const newCount = parseInt(input.value, 10);
+          if (!isFinite(newCount) || newCount < 1) {
+            err.textContent = "Count must be at least 1.";
+            err.classList.add("visible");
+            input.classList.add("input-error");
+            return;
+          }
+          postTypes[idx].templateCount = newCount;
+          savePostTypes();
+          rebuildTopicData();
+          editingTemplateIdx = null;
+          renderTemplateLibraryList();
+        });
+        form.querySelector(".tl-cancel").addEventListener("click", function () {
+          editingTemplateIdx = null;
+          renderTemplateLibraryList();
+        });
+        row.appendChild(form);
+      }
+
+      list.appendChild(row);
+    });
+  }
+
+  /* ============================================================
+     CUSTOM TEMPLATES (Upload Center + Agent Template Manager)
+  ============================================================ */
+  const CUSTOM_TEMPLATES_KEY = "legacy_custom_templates";
+  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
+
+  let ucPendingFiles = []; // [{ id, name, file, dataUrl, sizeStr }]
+  let ucSelectedAgents = new Set();
+  let atmExpandedAgentIds = new Set();
+  let atmOpenCopyDropdownTplId = null;
+
+  function loadCustomTemplates() {
+    try {
+      const raw = localStorage.getItem(CUSTOM_TEMPLATES_KEY);
+      if (!raw) return [];
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (e) { return []; }
+  }
+  function saveCustomTemplates(arr) {
+    try { localStorage.setItem(CUSTOM_TEMPLATES_KEY, JSON.stringify(arr)); } catch (e) {}
+  }
+  /* Templates are no longer filtered by post type — every assigned template
+     shows for the agent regardless of which topic they pick. */
+  function getCustomTemplatesFor(agentSlug /* topic ignored, retained for callsites */) {
+    return loadCustomTemplates().filter(function (t) {
+      return Array.isArray(t.assignedTo) && t.assignedTo.indexOf(agentSlug) !== -1;
+    });
+  }
+  function countTemplatesFor(agentSlug) {
+    return getCustomTemplatesFor(agentSlug).length;
+  }
+  function customTemplateById(id) {
+    return loadCustomTemplates().find(function (t) { return t.id === id; });
+  }
+
+  function formatFileSize(bytes) {
+    if (bytes < 1024) return bytes + " B";
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(0) + " KB";
+    return (bytes / (1024 * 1024)).toFixed(1) + " MB";
+  }
+  function todayISO() {
+    const d = new Date();
+    return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+  }
+
+  /* ===== Build Post Type dropdown for Upload Center ===== */
+  function refreshUCPostTypes() {
+    const sel = document.getElementById("ucPostType");
+    if (!sel) return;
+    const prev = sel.value;
+    sel.innerHTML = '<option value="">— Select a post type —</option>';
+    postTypes.forEach(function (pt) {
+      if (!pt.active) return;
+      const opt = document.createElement("option");
+      opt.value = pt.name;
+      opt.textContent = pt.name + " (" + pt.code + ")";
+      sel.appendChild(opt);
+    });
+    if (prev) sel.value = prev;
+  }
+
+  /* ===== Render the agent assignment list ===== */
+  function refreshUCAgentList() {
+    const list = document.getElementById("ucAgentList");
+    if (!list) return;
+    list.innerHTML = "";
+    if (AGENTS.length === 0) {
+      list.innerHTML = '<div class="admin-empty">No agents yet.</div>';
+      return;
+    }
+    AGENTS.forEach(function (agent) {
+      const slug = agentPrefsSlug(agent);
+      const card = document.createElement("div");
+      const isSel = ucSelectedAgents.has(slug);
+      card.className = "uc-agent-card" + (isSel ? " selected" : "");
+      const cb = document.createElement("div");
+      cb.className = "uc-agent-checkbox";
+      const info = document.createElement("div");
+      info.className = "uc-agent-info";
+      const nameEl = document.createElement("div");
+      nameEl.className = "uc-agent-name";
+      nameEl.textContent = agent.name;
+      const countEl = document.createElement("div");
+      countEl.className = "uc-agent-count";
+      const cnt = countTemplatesFor(slug);
+      countEl.textContent = cnt + " template" + (cnt === 1 ? "" : "s") + " assigned";
+      info.appendChild(nameEl);
+      info.appendChild(countEl);
+      card.appendChild(cb);
+      card.appendChild(info);
+      card.addEventListener("click", function () {
+        if (ucSelectedAgents.has(slug)) ucSelectedAgents.delete(slug);
+        else ucSelectedAgents.add(slug);
+        refreshUCAgentList();
+        updateUploadBtn();
+      });
+      list.appendChild(card);
+    });
+  }
+
+  /* ===== Render the file preview grid ===== */
+  function refreshUCPreviewGrid() {
+    const grid = document.getElementById("ucPreviewGrid");
+    if (!grid) return;
+    grid.innerHTML = "";
+    ucPendingFiles.forEach(function (pf, idx) {
+      const card = document.createElement("div");
+      card.className = "uc-preview-card";
+      card.innerHTML =
+        '<button type="button" class="uc-preview-remove" data-idx="' + idx + '">&times;</button>' +
+        '<img class="uc-preview-img" src="' + pf.dataUrl + '" alt="">' +
+        '<input type="text" class="uc-preview-name-input" data-idx="' + idx + '" value="' + escapeHtml(pf.name) + '" placeholder="e.g. LRP_001">' +
+        '<div class="uc-preview-meta">' + escapeHtml(pf.sizeStr) + '</div>';
+      const removeBtn = card.querySelector(".uc-preview-remove");
+      removeBtn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        ucPendingFiles.splice(idx, 1);
+        refreshUCPreviewGrid();
+        updateUploadBtn();
+      });
+      const nameInput = card.querySelector(".uc-preview-name-input");
+      nameInput.addEventListener("input", function () {
+        ucPendingFiles[idx].name = nameInput.value;
+      });
+      grid.appendChild(card);
+    });
+  }
+
+  function updateUploadBtn() {
+    const btn = document.getElementById("ucUploadBtn");
+    if (!btn) return;
+    const fileCount = ucPendingFiles.length;
+    const agentCount = ucSelectedAgents.size;
+    btn.textContent = "Upload " + fileCount + " Template" + (fileCount === 1 ? "" : "s") +
+      " to " + agentCount + " Agent" + (agentCount === 1 ? "" : "s");
+    btn.disabled = !(fileCount > 0 && agentCount > 0);
+  }
+
+  /* ===== Read files via FileReader ===== */
+  function readFilesAsDataUrl(fileList, onAdded) {
+    const files = Array.from(fileList).filter(function (f) {
+      return f.type === "image/png" || f.type === "image/jpeg";
+    });
+    files.forEach(function (file) {
+      if (file.size > MAX_FILE_SIZE) {
+        showUCError("ucGeneralError", file.name + " is over 5MB and was skipped.");
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const baseName = file.name.replace(/\.[^.]+$/, "");
+        ucPendingFiles.push({
+          name: baseName,
+          file: file,
+          dataUrl: e.target.result,
+          sizeStr: formatFileSize(file.size)
+        });
+        if (onAdded) onAdded();
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function showUCError(elId, text) {
+    const e = document.getElementById(elId);
+    if (!e) return;
+    e.textContent = text;
+    e.classList.add("visible");
+    setTimeout(function () { e.classList.remove("visible"); }, 5000);
+  }
+
+  /* ===== Drop zone setup ===== */
+  (function () {
+    const dz = document.getElementById("ucDropzone");
+    const input = document.getElementById("ucFileInput");
+    if (!dz || !input) return;
+    dz.addEventListener("click", function () { input.click(); });
+    input.addEventListener("change", function () {
+      readFilesAsDataUrl(input.files, function () {
+        refreshUCPreviewGrid();
+        updateUploadBtn();
+      });
+      input.value = "";
+    });
+    ["dragenter","dragover"].forEach(function (evt) {
+      dz.addEventListener(evt, function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        dz.classList.add("drag-over");
+      });
+    });
+    ["dragleave","drop"].forEach(function (evt) {
+      dz.addEventListener(evt, function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        dz.classList.remove("drag-over");
+      });
+    });
+    dz.addEventListener("drop", function (e) {
+      const files = e.dataTransfer ? e.dataTransfer.files : null;
+      if (files && files.length) {
+        readFilesAsDataUrl(files, function () {
+          refreshUCPreviewGrid();
+          updateUploadBtn();
+        });
+      }
+    });
+  })();
+
+  document.getElementById("ucSelectAll").addEventListener("click", function () {
+    AGENTS.forEach(function (a) { ucSelectedAgents.add(agentPrefsSlug(a)); });
+    refreshUCAgentList();
+    updateUploadBtn();
+  });
+  document.getElementById("ucClearAll").addEventListener("click", function () {
+    ucSelectedAgents.clear();
+    refreshUCAgentList();
+    updateUploadBtn();
+  });
+
+  /* ===== Upload action ===== */
+  document.getElementById("ucUploadBtn").addEventListener("click", function () {
+    const agErr = document.getElementById("ucAgentError");
+    const genErr = document.getElementById("ucGeneralError");
+    agErr.classList.remove("visible");
+    genErr.classList.remove("visible");
+
+    if (ucPendingFiles.length === 0) {
+      showUCError("ucGeneralError", "Please add at least one file to upload.");
+      return;
+    }
+    if (ucSelectedAgents.size === 0) {
+      agErr.textContent = "Select at least one agent.";
+      agErr.classList.add("visible");
+      return;
+    }
+    /* All files must have a name */
+    for (let i = 0; i < ucPendingFiles.length; i++) {
+      if (!ucPendingFiles[i].name || !ucPendingFiles[i].name.trim()) {
+        showUCError("ucGeneralError", "File " + (i+1) + " needs a template name.");
+        return;
+      }
+    }
+
+    const all = loadCustomTemplates();
+    const progress = document.getElementById("ucProgress");
+    const successEl = document.getElementById("ucSuccess");
+
+    progress.classList.add("visible");
+    successEl.classList.remove("visible", "fading");
+    successEl.innerHTML = "";
+
+    const ts = Date.now();
+    const assignedSlugs = Array.from(ucSelectedAgents);
+    const newOnes = [];
+
+    /* Stagger UI updates so progress shows */
+    let i = 0;
+    function processNext() {
+      if (i >= ucPendingFiles.length) {
+        saveCustomTemplates(all.concat(newOnes));
+        progress.classList.remove("visible");
+        progress.textContent = "";
+        /* Build success summary */
+        const counts = {};
+        assignedSlugs.forEach(function (s) { counts[s] = newOnes.length; });
+        let summary = "<strong>" + newOnes.length + " template" + (newOnes.length === 1 ? "" : "s") + " uploaded successfully.</strong><br>Assigned to:<ul>";
+        assignedSlugs.forEach(function (s) {
+          const ag = AGENTS.find(function (a) { return agentPrefsSlug(a) === s; });
+          if (ag) summary += "<li>" + escapeHtml(ag.name) + " — " + counts[s] + " new template" + (counts[s] === 1 ? "" : "s") + " added</li>";
+        });
+        summary += "</ul>";
+        successEl.innerHTML = summary;
+        successEl.classList.add("visible");
+        setTimeout(function () {
+          successEl.classList.add("fading");
+          setTimeout(function () {
+            successEl.classList.remove("visible", "fading");
+            successEl.innerHTML = "";
+          }, 400);
+        }, 6000);
+
+        /* Clear pending */
+        ucPendingFiles = [];
+        refreshUCPreviewGrid();
+        refreshUCAgentList();
+        renderATM();
+        updateUploadBtn();
+        return;
+      }
+      progress.textContent = "Processing " + (i+1) + " of " + ucPendingFiles.length + "…";
+      const pf = ucPendingFiles[i];
+      const timesSelected = {};
+      assignedSlugs.forEach(function (s) { timesSelected[s] = 0; });
+      newOnes.push({
+        id: "CUSTOM_" + ts + "_" + i,
+        name: pf.name.trim(),
+        assignedTo: assignedSlugs.slice(),
+        image: pf.dataUrl,
+        uploadedOn: todayISO(),
+        uploadedAt: ts + i,
+        timesSelected: timesSelected
+      });
+      i++;
+      setTimeout(processNext, 50);
+    }
+    processNext();
+  });
+
+  /* ============================================================
+     AGENT TEMPLATE MANAGER
+  ============================================================ */
+  function renderATM() {
+    const container = document.getElementById("atmAgentSections");
+    if (!container) return;
+    container.innerHTML = "";
+    if (AGENTS.length === 0) {
+      container.innerHTML = '<div class="admin-empty">No agents yet.</div>';
+      return;
+    }
+    const customs = loadCustomTemplates();
+    AGENTS.forEach(function (agent) {
+      const slug = agentPrefsSlug(agent);
+      const isExpanded = atmExpandedAgentIds.has(agent.id);
+      const total = customs.filter(function (t) {
+        return Array.isArray(t.assignedTo) && t.assignedTo.indexOf(slug) !== -1;
+      }).length;
+
+      const wrap = document.createElement("div");
+      wrap.className = "atm-agent";
+
+      const header = document.createElement("button");
+      header.type = "button";
+      header.className = "atm-agent-header";
+      header.innerHTML =
+        '<span><strong>' + escapeHtml(agent.name) + '</strong> ' +
+        '<span style="color:var(--gray-muted);font-size:13px;font-weight:400;">(' + total + ' template' + (total === 1 ? "" : "s") + ' total)</span></span>' +
+        '<span class="atm-toggle">' + (isExpanded ? "▾" : "▸") + '</span>';
+      header.addEventListener("click", function () {
+        if (atmExpandedAgentIds.has(agent.id)) atmExpandedAgentIds.delete(agent.id);
+        else atmExpandedAgentIds.add(agent.id);
+        renderATM();
+      });
+      wrap.appendChild(header);
+
+      if (isExpanded) {
+        const body = document.createElement("div");
+        body.className = "atm-agent-body";
+
+        /* Flat list of all templates assigned to this agent, most-recent first */
+        const tpls = customs
+          .filter(function (t) { return Array.isArray(t.assignedTo) && t.assignedTo.indexOf(slug) !== -1; })
+          .sort(function (a, b) {
+            const ta = a.uploadedAt || 0;
+            const tb = b.uploadedAt || 0;
+            if (tb !== ta) return tb - ta;
+            return (a.id < b.id ? 1 : a.id > b.id ? -1 : 0);
+          });
+
+        if (tpls.length === 0) {
+          const empty = document.createElement("div");
+          empty.className = "atm-empty-pt";
+          empty.textContent = "No templates assigned to this agent yet.";
+          body.appendChild(empty);
+        } else {
+          const grid = document.createElement("div");
+          grid.className = "atm-thumb-grid";
+          tpls.forEach(function (tpl) {
+            const thumb = document.createElement("div");
+            thumb.className = "atm-thumb";
+            thumb.innerHTML =
+              '<button type="button" class="atm-thumb-remove" title="Remove from ' + escapeHtml(agent.name) + '">&times;</button>' +
+              '<img class="atm-thumb-img" src="' + tpl.image + '" alt="">' +
+              '<div class="atm-thumb-name">' + escapeHtml(tpl.name) + '</div>' +
+              '<button type="button" class="atm-thumb-copy">Copy to…</button>';
+            thumb.querySelector(".atm-thumb-remove").addEventListener("click", function () {
+              removeTemplateFromAgent(tpl.id, slug);
+            });
+            const copyBtn = thumb.querySelector(".atm-thumb-copy");
+            copyBtn.addEventListener("click", function (e) {
+              e.stopPropagation();
+              if (atmOpenCopyDropdownTplId === tpl.id + "::" + slug) {
+                atmOpenCopyDropdownTplId = null;
+              } else {
+                atmOpenCopyDropdownTplId = tpl.id + "::" + slug;
+              }
+              renderATM();
+            });
+
+            if (atmOpenCopyDropdownTplId === tpl.id + "::" + slug) {
+              const dd = document.createElement("div");
+              dd.className = "atm-copy-dropdown";
+              const otherAgents = AGENTS.filter(function (a) { return agentPrefsSlug(a) !== slug; });
+              if (otherAgents.length === 0) {
+                const none = document.createElement("div");
+                none.style.padding = "6px 8px";
+                none.style.fontSize = "12px";
+                none.style.color = "var(--gray-muted)";
+                none.textContent = "No other agents.";
+                dd.appendChild(none);
+              } else {
+                otherAgents.forEach(function (otherA) {
+                  const opt = document.createElement("button");
+                  opt.type = "button";
+                  opt.className = "atm-copy-option";
+                  opt.textContent = otherA.name;
+                  opt.addEventListener("click", function (e) {
+                    e.stopPropagation();
+                    copyTemplateToAgent(tpl.id, agentPrefsSlug(otherA), otherA.name);
+                  });
+                  dd.appendChild(opt);
+                });
+              }
+              thumb.appendChild(dd);
+            }
+
+            grid.appendChild(thumb);
+          });
+          body.appendChild(grid);
+        }
+
+        wrap.appendChild(body);
+      }
+
+      container.appendChild(wrap);
+    });
+  }
+
+  function removeTemplateFromAgent(tplId, agentSlug) {
+    const all = loadCustomTemplates();
+    const idx = all.findIndex(function (t) { return t.id === tplId; });
+    if (idx < 0) return;
+    const tpl = all[idx];
+    const aIdx = tpl.assignedTo.indexOf(agentSlug);
+    if (aIdx >= 0) tpl.assignedTo.splice(aIdx, 1);
+    /* If no agents left, drop the template entirely */
+    if (tpl.assignedTo.length === 0) {
+      all.splice(idx, 1);
+    } else {
+      if (tpl.timesSelected) delete tpl.timesSelected[agentSlug];
+    }
+    saveCustomTemplates(all);
+    atmOpenCopyDropdownTplId = null;
+    renderATM();
+    refreshUCAgentList();
+  }
+
+  function copyTemplateToAgent(tplId, agentSlug, agentName) {
+    const all = loadCustomTemplates();
+    const tpl = all.find(function (t) { return t.id === tplId; });
+    if (!tpl) return;
+    if (tpl.assignedTo.indexOf(agentSlug) === -1) {
+      tpl.assignedTo.push(agentSlug);
+      if (!tpl.timesSelected) tpl.timesSelected = {};
+      tpl.timesSelected[agentSlug] = 0;
+      saveCustomTemplates(all);
+    }
+    atmOpenCopyDropdownTplId = null;
+    renderATM();
+    refreshUCAgentList();
+    /* Brief inline confirmation via the upload success banner area */
+    const successEl = document.getElementById("ucSuccess");
+    if (successEl) {
+      successEl.innerHTML = "<strong>Template copied to " + escapeHtml(agentName) + ".</strong>";
+      successEl.classList.remove("fading");
+      successEl.classList.add("visible");
+      setTimeout(function () {
+        successEl.classList.add("fading");
+        setTimeout(function () { successEl.classList.remove("visible", "fading"); successEl.innerHTML = ""; }, 400);
+      }, 2500);
+    }
+  }
+
+  /* Close any open copy dropdown when clicking outside */
+  document.addEventListener("click", function (e) {
+    if (!atmOpenCopyDropdownTplId) return;
+    const target = e.target;
+    if (target && (target.classList.contains("atm-thumb-copy") || target.closest(".atm-copy-dropdown"))) return;
+    atmOpenCopyDropdownTplId = null;
+    renderATM();
+  });
+
+  /* ============================================================
+     BULK ACTIONS
+  ============================================================ */
+  function renderATMBulkExtra() {
+    const action = document.getElementById("atmActionSelect").value;
+    const extra = document.getElementById("atmBulkExtra");
+    extra.innerHTML = "";
+    function agentSelectHTML(id, label) {
+      let opts = '<option value="">— ' + label + ' —</option>';
+      AGENTS.forEach(function (a) { opts += '<option value="' + escapeHtml(agentPrefsSlug(a)) + '">' + escapeHtml(a.name) + '</option>'; });
+      return '<label class="field-label" style="margin-bottom:4px;">' + escapeHtml(label) + '</label>' +
+        '<select id="' + id + '">' + opts + '</select>';
+    }
+    if (action === "copy") {
+      extra.innerHTML =
+        '<div>' + agentSelectHTML("bulkFromAgent", "Copy from agent") + '</div>' +
+        '<div>' + agentSelectHTML("bulkToAgent",   "Copy to agent")   + '</div>';
+    } else if (action === "removeAll") {
+      extra.innerHTML =
+        '<div>' + agentSelectHTML("bulkRaAgent", "Agent") + '</div>';
+    }
+  }
+
+  document.getElementById("atmActionSelect").addEventListener("change", renderATMBulkExtra);
+
+  document.getElementById("atmBulkGo").addEventListener("click", function () {
+    const action = document.getElementById("atmActionSelect").value;
+    if (!action) return;
+    if (action === "copy") {
+      const fromSlug = (document.getElementById("bulkFromAgent") || {}).value;
+      const toSlug   = (document.getElementById("bulkToAgent")   || {}).value;
+      if (!fromSlug || !toSlug) { showUCError("ucGeneralError", "Pick from-agent and to-agent."); return; }
+      if (fromSlug === toSlug) { showUCError("ucGeneralError", "From and To must be different agents."); return; }
+      const all = loadCustomTemplates();
+      let copied = 0;
+      all.forEach(function (t) {
+        if (Array.isArray(t.assignedTo) && t.assignedTo.indexOf(fromSlug) !== -1) {
+          if (t.assignedTo.indexOf(toSlug) === -1) {
+            t.assignedTo.push(toSlug);
+            if (!t.timesSelected) t.timesSelected = {};
+            t.timesSelected[toSlug] = 0;
+            copied++;
+          }
+        }
+      });
+      saveCustomTemplates(all);
+      const fromAgent = AGENTS.find(function (a) { return agentPrefsSlug(a) === fromSlug; });
+      const toAgent   = AGENTS.find(function (a) { return agentPrefsSlug(a) === toSlug; });
+      const successEl = document.getElementById("ucSuccess");
+      successEl.innerHTML = "<strong>Copied " + copied + " template" + (copied === 1 ? "" : "s") +
+        " from " + escapeHtml(fromAgent ? fromAgent.name : fromSlug) +
+        " to " + escapeHtml(toAgent ? toAgent.name : toSlug) + ".</strong>";
+      successEl.classList.remove("fading");
+      successEl.classList.add("visible");
+      setTimeout(function () {
+        successEl.classList.add("fading");
+        setTimeout(function () { successEl.classList.remove("visible", "fading"); successEl.innerHTML = ""; }, 400);
+      }, 4000);
+      renderATM();
+      refreshUCAgentList();
+    } else if (action === "removeAll") {
+      const slug = (document.getElementById("bulkRaAgent") || {}).value;
+      if (!slug) { showUCError("ucGeneralError", "Pick an agent."); return; }
+      const ag = AGENTS.find(function (a) { return agentPrefsSlug(a) === slug; });
+      openConfirmModal({
+        title: "Remove all templates?",
+        message: "Remove every custom template assigned to <strong>" + escapeHtml(ag ? ag.name : slug) + "</strong>?",
+        confirmText: "Remove All",
+        confirmClass: "btn-danger",
+        onConfirm: function () {
+          const all = loadCustomTemplates();
+          const remaining = [];
+          all.forEach(function (t) {
+            if (Array.isArray(t.assignedTo) && t.assignedTo.indexOf(slug) !== -1) {
+              t.assignedTo = t.assignedTo.filter(function (x) { return x !== slug; });
+              if (t.timesSelected) delete t.timesSelected[slug];
+            }
+            if (t.assignedTo.length > 0) remaining.push(t);
+          });
+          saveCustomTemplates(remaining);
+          renderATM();
+          refreshUCAgentList();
+        }
+      });
+    }
+  });
+
+  /* When the Content tab opens we render UC + ATM too */
+  const _origSwitchAdminTab = (typeof switchAdminTab === "function") ? switchAdminTab : null;
+  if (_origSwitchAdminTab) {
+    switchAdminTab = function (tab) {
+      _origSwitchAdminTab(tab);
+      if (tab === "content") {
+        refreshUCAgentList();
+        refreshUCPreviewGrid();
+        updateUploadBtn();
+        renderATM();
+      }
+    };
+  }
+
+  /* ============================================================
+     INIT
+  ============================================================ */
+  /* Remove obsolete most-used preference data — Section 2 is fully random. */
+  (function cleanupLegacyPrefsKeys() {
+    try {
+      const toRemove = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (k && k.indexOf("legacy_prefs_") === 0) toRemove.push(k);
+      }
+      toRemove.forEach(function (k) { localStorage.removeItem(k); });
+    } catch (e) { /* ignore */ }
+  })();
+  postTypes = loadPostTypes();
+  rebuildTopicData();
+  cleanupOldDrafts();
+  renderHome();
+  showPage("homePage");
+</script>
+
+</body>
+</html>
