@@ -2583,6 +2583,9 @@
       Your selections for the week of <strong id="successWeek"></strong> have been received.<br>
       Legacy will have your posts ready within 24 hours.
     </p>
+    <p style="font-size:13px;color:var(--gray-muted);margin:14px 0 0;">
+      Questions? Email <a id="contactEmailLink" href="mailto:brett@legacyrep.co" style="color:var(--gold-dark);text-decoration:underline;">brett@legacyrep.co</a>
+    </p>
   </div>
 </div>
 
@@ -2779,9 +2782,7 @@
      CONFIG
   ============================================================ */
   const AGENTS = [
-    { id: "john-doe",   name: "John Doe" },
-    { id: "jane-smith", name: "Jane Smith" },
-    { id: "amy-houser", name: "Amy Houser" }
+    { id: "sabrina-thompson", name: "Sabrina Thompson" }
   ];
 
   /* Load persisted agents from localStorage on startup (admin-panel edits). */
@@ -2820,9 +2821,15 @@
   }
 
   /* ============================================================
+     BROKERAGE / CONTACT SETTINGS
+  ============================================================ */
+  const BROKERAGE_NAME = "Legacy Real Estate Partners";
+  const CONTACT_EMAIL  = "brett@legacyrep.co";
+
+  /* ============================================================
      ADMIN PASSWORD / SESSION / LOCKOUT
   ============================================================ */
-  const ADMIN_PASSWORD = "TeamLegacy1!";
+  const ADMIN_PASSWORD = "TeamLegacy123!";
   const ADMIN_AUTH_KEY = "legacy_admin_auth";
   const ADMIN_LOCKOUT_KEY = "legacy_admin_lockout";
   const ADMIN_SESSION_MS = 4 * 60 * 60 * 1000;   // 4 hours
@@ -6148,6 +6155,29 @@
   /* ============================================================
      INIT
   ============================================================ */
+  /* Wire the contact email link from the CONTACT_EMAIL setting */
+  (function wireContactEmail() {
+    const link = document.getElementById("contactEmailLink");
+    if (!link) return;
+    link.href = "mailto:" + CONTACT_EMAIL;
+    link.textContent = CONTACT_EMAIL;
+  })();
+  /* One-time wipe of every legacy_* localStorage key so the file boots
+     fresh for real use. Bumping RESET_VERSION on a future production reset
+     will run the wipe again on every browser the next time the page loads. */
+  const RESET_VERSION = "v1-prod-2026-04-28-sabrina-only";
+  (function resetForRealUse() {
+    try {
+      if (localStorage.getItem("legacy_reset_version") === RESET_VERSION) return;
+      const toRemove = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (k && k.indexOf("legacy_") === 0 && k !== "legacy_reset_version") toRemove.push(k);
+      }
+      toRemove.forEach(function (k) { localStorage.removeItem(k); });
+      localStorage.setItem("legacy_reset_version", RESET_VERSION);
+    } catch (e) { /* ignore */ }
+  })();
   /* Remove obsolete most-used preference data — Section 2 is fully random. */
   (function cleanupLegacyPrefsKeys() {
     try {
