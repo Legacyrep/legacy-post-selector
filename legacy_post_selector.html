@@ -1486,6 +1486,198 @@
   }
   .agent-logout-link:hover { color: var(--navy); }
 
+  /* ===== Submit progress + error ===== */
+  .submit-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+  .btn-spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid currentColor;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: btnSpin 0.7s linear infinite;
+    vertical-align: middle;
+    flex-shrink: 0;
+  }
+  @keyframes btnSpin { to { transform: rotate(360deg); } }
+
+  /* ===== Submissions page ===== */
+  .view-submissions-link {
+    display: inline-block;
+    background: transparent;
+    border: none;
+    color: var(--gold-dark);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: underline;
+    padding: 4px 6px;
+    margin-top: 4px;
+  }
+  .view-submissions-link:hover { color: var(--navy); }
+
+  .subm-section {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 18px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow);
+  }
+  .subm-section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 0 0 14px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--gold);
+  }
+  .subm-section-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--navy);
+    margin: 0;
+  }
+  .subm-section-week {
+    color: var(--gold-dark);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+  }
+  .subm-status-pill {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 12px;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+  }
+  .subm-status-submitted { background: var(--green); color: white; }
+  .subm-status-not-submitted { background: var(--gray-muted); color: white; }
+  .subm-day {
+    padding: 12px 4px;
+    border-bottom: 1px solid var(--border);
+  }
+  .subm-day:last-child { border-bottom: none; }
+  .subm-day.skipped { opacity: 0.6; }
+  .subm-day-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 4px;
+  }
+  .subm-day-name { color: var(--navy); font-weight: 700; font-size: 14px; }
+  .subm-day-date { color: var(--gray-muted); font-size: 12px; }
+  .subm-post-status {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 12px;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+  }
+  .subm-post-status.pending  { background: #d9dde3; color: #5b6470; }
+  .subm-post-status.ready    { background: var(--gold); color: var(--navy); }
+  .subm-post-status.updated  { background: #2f6db8; color: white; }
+  .subm-post-status.approved { background: var(--green); color: white; }
+  .subm-day-meta {
+    color: var(--navy-light);
+    font-size: 13px;
+    margin: 4px 0;
+    line-height: 1.5;
+  }
+  .subm-day-meta strong { color: var(--navy); }
+  .subm-empty-day { color: var(--gray-muted); font-style: italic; font-size: 13px; }
+  .subm-empty {
+    text-align: center;
+    color: var(--gray-muted);
+    padding: 30px 20px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .submit-error {
+    background: #fdebe9;
+    border: 2px solid #c2392e;
+    color: #c2392e;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: 12px;
+    text-align: center;
+    max-width: 340px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* ===== Skip This Week ===== */
+  .skip-week-row { margin-bottom: 14px; }
+  .skip-week-btn {
+    width: 100%;
+    background: transparent;
+    border: 2px solid var(--navy);
+    color: var(--navy);
+    padding: 10px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    min-height: 44px;
+    letter-spacing: 0.3px;
+    transition: all 0.15s ease;
+  }
+  .skip-week-btn:hover { background: var(--navy); color: white; }
+  .skip-week-confirm {
+    background: var(--cream);
+    border: 2px solid var(--gold-dark);
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+  .skip-week-message {
+    color: var(--navy);
+    font-weight: 600;
+    margin-bottom: 12px;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .skip-week-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .skip-yes {
+    background: var(--navy);
+    color: var(--gold);
+    border: 2px solid var(--navy);
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    min-height: 42px;
+  }
+  .skip-yes:hover { background: var(--gold); color: var(--navy); }
+  .skip-back {
+    background: transparent;
+    color: var(--navy);
+    border: 2px solid var(--navy);
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    min-height: 42px;
+  }
+  .skip-back:hover { background: var(--navy); color: white; }
+
   /* ===== Quick Questions ===== */
   .quick-questions {
     margin-top: 28px;
@@ -2284,10 +2476,10 @@
     </div>
 
     <div class="agent-pin-boxes" id="agentPinBoxes">
-      <input type="password" inputmode="numeric" maxlength="1" class="agent-pin-box" data-idx="0">
-      <input type="password" inputmode="numeric" maxlength="1" class="agent-pin-box" data-idx="1">
-      <input type="password" inputmode="numeric" maxlength="1" class="agent-pin-box" data-idx="2">
-      <input type="password" inputmode="numeric" maxlength="1" class="agent-pin-box" data-idx="3">
+      <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="agent-pin-box" data-idx="0">
+      <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="agent-pin-box" data-idx="1">
+      <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="agent-pin-box" data-idx="2">
+      <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="agent-pin-box" data-idx="3">
     </div>
 
     <div class="agent-pin-error" id="agentPinError"></div>
@@ -2318,6 +2510,7 @@
   <div class="form-header">
     <h2 class="form-agent-name" id="formAgentName"></h2>
     <div class="form-week" id="formWeek"></div>
+    <button class="view-submissions-link" id="viewSubmissionsLink" type="button">View Past Submissions</button>
   </div>
 
   <div class="week-nav">
@@ -2327,6 +2520,17 @@
       <div class="week-range-sub" id="weekRangeSub"></div>
     </div>
     <button class="week-arrow" id="nextWeekBtn" type="button" aria-label="Next week">&rarr;</button>
+  </div>
+
+  <div class="skip-week-row" id="skipWeekRow">
+    <button class="skip-week-btn" id="skipWeekBtn" type="button">Skip This Week</button>
+    <div class="skip-week-confirm hidden" id="skipWeekConfirm">
+      <div class="skip-week-message" id="skipWeekMessage"></div>
+      <div class="skip-week-actions">
+        <button type="button" class="skip-yes" id="skipWeekYes">Yes, Skip This Week</button>
+        <button type="button" class="skip-back" id="skipWeekBack">Go Back</button>
+      </div>
+    </div>
   </div>
 
   <div id="daysContainer"></div>
@@ -2349,23 +2553,27 @@
 
     <div class="qq-question">
       <label class="qq-label" for="qqContext">Is there anything specific happening in your life or business this week you want woven into your posts?</label>
-      <textarea id="qqContext" class="qq-textarea" placeholder="e.g. just closed a big deal, kids going back to school, been really busy with showings… Leave blank to skip. One or two sentences max."></textarea>
+      <textarea id="qqContext" class="qq-textarea" autocapitalize="sentences" autocorrect="on" spellcheck="true" placeholder="e.g. just closed a big deal, kids going back to school, been really busy with showings… Leave blank to skip. One or two sentences max."></textarea>
     </div>
 
     <div class="qq-question">
       <label class="qq-label" for="qqPhrases">Any words or phrases you want used or avoided in your posts this week?</label>
-      <textarea id="qqPhrases" class="qq-textarea" placeholder="e.g. use the word exciting this week / avoid mentioning interest rates / keep it light and funny… Leave blank to skip."></textarea>
+      <textarea id="qqPhrases" class="qq-textarea" autocapitalize="sentences" autocorrect="on" spellcheck="true" placeholder="e.g. use the word exciting this week / avoid mentioning interest rates / keep it light and funny… Leave blank to skip."></textarea>
     </div>
 
     <div class="qq-question">
       <label class="qq-label" for="qqRequest">Want to request a new post type for future weeks?</label>
-      <textarea id="qqRequest" class="qq-textarea" placeholder="e.g. I would love a post about pet friendly neighborhoods / can we do something about new construction homes… Leave blank to skip."></textarea>
+      <textarea id="qqRequest" class="qq-textarea" autocapitalize="sentences" autocorrect="on" spellcheck="true" placeholder="e.g. I would love a post about pet friendly neighborhoods / can we do something about new construction homes… Leave blank to skip."></textarea>
       <div class="qq-note" style="margin-top:6px;margin-bottom:0;">We review all requests and add popular ones to the system.</div>
     </div>
   </div>
 
   <div class="submit-wrap">
-    <button class="submit-btn" id="submitBtn" type="button">Submit My Week</button>
+    <button class="submit-btn" id="submitBtn" type="button">
+      <span class="btn-spinner hidden" id="submitSpinner" aria-hidden="true"></span>
+      <span id="submitBtnText">Submit My Week</span>
+    </button>
+    <div class="submit-error hidden" id="submitError"></div>
   </div>
 
   <div class="success-banner hidden" id="successBanner">
@@ -2376,6 +2584,18 @@
       Legacy will have your posts ready within 24 hours.
     </p>
   </div>
+</div>
+
+<!-- PAGE: SUBMISSIONS (read-only history) -->
+<div id="submissionsPage" class="container page hidden">
+  <div class="back-bar">
+    <button class="back-btn" id="submissionsBackBtn" type="button">&larr; Back to Form</button>
+  </div>
+  <div class="form-header">
+    <h2 class="form-agent-name" id="submissionsAgentName"></h2>
+    <div class="form-week">Past Submissions</div>
+  </div>
+  <div id="submissionsContent"></div>
 </div>
 
 <!-- PAGE 3A: ADMIN PASSWORD ENTRY -->
@@ -2908,6 +3128,117 @@
     toRemove.forEach(function (k) { try { localStorage.removeItem(k); } catch (e) {} });
   }
 
+  /* ============================================================
+     NOTION PROXY (Path B — gated, falls back to localStorage)
+     Set NOTION_PROXY_URL to your Cloudflare Worker URL once it
+     exists. While empty, all server-side calls no-op and the file
+     behaves exactly like the localStorage-only version.
+  ============================================================ */
+  const NOTION_PROXY_URL = ""; // e.g. "https://legacy-proxy.your-worker.workers.dev"
+
+  function proxyEnabled() {
+    return typeof NOTION_PROXY_URL === "string" && NOTION_PROXY_URL.length > 0;
+  }
+  function proxyCall(method, path, body) {
+    if (!proxyEnabled()) return Promise.resolve(null);
+    const url = NOTION_PROXY_URL.replace(/\/+$/, "") + path;
+    const opts = { method: method, headers: { "Content-Type": "application/json" } };
+    if (body !== undefined) opts.body = JSON.stringify(body);
+    return fetch(url, opts).then(function (res) {
+      if (!res.ok) throw new Error("Proxy " + method + " " + path + " failed: " + res.status);
+      return res.json().catch(function () { return null; });
+    });
+  }
+
+  /* Server draft save on inactivity (additive — localStorage save still runs first) */
+  function serverSaveDraftFor(agent, weekOffset) {
+    if (!proxyEnabled() || !agent) return Promise.resolve(null);
+    const monday = getWeekMonday(weekOffset);
+    const days = (weekState[weekOffset] || []).map(serializeDay);
+    return proxyCall("POST", "/draft", {
+      agentSlug: agentPrefsSlug(agent),
+      agentName: agent.name,
+      weekStart: mondayISO(monday),
+      days: days,
+      savedAt: Date.now()
+    }).catch(function (e) { console.warn("[draft save] proxy failed, localStorage already wrote", e); return null; });
+  }
+  function serverFetchDraftFor(agent) {
+    if (!proxyEnabled() || !agent) return Promise.resolve(null);
+    return proxyCall("GET", "/draft?agentSlug=" + encodeURIComponent(agentPrefsSlug(agent)), undefined)
+      .catch(function (e) { console.warn("[draft fetch] proxy failed, falling back to localStorage", e); return null; });
+  }
+  function serverDeleteDraftFor(agent, weekOffset) {
+    if (!proxyEnabled() || !agent) return Promise.resolve(null);
+    const monday = getWeekMonday(weekOffset);
+    return proxyCall("DELETE", "/draft?agentSlug=" + encodeURIComponent(agentPrefsSlug(agent)) +
+                                "&weekStart=" + encodeURIComponent(mondayISO(monday)), undefined)
+      .catch(function () { return null; });
+  }
+  function serverSendConfirmationEmail(agent, weekOffset, submissionRecord) {
+    if (!proxyEnabled() || !agent) return Promise.resolve(null);
+    return proxyCall("POST", "/email/confirmation", {
+      agentSlug: agentPrefsSlug(agent),
+      agentName: agent.name,
+      weekStart: submissionRecord.weekStart,
+      weekRange: submissionRecord.weekRange,
+      days: submissionRecord.days
+    }).catch(function (e) { console.warn("[email] proxy failed, no email sent", e); return null; });
+  }
+  function serverFetchPostStatuses(agent, weekStartISO) {
+    if (!proxyEnabled() || !agent) return Promise.resolve(null);
+    return proxyCall("GET",
+      "/post-statuses?agentSlug=" + encodeURIComponent(agentPrefsSlug(agent)) +
+      "&weekStart=" + encodeURIComponent(weekStartISO), undefined)
+      .catch(function () { return null; });
+  }
+
+  /* ============================================================
+     SUBMISSION RECORDS (localStorage cache for Submissions page)
+  ============================================================ */
+  function submissionKey(agent, weekStartISO) {
+    return "legacy_submission_" + agentPrefsSlug(agent) + "_" + weekStartISO;
+  }
+  function saveSubmissionRecord(agent, weekOffset) {
+    if (!agent) return null;
+    const monday = getWeekMonday(weekOffset);
+    const sunday = new Date(monday); sunday.setDate(monday.getDate() + 6);
+    const days = (weekState[weekOffset] || []).map(serializeDay);
+    let weeklyNotes = null;
+    try { const raw = localStorage.getItem(weeklyNotesKey(agent, weekOffset)); if (raw) weeklyNotes = JSON.parse(raw); } catch (e) {}
+    const record = {
+      agentSlug: agentPrefsSlug(agent),
+      agentName: agent.name,
+      weekStart: mondayISO(monday),
+      weekRange: formatWeekRangeShort(monday, sunday),
+      days: days,
+      weeklyNotes: weeklyNotes,
+      submittedAt: Date.now()
+    };
+    try { localStorage.setItem(submissionKey(agent, record.weekStart), JSON.stringify(record)); } catch (e) {}
+    return record;
+  }
+  function loadAllSubmissionsFor(agent) {
+    if (!agent) return [];
+    const prefix = "legacy_submission_" + agentPrefsSlug(agent) + "_";
+    const out = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (!k || k.indexOf(prefix) !== 0) continue;
+      try { out.push(JSON.parse(localStorage.getItem(k))); } catch (e) {}
+    }
+    out.sort(function (a, b) { return (a.weekStart < b.weekStart ? 1 : a.weekStart > b.weekStart ? -1 : 0); });
+    return out;
+  }
+  function loadSubmissionForWeek(agent, weekOffset) {
+    if (!agent) return null;
+    const iso = mondayISO(getWeekMonday(weekOffset));
+    try {
+      const raw = localStorage.getItem(submissionKey(agent, iso));
+      return raw ? JSON.parse(raw) : null;
+    } catch (e) { return null; }
+  }
+
   function restoreDraftsIntoWeekState(agent) {
     const loaded = loadDraftsForAgent(agent);
     if (!loaded.drafts.length && !loaded.currentMonday) return { restored: false, navigateOffset: 0 };
@@ -2982,6 +3313,9 @@
     if (!currentAgent) return;
     /* Save drafts for all touched weeks + mark the viewing week */
     saveDraftForAgent(currentAgent, weekOffset);
+    /* Path B: also push the current week's draft to the Notion proxy
+       (no-ops if NOTION_PROXY_URL is empty; localStorage save above is authoritative) */
+    serverSaveDraftFor(currentAgent, weekOffset);
     /* Clear session */
     clearAgentSession(currentAgent.id);
     /* Stop timer + hide warning */
@@ -3166,7 +3500,7 @@
      PAGE SWITCHING
   ============================================================ */
   function showPage(id) {
-    const pages = ["homePage", "agentPinPage", "formPage", "adminPage", "adminPasswordPage"];
+    const pages = ["homePage", "agentPinPage", "formPage", "submissionsPage", "adminPage", "adminPasswordPage"];
     pages.forEach(function (p) {
       const el = document.getElementById(p);
       if (!el) return;
@@ -3205,13 +3539,56 @@
     currentAgent = agent;
     weekOffset = 0;
     weekState = {};
-    /* Restore any saved drafts before rendering */
+    /* Restore any saved drafts before rendering — localStorage first */
     const restore = restoreDraftsIntoWeekState(agent);
     if (restore.navigateOffset > 0) weekOffset = restore.navigateOffset;
     document.getElementById("formAgentName").textContent = agent.name;
     document.getElementById("successBanner").classList.add("hidden");
     renderWeek();
     showPage("formPage");
+    /* Path B: also try the proxy. If it has fresher draft data than localStorage
+       (e.g. agent timed out on a different device), merge it in and re-render.
+       No-op if NOTION_PROXY_URL is empty. */
+    if (proxyEnabled()) {
+      serverFetchDraftFor(agent).then(function (resp) {
+        if (!resp || !resp.draft || !resp.draft.days) return;
+        const draft = resp.draft;
+        const offset = (function () {
+          if (!draft.weekStart) return 0;
+          const o = offsetFromMondayISO(draft.weekStart);
+          return o >= 0 ? o : 0;
+        })();
+        weekState[offset] = draft.days.map(function (raw) {
+          const favSet = {};
+          (raw.favoriteIds || []).forEach(function (id) { favSet[id] = true; });
+          if (raw.selectedTemplate && (raw.templateIds || []).indexOf(raw.selectedTemplate) === -1) {
+            (raw.templateIds = raw.templateIds || []).unshift(raw.selectedTemplate);
+          }
+          return {
+            topic: raw.topic || "",
+            tone: raw.tone || "",
+            selectedTemplate: raw.selectedTemplate || null,
+            url: raw.url || "",
+            notes: raw.notes || "",
+            templateIds: (raw.templateIds || []).slice(),
+            favoriteSet: favSet
+          };
+        });
+        weekOffset = offset;
+        renderWeek();
+        const restoredBanner = document.getElementById("restoredBanner");
+        if (restoredBanner) {
+          restoredBanner.classList.remove("hidden", "fading");
+          setTimeout(function () {
+            restoredBanner.classList.add("fading");
+            setTimeout(function () {
+              restoredBanner.classList.add("hidden");
+              restoredBanner.classList.remove("fading");
+            }, 420);
+          }, 4000);
+        }
+      });
+    }
     /* Show restored banner if we loaded any saved work */
     const restoredBanner = document.getElementById("restoredBanner");
     if (restore.restored) {
@@ -3266,6 +3643,17 @@
 
     /* Load Quick Questions for this (agent, week) and populate the inputs */
     if (typeof loadWeeklyNotesIntoForm === "function") loadWeeklyNotesIntoForm();
+
+    /* Reset Skip This Week confirmation if visible (fresh on every week change) */
+    const skipBtn = document.getElementById("skipWeekBtn");
+    const skipConfirm = document.getElementById("skipWeekConfirm");
+    if (skipBtn && skipConfirm) {
+      skipBtn.classList.remove("hidden");
+      skipConfirm.classList.add("hidden");
+    }
+    /* Hide any submit error and refresh submit button text */
+    if (typeof hideSubmitError === "function") hideSubmitError();
+    if (typeof updateSubmitButtonText === "function") updateSubmitButtonText();
   }
 
   /* ============================================================
@@ -3390,12 +3778,12 @@
 
       '<div class="url-group field-group hidden">' +
         '<label class="field-label">Listing URL</label>' +
-        '<input type="text" class="url-input" placeholder="Paste listing URL here \u2014 optional">' +
+        '<input type="url" inputmode="url" autocomplete="url" class="url-input" placeholder="Paste listing URL here \u2014 optional">' +
       '</div>' +
 
       '<div class="notes-group field-group hidden">' +
         '<label class="field-label">Special Notes</label>' +
-        '<textarea class="notes-input" placeholder="Any special notes \u2014 optional"></textarea>' +
+        '<textarea class="notes-input" autocorrect="off" autocapitalize="sentences" placeholder="Any special notes \u2014 optional"></textarea>' +
       '</div>';
 
     const topicSelect = card.querySelector(".topic-select");
@@ -3438,6 +3826,7 @@
         dayState.selectedTemplate = null;
       }
       updateDayState(card, isToday, dayState);
+      if (typeof updateSubmitButtonText === "function") updateSubmitButtonText();
     });
 
     toneSelect.addEventListener("change", function () {
@@ -3681,19 +4070,285 @@
     window.scrollTo({ top: 0, behavior: "smooth" });
   });
 
+  function isWeekFullySkipped() {
+    const state = (weekState && weekState[weekOffset]) || [];
+    if (state.length !== 7) return false;
+    return state.every(function (d) { return !d.topic; });
+  }
+  function updateSubmitButtonText() {
+    const text = document.getElementById("submitBtnText");
+    if (!text) return;
+    text.textContent = isWeekFullySkipped() ? "Submit — Skipping This Week" : "Submit My Week";
+  }
+
+  function setSubmitProgress(on) {
+    const btn = document.getElementById("submitBtn");
+    const spinner = document.getElementById("submitSpinner");
+    const text = document.getElementById("submitBtnText");
+    if (!btn || !spinner || !text) return;
+    if (on) {
+      btn.disabled = true;
+      spinner.classList.remove("hidden");
+      text.textContent = "Saving your selections...";
+    } else {
+      btn.disabled = false;
+      spinner.classList.add("hidden");
+      updateSubmitButtonText();
+    }
+  }
+  function showSubmitError(msg) {
+    const err = document.getElementById("submitError");
+    if (!err) return;
+    err.textContent = msg;
+    err.classList.remove("hidden");
+  }
+  function hideSubmitError() {
+    const err = document.getElementById("submitError");
+    if (err) err.classList.add("hidden");
+  }
+
+  /* Simulated submission Promise — wired so a real backend can replace this later */
+  function performSubmission() {
+    return new Promise(function (resolve) {
+      setTimeout(function () { resolve({ ok: true }); }, 700);
+    });
+  }
+
   document.getElementById("submitBtn").addEventListener("click", function () {
+    /* Ensure latest weekly notes are persisted before "submitting" */
+    if (typeof saveWeeklyNotes === "function") saveWeeklyNotes();
+    hideSubmitError();
+    setSubmitProgress(true);
+    performSubmission().then(function (result) {
+      if (!result || !result.ok) {
+        setSubmitProgress(false);
+        showSubmitError("Something went wrong. Please try again.");
+        return;
+      }
+      const monday = getWeekMonday(weekOffset);
+      const sunday = new Date(monday);
+      sunday.setDate(monday.getDate() + 6);
+      document.getElementById("successWeek").textContent = formatWeekRangeShort(monday, sunday);
+      const banner = document.getElementById("successBanner");
+      banner.classList.remove("hidden");
+      banner.scrollIntoView({ behavior: "smooth", block: "center" });
+      /* Persist submission record for the Submissions page */
+      const record = currentAgent ? saveSubmissionRecord(currentAgent, weekOffset) : null;
+      if (currentAgent) clearDraftForWeek(currentAgent, weekOffset);
+      stopInactivityTimer();
+      setSubmitProgress(false);
+      /* Path B: notify the proxy — confirmation email + cleanup of server draft.
+         No-ops if NOTION_PROXY_URL is empty. */
+      if (currentAgent && record) serverSendConfirmationEmail(currentAgent, weekOffset, record);
+      if (currentAgent) serverDeleteDraftFor(currentAgent, weekOffset);
+    }).catch(function () {
+      setSubmitProgress(false);
+      showSubmitError("Something went wrong. Please try again.");
+    });
+  });
+
+  /* ============================================================
+     SUBMISSIONS PAGE (read-only history)
+  ============================================================ */
+  const STATUS_LABELS = {
+    pending:  "Status pending",
+    ready:    "Ready to Post",
+    updated:  "Updated",
+    approved: "Approved"
+  };
+  function statusClassFromValue(v) {
+    if (!v) return "pending";
+    const lower = String(v).toLowerCase();
+    if (lower.indexOf("ready") !== -1) return "ready";
+    if (lower.indexOf("update") !== -1) return "updated";
+    if (lower.indexOf("approve") !== -1) return "approved";
+    return "pending";
+  }
+
+  function renderSubmissionsPage() {
+    if (!currentAgent) return;
+    document.getElementById("submissionsAgentName").textContent = currentAgent.name;
+    const container = document.getElementById("submissionsContent");
+    container.innerHTML = "";
+
+    const thisWeekRecord = loadSubmissionForWeek(currentAgent, 0);
+    /* Find most recent past submission, regardless of how many weeks back */
+    const allSubs = loadAllSubmissionsFor(currentAgent);
+    const todayMonday = mondayISO(getMondayOfWeek(new Date()));
+    const lastWeekRecord = allSubs.filter(function (r) { return r.weekStart < todayMonday; })[0] || null;
+
+    if (!thisWeekRecord && !lastWeekRecord) {
+      const empty = document.createElement("div");
+      empty.className = "subm-empty";
+      empty.innerHTML = "<strong>No past submissions yet.</strong><br>Fill out your weekly form to get started.";
+      container.appendChild(empty);
+      return;
+    }
+
+    /* THIS WEEK */
+    const thisSection = document.createElement("div");
+    thisSection.className = "subm-section";
+    const thisHead = document.createElement("div");
+    thisHead.className = "subm-section-head";
+    const thisMon = getWeekMonday(0);
+    const thisSun = new Date(thisMon); thisSun.setDate(thisMon.getDate() + 6);
+    thisHead.innerHTML =
+      '<div>' +
+        '<h3 class="subm-section-title">This Week</h3>' +
+        '<div class="subm-section-week">' + escapeHtml(formatWeekRangeShort(thisMon, thisSun)) + '</div>' +
+      '</div>';
+    const thisStatus = document.createElement("span");
+    thisStatus.className = "subm-status-pill " + (thisWeekRecord ? "subm-status-submitted" : "subm-status-not-submitted");
+    thisStatus.textContent = thisWeekRecord ? "Submitted" : "Not submitted yet";
+    thisHead.appendChild(thisStatus);
+    thisSection.appendChild(thisHead);
+
+    if (thisWeekRecord) {
+      thisSection.appendChild(buildDayList(thisWeekRecord, /*showStatuses*/ false));
+    } else {
+      const empty = document.createElement("div");
+      empty.className = "subm-empty-day";
+      empty.style.padding = "8px 0";
+      empty.textContent = "Your selections for this week haven't been submitted yet.";
+      thisSection.appendChild(empty);
+    }
+    container.appendChild(thisSection);
+
+    /* LAST WEEK */
+    if (lastWeekRecord) {
+      const lastSection = document.createElement("div");
+      lastSection.className = "subm-section";
+      const lastHead = document.createElement("div");
+      lastHead.className = "subm-section-head";
+      lastHead.innerHTML =
+        '<div>' +
+          '<h3 class="subm-section-title">Last Week</h3>' +
+          '<div class="subm-section-week">' + escapeHtml(lastWeekRecord.weekRange || lastWeekRecord.weekStart) + '</div>' +
+        '</div>';
+      const lastStatus = document.createElement("span");
+      lastStatus.className = "subm-status-pill subm-status-submitted";
+      lastStatus.textContent = "Submitted";
+      lastHead.appendChild(lastStatus);
+      lastSection.appendChild(lastHead);
+
+      const dayListEl = buildDayList(lastWeekRecord, /*showStatuses*/ true);
+      lastSection.appendChild(dayListEl);
+      container.appendChild(lastSection);
+
+      /* Path B: try to fetch real per-post statuses from the proxy.
+         If NOTION_PROXY_URL is empty or the call fails, badges stay "Status pending". */
+      if (proxyEnabled()) {
+        serverFetchPostStatuses(currentAgent, lastWeekRecord.weekStart).then(function (resp) {
+          if (!resp || !Array.isArray(resp.statuses)) return;
+          const dayEls = dayListEl.querySelectorAll(".subm-day");
+          resp.statuses.forEach(function (s, idx) {
+            const el = dayEls[idx];
+            if (!el) return;
+            const pill = el.querySelector(".subm-post-status");
+            if (!pill) return;
+            const cls = statusClassFromValue(s.status);
+            pill.className = "subm-post-status " + cls;
+            pill.textContent = STATUS_LABELS[cls] || STATUS_LABELS.pending;
+          });
+        });
+      }
+    }
+  }
+
+  function buildDayList(record, showStatuses) {
+    const wrap = document.createElement("div");
+    if (!record || !Array.isArray(record.days)) return wrap;
+    const monday = isoToDate(record.weekStart);
+    record.days.forEach(function (day, idx) {
+      if (!day || !day.topic) return; // skipped days do not appear
+      const dayDate = new Date(monday); dayDate.setDate(monday.getDate() + idx);
+      const dayEl = document.createElement("div");
+      dayEl.className = "subm-day";
+      const head = document.createElement("div");
+      head.className = "subm-day-head";
+      head.innerHTML =
+        '<div>' +
+          '<span class="subm-day-name">' + escapeHtml(DAY_NAMES[idx]) + '</span> ' +
+          '<span class="subm-day-date">' + escapeHtml(formatShort(dayDate)) + '</span>' +
+        '</div>';
+      if (showStatuses) {
+        const pill = document.createElement("span");
+        pill.className = "subm-post-status pending";
+        pill.textContent = STATUS_LABELS.pending;
+        head.appendChild(pill);
+      }
+      dayEl.appendChild(head);
+
+      const meta = document.createElement("div");
+      meta.className = "subm-day-meta";
+      const tone = day.tone ? " &middot; <strong>Tone:</strong> " + escapeHtml(day.tone) : "";
+      let templ = "";
+      if (day.selectedTemplate) {
+        const id = day.selectedTemplate;
+        let label = id;
+        if (id.indexOf("CUSTOM_") === 0 && typeof customTemplateById === "function") {
+          const c = customTemplateById(id);
+          if (c && c.name) label = c.name;
+        }
+        templ = "<br><strong>Template:</strong> " + escapeHtml(label);
+      }
+      meta.innerHTML = '<strong>Topic:</strong> ' + escapeHtml(day.topic) + tone + templ;
+      dayEl.appendChild(meta);
+      wrap.appendChild(dayEl);
+    });
+    if (!wrap.children.length) {
+      const empty = document.createElement("div");
+      empty.className = "subm-empty-day";
+      empty.style.padding = "8px 0";
+      empty.textContent = "All days were skipped this week.";
+      wrap.appendChild(empty);
+    }
+    return wrap;
+  }
+
+  document.getElementById("viewSubmissionsLink").addEventListener("click", function () {
+    if (!currentAgent) return;
+    /* Save in-progress draft first so This Week reflects current state if not yet submitted */
+    /* (we don't auto-save submission record; only the actual Submit creates one) */
+    renderSubmissionsPage();
+    showPage("submissionsPage");
+  });
+  document.getElementById("submissionsBackBtn").addEventListener("click", function () {
+    showPage("formPage");
+  });
+
+  /* ===== Skip This Week ===== */
+  document.getElementById("skipWeekBtn").addEventListener("click", function () {
     const monday = getWeekMonday(weekOffset);
     const sunday = new Date(monday);
     sunday.setDate(monday.getDate() + 6);
-    /* Final save of weekly notes on submit (ensures latest values are persisted) */
-    if (typeof saveWeeklyNotes === "function") saveWeeklyNotes();
-    document.getElementById("successWeek").textContent = formatWeekRangeShort(monday, sunday);
-    const banner = document.getElementById("successBanner");
-    banner.classList.remove("hidden");
-    banner.scrollIntoView({ behavior: "smooth", block: "center" });
-    /* Clear this week's draft on successful submit + stop timer */
-    if (currentAgent) clearDraftForWeek(currentAgent, weekOffset);
-    stopInactivityTimer();
+    const range = formatWeekRangeShort(monday, sunday);
+    document.getElementById("skipWeekMessage").innerHTML =
+      "Are you sure you want to skip the week of <strong>" + range + "</strong>?<br>" +
+      "No posts will be generated for this week.";
+    document.getElementById("skipWeekBtn").classList.add("hidden");
+    document.getElementById("skipWeekConfirm").classList.remove("hidden");
+  });
+  document.getElementById("skipWeekBack").addEventListener("click", function () {
+    document.getElementById("skipWeekConfirm").classList.add("hidden");
+    document.getElementById("skipWeekBtn").classList.remove("hidden");
+  });
+  document.getElementById("skipWeekYes").addEventListener("click", function () {
+    /* Reset every day in this week to "blank / skipped" */
+    const state = ensureWeekState(weekOffset);
+    for (let i = 0; i < 7; i++) {
+      state[i].topic = "";
+      state[i].tone = "";
+      state[i].selectedTemplate = null;
+      state[i].url = "";
+      state[i].notes = "";
+      state[i].templateIds = [];
+      state[i].favoriteSet = {};
+    }
+    document.getElementById("skipWeekConfirm").classList.add("hidden");
+    document.getElementById("skipWeekBtn").classList.remove("hidden");
+    renderWeek();
+    updateSubmitButtonText();
   });
 
   /* ============================================================
