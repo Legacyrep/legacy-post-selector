@@ -2783,7 +2783,10 @@
   ============================================================ */
   const AGENTS = [
     { id: "sabrina-thompson", name: "Sabrina Thompson" },
-    { id: "crystal-boike",    name: "Crystal Lynn Boike", displayName: "Crystal", pin: "1234" }
+    { id: "crystal-boike",    name: "Crystal Lynn Boike", displayName: "Crystal", pin: "1234" },
+    { id: "danny-rust",       name: "Danny Rust",                                  pin: "1234" },
+    { id: "drake-johnson",    name: "Drake Johnson",      displayName: "Drake",    pin: "1234" },
+    { id: "darrin-t-miller",  name: "Darrin T Miller",    displayName: "Darrin",   pin: "1234" }
   ];
 
   /* Load persisted agents from localStorage on startup (admin-panel edits). */
@@ -6166,7 +6169,7 @@
   /* One-time wipe of every legacy_* localStorage key so the file boots
      fresh for real use. Bumping RESET_VERSION on a future production reset
      will run the wipe again on every browser the next time the page loads. */
-  const RESET_VERSION = "v2-prod-2026-04-29-add-crystal-boike";
+  const RESET_VERSION = "v3-prod-2026-04-29-sync-with-notion";
   (function resetForRealUse() {
     try {
       if (localStorage.getItem("legacy_reset_version") === RESET_VERSION) return;
