@@ -3901,11 +3901,27 @@
      ADMIN PASSWORD / SESSION / LOCKOUT
   ============================================================ */
   const ADMIN_PASSWORD = "TeamLegacy123!";
+  const ADMIN_PASSWORD_KEY = "legacy_admin_password";
   const ADMIN_AUTH_KEY = "legacy_admin_auth";
   const ADMIN_LOCKOUT_KEY = "legacy_admin_lockout";
   const ADMIN_SESSION_MS = 4 * 60 * 60 * 1000;   // 4 hours
   const ADMIN_LOCKOUT_MS = 10 * 60 * 1000;       // 10 minutes
   const ADMIN_MAX_ATTEMPTS = 5;
+
+  /* Single source of truth for the current admin password.
+     If the admin has changed their password via the Settings tab,
+     the new value lives in localStorage under ADMIN_PASSWORD_KEY and
+     overrides the hardcoded ADMIN_PASSWORD constant. */
+  function getCurrentAdminPassword() {
+    try {
+      const stored = localStorage.getItem(ADMIN_PASSWORD_KEY);
+      if (typeof stored === "string" && stored.length > 0) return stored;
+    } catch (e) {}
+    return ADMIN_PASSWORD;
+  }
+  function setStoredAdminPassword(p) {
+    try { localStorage.setItem(ADMIN_PASSWORD_KEY, p); } catch (e) {}
+  }
 
   function hasValidAdminSession() {
     try {
