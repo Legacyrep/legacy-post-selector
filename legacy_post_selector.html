@@ -8386,23 +8386,15 @@
   }
 
   function buildTfDeleteConfirmEl(folder) {
-    const wrap = document.createElement("div");
-    wrap.className = "tf-delete-confirm";
-    wrap.innerHTML =
-      'Are you sure you want to delete <strong>' + escapeHtml(folder.name || "") + '</strong>? ' +
-      'This will delete all templates inside it permanently. This cannot be undone.' +
-      '<div class="tf-confirm-actions">' +
-        '<button type="button" class="admin-confirm-yes" data-tf-del-yes="' + folder.id + '">Confirm Delete</button>' +
-        '<button type="button" class="admin-confirm-cancel" data-tf-del-no="' + folder.id + '">Cancel</button>' +
-      '</div>';
-    wrap.querySelector('[data-tf-del-yes="' + folder.id + '"]').addEventListener("click", function () {
-      handleTfDelete(folder.id);
+    return buildPasswordConfirmPanel({
+      messageHtml:
+        'Are you sure you want to delete <strong>' + escapeHtml(folder.name || "") + '</strong>? ' +
+        'This will delete all templates inside it permanently. This cannot be undone.',
+      confirmText: "Confirm Delete",
+      confirmClass: "admin-confirm-yes",
+      onConfirm: function () { handleTfDelete(folder.id); },
+      onCancel:  function () { tfState.deletingFolderId = null; renderTemplateFolders(); }
     });
-    wrap.querySelector('[data-tf-del-no="' + folder.id + '"]').addEventListener("click", function () {
-      tfState.deletingFolderId = null;
-      renderTemplateFolders();
-    });
-    return wrap;
   }
 
   function buildTfDetailEl(folder) {
