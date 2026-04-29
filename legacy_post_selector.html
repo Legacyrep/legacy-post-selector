@@ -3875,7 +3875,37 @@
       }
     } catch (e) { /* ignore */ }
   })();
+  /* Agent ordering: alphabetical by last name, with first name as tiebreaker.
+     Sorting in place means every render path (home cards, admin list, all
+     assignment checkboxes, ATM, bulk-action dropdowns) iterates AGENTS in
+     the correct order automatically. saveAgents() calls sortAgents() so the
+     order stays consistent after an add/edit. */
+  function lastNameOf(fullName) {
+    const parts = String(fullName || "").trim().split(/\s+/).filter(Boolean);
+    return parts.length ? parts[parts.length - 1] : "";
+  }
+  function firstNameOf(fullName) {
+    const parts = String(fullName || "").trim().split(/\s+/).filter(Boolean);
+    return parts.length ? parts[0] : "";
+  }
+  function sortAgents() {
+    AGENTS.sort(function (a, b) {
+      const la = lastNameOf(a && a.name).toLowerCase();
+      const lb = lastNameOf(b && b.name).toLowerCase();
+      if (la < lb) return -1;
+      if (la > lb) return 1;
+      const fa = firstNameOf(a && a.name).toLowerCase();
+      const fb = firstNameOf(b && b.name).toLowerCase();
+      if (fa < fb) return -1;
+      if (fa > fb) return 1;
+      return 0;
+    });
+  }
+  /* Initial sort of whatever ended up in AGENTS (hardcoded defaults or
+     localStorage-loaded list). Every later add/edit re-sorts via saveAgents(). */
+  sortAgents();
   function saveAgents() {
+    sortAgents();
     try { localStorage.setItem(AGENTS_STORAGE_KEY, JSON.stringify(AGENTS)); }
     catch (e) { /* ignore */ }
   }
