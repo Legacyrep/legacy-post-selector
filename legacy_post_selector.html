@@ -2429,6 +2429,379 @@
     border-radius: 8px;
     text-align: center;
   }
+
+  /* ===== Seasonal Templates (admin) ===== */
+  .seasonal-empty {
+    text-align: center;
+    color: var(--gray-muted);
+    padding: 18px 0;
+    font-style: italic;
+    font-size: 13px;
+  }
+  .seasonal-folder-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .seasonal-folder-card {
+    background: white;
+    border: 2px solid var(--border);
+    border-left-width: 4px;
+    border-radius: 10px;
+    padding: 14px 16px;
+    transition: border-color 0.18s ease, box-shadow 0.18s ease;
+  }
+  .seasonal-folder-card.is-active {
+    border-left-color: var(--gold);
+    box-shadow: 0 2px 10px rgba(201, 169, 97, 0.18);
+  }
+  .seasonal-folder-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .seasonal-folder-info {
+    flex: 1 1 220px;
+    min-width: 0;
+  }
+  .seasonal-folder-name {
+    font-weight: 700;
+    color: var(--navy);
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .seasonal-folder-emoji {
+    font-size: 18px;
+    letter-spacing: 1px;
+  }
+  .seasonal-folder-meta {
+    color: var(--gray-muted);
+    font-size: 12px;
+    margin-top: 4px;
+    line-height: 1.4;
+  }
+  .seasonal-folder-meta strong { color: var(--navy); font-weight: 600; }
+  .seasonal-folder-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .seasonal-view-btn {
+    background: white;
+    border: 2px solid var(--navy);
+    color: var(--navy);
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    min-height: 38px;
+    transition: all 0.15s ease;
+  }
+  .seasonal-view-btn:hover { background: var(--navy); color: var(--gold); }
+  .seasonal-delete-btn {
+    background: transparent;
+    border: 1px solid #c2392e;
+    color: #c2392e;
+    padding: 7px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    min-height: 36px;
+  }
+  .seasonal-delete-btn:hover { background: #c2392e; color: white; }
+
+  /* ===== Big toggle switch (gold = on, gray = off) ===== */
+  .season-toggle {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 32px;
+    flex-shrink: 0;
+  }
+  .season-toggle input { opacity: 0; width: 0; height: 0; }
+  .season-toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: #c0c6cf;
+    border-radius: 32px;
+    transition: background 0.2s ease;
+  }
+  .season-toggle-slider:before {
+    content: "";
+    position: absolute;
+    height: 26px;
+    width: 26px;
+    left: 3px;
+    bottom: 3px;
+    background: white;
+    border-radius: 50%;
+    transition: transform 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+  }
+  .season-toggle input:checked + .season-toggle-slider {
+    background: var(--gold);
+  }
+  .season-toggle input:checked + .season-toggle-slider:before {
+    transform: translateX(28px);
+  }
+  .season-toggle-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--gray-muted);
+    min-width: 26px;
+    text-align: center;
+  }
+  .season-toggle-label.on  { color: var(--gold-dark); }
+  .seasonal-folder-card.is-active .season-toggle-label.on { color: var(--gold-dark); }
+
+  .seasonal-folder-detail {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px dashed var(--border);
+  }
+  .seasonal-folder-detail.hidden { display: none; }
+  .seasonal-detail-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--navy);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0 0 10px;
+  }
+  .seasonal-dropzone {
+    border: 2px dashed var(--gold);
+    border-radius: 10px;
+    padding: 20px 14px;
+    text-align: center;
+    background: #fffbf2;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+  .seasonal-dropzone:hover,
+  .seasonal-dropzone.drag-over {
+    background: #fff5dd;
+    border-color: var(--gold-dark);
+  }
+  .seasonal-dropzone-icon {
+    font-size: 22px;
+    color: var(--gold-dark);
+    margin-bottom: 6px;
+  }
+  .seasonal-dropzone-text {
+    color: var(--navy);
+    font-weight: 600;
+    font-size: 14px;
+  }
+  .seasonal-dropzone-sub {
+    color: var(--gray-muted);
+    font-size: 12px;
+    margin-top: 4px;
+  }
+  .seasonal-thumb-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-top: 12px;
+  }
+  @media (min-width: 600px) {
+    .seasonal-thumb-grid { grid-template-columns: repeat(5, 1fr); }
+  }
+  .seasonal-thumb {
+    position: relative;
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    padding: 6px;
+  }
+  .seasonal-thumb-img {
+    width: 100%;
+    aspect-ratio: 1 / 1.1;
+    object-fit: cover;
+    border-radius: 4px;
+    background: #fff;
+  }
+  .seasonal-thumb-name {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--navy);
+    text-align: center;
+    margin-top: 4px;
+    word-break: break-word;
+  }
+  .seasonal-thumb-remove {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: none;
+    background: #c2392e;
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
+    font-weight: 700;
+  }
+  .seasonal-thumb-remove:hover { background: #a6322a; }
+
+  .seasonal-add-form {
+    background: var(--cream);
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+  .seasonal-emoji-preview {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-top: 6px;
+    font-size: 22px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--gray-muted);
+    letter-spacing: 2px;
+  }
+  .seasonal-emoji-preview.has-content { color: var(--navy); }
+  .seasonal-agent-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+  .seasonal-agent-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--navy);
+    padding: 4px 0;
+  }
+  .seasonal-agent-row input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--gold);
+  }
+  .seasonal-agent-shortcuts {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .seasonal-agent-shortcut {
+    background: white;
+    border: 1px solid var(--navy);
+    color: var(--navy);
+    padding: 5px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    min-height: 32px;
+  }
+  .seasonal-agent-shortcut:hover { background: var(--navy); color: white; }
+  .seasonal-toggle-confirm {
+    margin-top: 10px;
+    background: #fff8e5;
+    border: 1px solid var(--gold);
+    color: var(--navy);
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    transition: opacity 0.4s ease;
+    display: none;
+  }
+  .seasonal-toggle-confirm.visible { display: block; }
+  .seasonal-toggle-confirm.fading { opacity: 0; }
+
+  /* ===== Holiday section on agent weekly form ===== */
+  .holiday-section {
+    margin-top: 8px;
+    margin-bottom: 6px;
+  }
+  .holiday-banner {
+    background: linear-gradient(90deg, var(--gold), var(--gold-light));
+    color: var(--navy);
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    box-shadow: 0 2px 6px rgba(201, 169, 97, 0.25);
+  }
+  .holiday-banner .holiday-banner-emoji {
+    font-size: 18px;
+    letter-spacing: 2px;
+  }
+  .holiday-banner .holiday-banner-name {
+    font-family: Georgia, serif;
+    font-weight: 700;
+  }
+  .holiday-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  @media (min-width: 600px) {
+    .holiday-grid { grid-template-columns: repeat(5, 1fr); }
+  }
+  .holiday-section .fav-star { display: none !important; }
+  .holiday-divider {
+    margin: 18px 0 10px;
+    text-align: center;
+    color: var(--navy);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    position: relative;
+    padding: 8px 0;
+  }
+  .holiday-divider:before,
+  .holiday-divider:after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: calc(50% - 110px);
+    height: 1px;
+    background: var(--gold);
+  }
+  .holiday-divider:before { left: 0; }
+  .holiday-divider:after  { right: 0; }
+  .holiday-divider-label {
+    background: var(--cream);
+    padding: 0 12px;
+  }
 </style>
 </head>
 <body>
@@ -2774,6 +3147,54 @@
         <div id="atmAgentSections"></div>
       </div>
     </div>
+
+    <div class="admin-section">
+      <h3 class="admin-section-title">Seasonal Templates</h3>
+      <p style="font-size:13px;color:var(--gray-muted);margin:0 0 12px;">
+        Create holiday folders and turn them on or off manually. When a folder is on, assigned agents see a holiday section above their regular templates. When off, the holiday section disappears and templates are saved for next year.
+      </p>
+
+      <div id="seasonalFolderList"></div>
+
+      <h4 style="margin:22px 0 12px;color:var(--navy);font-size:15px;">Add Holiday Folder</h4>
+      <div class="seasonal-add-form">
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div>
+            <label class="field-label" for="seasonHolidayName">Holiday Name</label>
+            <input type="text" id="seasonHolidayName" placeholder="e.g. Christmas 2026, Thanksgiving 2026, Fourth of July 2026">
+            <div class="admin-error" id="seasonHolidayNameError"></div>
+          </div>
+          <div>
+            <label class="field-label" for="seasonEmojiSet">Emoji Set</label>
+            <input type="text" id="seasonEmojiSet" placeholder="e.g. 🎄🎅🏠❄️⛄🎁🔔">
+            <div class="seasonal-emoji-preview" id="seasonEmojiPreview">Emojis will appear here as you type…</div>
+          </div>
+          <div>
+            <label class="field-label" for="seasonToneSelect">Tone Suggestion</label>
+            <select id="seasonToneSelect">
+              <option value="Warm and festive">Warm and festive</option>
+              <option value="Energetic and celebratory">Energetic and celebratory</option>
+              <option value="Grateful and warm">Grateful and warm</option>
+              <option value="Light and fun">Light and fun</option>
+              <option value="Cozy and homey">Cozy and homey</option>
+              <option value="Fresh and optimistic">Fresh and optimistic</option>
+              <option value="No change — normal tone">No change — normal tone</option>
+            </select>
+          </div>
+          <div>
+            <label class="field-label">Assign to Agents</label>
+            <div class="seasonal-agent-shortcuts">
+              <button type="button" class="seasonal-agent-shortcut" id="seasonSelectAll">Select All</button>
+              <button type="button" class="seasonal-agent-shortcut" id="seasonClearAll">Clear All</button>
+            </div>
+            <div class="seasonal-agent-list" id="seasonAgentList"></div>
+            <div class="admin-error" id="seasonAgentError"></div>
+          </div>
+          <button type="button" class="admin-add-btn" id="seasonCreateBtn">Create Folder</button>
+          <div class="admin-success" id="seasonCreateSuccess"></div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -3039,7 +3460,7 @@
     return "legacy_draft_current_" + agentPrefsSlug(agent);
   }
   function serializeDay(day) {
-    return {
+    const out = {
       topic: day.topic || "",
       tone: day.tone || "",
       selectedTemplate: day.selectedTemplate || null,
@@ -3048,6 +3469,21 @@
       templateIds: (day.templateIds || []).slice(),
       favoriteIds: Object.keys(day.favoriteSet || {})
     };
+    /* If the agent picked a holiday template, attach the season payload so
+       Cowork can apply the seasonal emojis and tone to this post. Picking a
+       regular template intentionally omits these fields entirely. */
+    const sel = day.selectedTemplate;
+    if (sel && typeof sel === "string" && sel.indexOf("HOLIDAY_") === 0
+        && typeof holidayTemplateById === "function") {
+      const ht = holidayTemplateById(sel);
+      if (ht && ht.folder) {
+        out.activeSeason = ht.folder.name || "";
+        out.seasonEmojis = ht.folder.emojiSet || "";
+        out.seasonTone = ht.folder.toneSuggestion || "";
+        out.holidayTemplateUsed = true;
+      }
+    }
+    return out;
   }
   function weekHasData(days) {
     if (!days) return false;
@@ -3270,9 +3706,11 @@
           favoriteSet: favSet
         };
       });
-      /* Ensure the selected template is actually in the displayed grid */
+      /* Ensure the selected template is actually in the displayed grid.
+         Holiday templates render from their own holiday section, not templateIds. */
       days.forEach(function (day) {
-        if (day.selectedTemplate && day.templateIds.indexOf(day.selectedTemplate) === -1) {
+        if (day.selectedTemplate && day.templateIds.indexOf(day.selectedTemplate) === -1
+            && String(day.selectedTemplate).indexOf("HOLIDAY_") !== 0) {
           day.templateIds.unshift(day.selectedTemplate);
         }
       });
@@ -3772,6 +4210,8 @@
           '<label class="field-label" style="margin: 0;">Choose a Template</label>' +
           '<span class="template-hint">Tap \u2605 to favorite</span>' +
         '</div>' +
+        '<div class="holiday-sections"></div>' +
+        '<div class="holiday-divider hidden"><span class="holiday-divider-label">Your Regular Templates</span></div>' +
         '<div class="favorites-section hidden">' +
           '<div class="favorites-header">\u2b50 Your Favorites</div>' +
           '<div class="favorites-grid"></div>' +
@@ -3863,7 +4303,12 @@
         dayState.templateIds = picked.ids;
         dayState.favoriteSet = picked.favoriteSet;
         if (dayState.selectedTemplate && dayState.templateIds.indexOf(dayState.selectedTemplate) === -1) {
-          dayState.selectedTemplate = null;
+          /* Keep a holiday selection alive across rerolls (it lives in its own grid).
+             Also keep favorited templates (still rendered in the favorites section). */
+          const isHoliday = String(dayState.selectedTemplate).indexOf("HOLIDAY_") === 0;
+          const isFavorite = currentAgent && dayState.topic
+            && loadUserFavorites(currentAgent, dayState.topic).indexOf(dayState.selectedTemplate) !== -1;
+          if (!isHoliday && !isFavorite) dayState.selectedTemplate = null;
         }
         renderTemplateGrid(card, dayState, true);
         updateDayState(card, isToday, dayState);
@@ -3891,6 +4336,13 @@
       if (custom && custom.image) {
         imgPart = '<img class="template-img" style="background:#fff;object-fit:cover;" src="' + custom.image + '" alt="' + escapeHtml(custom.name || id) + '">' +
                   '<span class="num" style="font-size:11px;letter-spacing:0;">' + escapeHtml(custom.name || id) + '</span>';
+      }
+    }
+    if (!imgPart && id && id.indexOf("HOLIDAY_") === 0 && typeof holidayTemplateById === "function") {
+      const ht = holidayTemplateById(id);
+      if (ht && ht.template && ht.template.image) {
+        imgPart = '<img class="template-img" style="background:#fff;object-fit:cover;" src="' + ht.template.image + '" alt="' + escapeHtml(ht.template.name || id) + '">' +
+                  '<span class="num" style="font-size:11px;letter-spacing:0;">' + escapeHtml(ht.template.name || id) + '</span>';
       }
     }
     if (!imgPart) imgPart = '<span class="num">' + id + '</span>';
@@ -3921,6 +4373,42 @@
     const favGrid = card.querySelector(".favorites-grid");
     const moreGrid = card.querySelector(".template-grid");
     if (!favSection || !favGrid || !moreGrid) return;
+
+    /* Section 0: holiday sections (one per active holiday folder assigned to this agent) */
+    const holidaysContainer = card.querySelector(".holiday-sections");
+    const dividerEl = card.querySelector(".holiday-divider");
+    if (holidaysContainer && dividerEl) {
+      holidaysContainer.innerHTML = "";
+      let visibleHolidays = [];
+      if (currentAgent && typeof getActiveHolidaysForAgent === "function") {
+        visibleHolidays = getActiveHolidaysForAgent(agentPrefsSlug(currentAgent))
+          .filter(function (f) { return Array.isArray(f.templates) && f.templates.length > 0; });
+      }
+      if (visibleHolidays.length === 0) {
+        dividerEl.classList.add("hidden");
+      } else {
+        dividerEl.classList.remove("hidden");
+        visibleHolidays.forEach(function (folder) {
+          const section = document.createElement("div");
+          section.className = "holiday-section";
+          const banner = document.createElement("div");
+          banner.className = "holiday-banner";
+          const emojis = folder.emojiSet || "";
+          banner.innerHTML =
+            '<span class="holiday-banner-emoji">' + escapeHtml(emojis) + '</span>' +
+            '<span class="holiday-banner-name">' + escapeHtml(folder.name || "Holiday") + ' Templates</span>' +
+            '<span class="holiday-banner-emoji">' + escapeHtml(emojis) + '</span>';
+          section.appendChild(banner);
+          const grid = document.createElement("div");
+          grid.className = "holiday-grid";
+          folder.templates.forEach(function (t) {
+            grid.appendChild(buildTemplateCardEl(t.id, { isFavorite: false, animateIn: false }, card, dayState));
+          });
+          section.appendChild(grid);
+          holidaysContainer.appendChild(section);
+        });
+      }
+    }
 
     /* Section 1: user favorites */
     const userFavs = loadUserFavorites(currentAgent, dayState.topic);
@@ -3988,8 +4476,9 @@
   }
 
   function handleTemplateClick(card, dayState, id) {
-    const grid = card.querySelector(".template-grid");
-    const allCards = grid.querySelectorAll(".template-card");
+    /* Look across all template card sections (holiday + favorites + more) */
+    const templateGroup = card.querySelector(".template-group") || card;
+    const allCards = templateGroup.querySelectorAll(".template-card");
     if (dayState.selectedTemplate === id) {
       dayState.selectedTemplate = null;
       allCards.forEach(function (c) { c.classList.remove("selected"); });
@@ -4300,10 +4789,17 @@
         if (id.indexOf("CUSTOM_") === 0 && typeof customTemplateById === "function") {
           const c = customTemplateById(id);
           if (c && c.name) label = c.name;
+        } else if (id.indexOf("HOLIDAY_") === 0 && typeof holidayTemplateById === "function") {
+          const ht = holidayTemplateById(id);
+          if (ht && ht.template && ht.template.name) label = ht.template.name;
         }
         templ = "<br><strong>Template:</strong> " + escapeHtml(label);
       }
-      meta.innerHTML = '<strong>Topic:</strong> ' + escapeHtml(day.topic) + tone + templ;
+      const seasonLine = day.holidayTemplateUsed
+        ? "<br><strong>Season:</strong> " + escapeHtml(day.activeSeason || "") +
+          (day.seasonEmojis ? " " + escapeHtml(day.seasonEmojis) : "")
+        : "";
+      meta.innerHTML = '<strong>Topic:</strong> ' + escapeHtml(day.topic) + tone + templ + seasonLine;
       dayEl.appendChild(meta);
       wrap.appendChild(dayEl);
     });
@@ -6142,7 +6638,434 @@
     }
   });
 
-  /* When the Content tab opens we render UC + ATM too */
+  /* ============================================================
+     SEASONAL / HOLIDAY TEMPLATES
+     Admin-controlled on/off folders. When a folder is on, assigned
+     agents see a holiday section above their regular templates.
+  ============================================================ */
+  const HOLIDAY_FOLDERS_KEY = "legacy_holiday_folders";
+  let seasonalExpandedFolderId = null;
+  let seasonalSelectedAgents   = new Set();
+
+  function loadHolidayFolders() {
+    try {
+      const raw = localStorage.getItem(HOLIDAY_FOLDERS_KEY);
+      if (!raw) return [];
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (e) { return []; }
+  }
+  function saveHolidayFolders(arr) {
+    try { localStorage.setItem(HOLIDAY_FOLDERS_KEY, JSON.stringify(arr)); } catch (e) {}
+  }
+  function findHolidayFolder(id) {
+    return loadHolidayFolders().find(function (f) { return f.id === id; });
+  }
+  function getActiveHolidaysForAgent(agentSlug) {
+    return loadHolidayFolders().filter(function (f) {
+      return f.active && Array.isArray(f.assignedTo) && f.assignedTo.indexOf(agentSlug) !== -1;
+    });
+  }
+  function holidayTemplateById(tplId) {
+    const folders = loadHolidayFolders();
+    for (let i = 0; i < folders.length; i++) {
+      const f = folders[i];
+      const tpls = Array.isArray(f.templates) ? f.templates : [];
+      const t = tpls.find(function (x) { return x.id === tplId; });
+      if (t) return { template: t, folder: f };
+    }
+    return null;
+  }
+
+  /* ===== Render the agent checkbox list inside the Add form ===== */
+  function refreshSeasonAgentList() {
+    const list = document.getElementById("seasonAgentList");
+    if (!list) return;
+    list.innerHTML = "";
+    if (AGENTS.length === 0) {
+      list.innerHTML = '<div class="admin-empty">No agents yet.</div>';
+      return;
+    }
+    AGENTS.forEach(function (agent) {
+      const slug = agentPrefsSlug(agent);
+      const row = document.createElement("label");
+      row.className = "seasonal-agent-row";
+      const cb = document.createElement("input");
+      cb.type = "checkbox";
+      cb.checked = seasonalSelectedAgents.has(slug);
+      cb.addEventListener("change", function () {
+        if (cb.checked) seasonalSelectedAgents.add(slug);
+        else seasonalSelectedAgents.delete(slug);
+      });
+      const span = document.createElement("span");
+      span.textContent = agent.name;
+      row.appendChild(cb);
+      row.appendChild(span);
+      list.appendChild(row);
+    });
+  }
+
+  /* ===== Live emoji preview ===== */
+  function updateSeasonEmojiPreview() {
+    const input = document.getElementById("seasonEmojiSet");
+    const preview = document.getElementById("seasonEmojiPreview");
+    if (!input || !preview) return;
+    const v = input.value.trim();
+    if (v) {
+      preview.textContent = v;
+      preview.classList.add("has-content");
+    } else {
+      preview.textContent = "Emojis will appear here as you type…";
+      preview.classList.remove("has-content");
+    }
+  }
+
+  /* ===== Render the seasonal folder list ===== */
+  function renderSeasonalFolders() {
+    const container = document.getElementById("seasonalFolderList");
+    if (!container) return;
+    container.innerHTML = "";
+    const folders = loadHolidayFolders();
+    if (folders.length === 0) {
+      container.innerHTML = '<div class="seasonal-empty">No holiday folders yet. Create one below.</div>';
+      return;
+    }
+    folders.forEach(function (folder) {
+      container.appendChild(buildSeasonalFolderCard(folder));
+    });
+  }
+
+  function buildSeasonalFolderCard(folder) {
+    const card = document.createElement("div");
+    card.className = "seasonal-folder-card" + (folder.active ? " is-active" : "");
+
+    const tplCount = Array.isArray(folder.templates) ? folder.templates.length : 0;
+    const agentCount = Array.isArray(folder.assignedTo) ? folder.assignedTo.length : 0;
+    const assignedNames = (folder.assignedTo || [])
+      .map(function (slug) {
+        const a = AGENTS.find(function (x) { return agentPrefsSlug(x) === slug; });
+        return a ? a.name : slug;
+      });
+
+    const row = document.createElement("div");
+    row.className = "seasonal-folder-row";
+
+    const info = document.createElement("div");
+    info.className = "seasonal-folder-info";
+    info.innerHTML =
+      '<div class="seasonal-folder-name">' +
+        '<span>' + escapeHtml(folder.name || "Untitled holiday") + '</span>' +
+        '<span class="seasonal-folder-emoji">' + escapeHtml(folder.emojiSet || "") + '</span>' +
+      '</div>' +
+      '<div class="seasonal-folder-meta">' +
+        '<strong>Tone:</strong> ' + escapeHtml(folder.toneSuggestion || "—") + ' &middot; ' +
+        '<strong>Templates:</strong> ' + tplCount + ' &middot; ' +
+        '<strong>Assigned:</strong> ' + (agentCount === 0 ? 'none' : escapeHtml(assignedNames.join(", "))) +
+      '</div>';
+
+    const actions = document.createElement("div");
+    actions.className = "seasonal-folder-actions";
+
+    /* Off label, toggle, On label */
+    const offLabel = document.createElement("span");
+    offLabel.className = "season-toggle-label" + (folder.active ? "" : " on");
+    offLabel.textContent = "Off";
+
+    const toggleWrap = document.createElement("label");
+    toggleWrap.className = "season-toggle";
+    const toggleInput = document.createElement("input");
+    toggleInput.type = "checkbox";
+    toggleInput.checked = !!folder.active;
+    toggleInput.addEventListener("change", function () {
+      handleSeasonalToggle(folder.id, toggleInput.checked);
+    });
+    const slider = document.createElement("span");
+    slider.className = "season-toggle-slider";
+    toggleWrap.appendChild(toggleInput);
+    toggleWrap.appendChild(slider);
+
+    const onLabel = document.createElement("span");
+    onLabel.className = "season-toggle-label" + (folder.active ? " on" : "");
+    onLabel.textContent = "On";
+
+    const viewBtn = document.createElement("button");
+    viewBtn.type = "button";
+    viewBtn.className = "seasonal-view-btn";
+    viewBtn.textContent = (seasonalExpandedFolderId === folder.id) ? "Hide Templates" : "View Templates";
+    viewBtn.addEventListener("click", function () {
+      seasonalExpandedFolderId = (seasonalExpandedFolderId === folder.id) ? null : folder.id;
+      renderSeasonalFolders();
+    });
+
+    const delBtn = document.createElement("button");
+    delBtn.type = "button";
+    delBtn.className = "seasonal-delete-btn";
+    delBtn.textContent = "Delete";
+    delBtn.addEventListener("click", function () {
+      if (!window.confirm("Delete the holiday folder \"" + (folder.name || "") + "\"? Templates inside it will also be removed.")) return;
+      const all = loadHolidayFolders().filter(function (f) { return f.id !== folder.id; });
+      saveHolidayFolders(all);
+      if (seasonalExpandedFolderId === folder.id) seasonalExpandedFolderId = null;
+      renderSeasonalFolders();
+    });
+
+    actions.appendChild(offLabel);
+    actions.appendChild(toggleWrap);
+    actions.appendChild(onLabel);
+    actions.appendChild(viewBtn);
+    actions.appendChild(delBtn);
+
+    row.appendChild(info);
+    row.appendChild(actions);
+    card.appendChild(row);
+
+    /* Confirmation slot (used after toggling on) */
+    const confirm = document.createElement("div");
+    confirm.className = "seasonal-toggle-confirm";
+    confirm.id = "seasonalConfirm_" + folder.id;
+    card.appendChild(confirm);
+
+    /* Detail / upload area when expanded */
+    if (seasonalExpandedFolderId === folder.id) {
+      card.appendChild(buildSeasonalDetailEl(folder));
+    }
+    return card;
+  }
+
+  function buildSeasonalDetailEl(folder) {
+    const wrap = document.createElement("div");
+    wrap.className = "seasonal-folder-detail";
+
+    const title = document.createElement("h5");
+    title.className = "seasonal-detail-title";
+    title.textContent = "Upload Templates to " + (folder.name || "Holiday");
+    wrap.appendChild(title);
+
+    const dz = document.createElement("div");
+    dz.className = "seasonal-dropzone";
+    dz.innerHTML =
+      '<div class="seasonal-dropzone-icon">&uarr;</div>' +
+      '<div class="seasonal-dropzone-text">Drag templates here or click to browse</div>' +
+      '<div class="seasonal-dropzone-sub">PNG or JPG. Max 5MB per file. Multiple files OK.</div>';
+    const fileInput = document.createElement("input");
+    fileInput.type = "file";
+    fileInput.multiple = true;
+    fileInput.accept = "image/png,image/jpeg";
+    fileInput.style.display = "none";
+    dz.appendChild(fileInput);
+
+    dz.addEventListener("click", function () { fileInput.click(); });
+    fileInput.addEventListener("change", function () {
+      handleSeasonalFiles(folder.id, fileInput.files);
+      fileInput.value = "";
+    });
+    ["dragenter","dragover"].forEach(function (evt) {
+      dz.addEventListener(evt, function (e) { e.preventDefault(); e.stopPropagation(); dz.classList.add("drag-over"); });
+    });
+    ["dragleave","drop"].forEach(function (evt) {
+      dz.addEventListener(evt, function (e) { e.preventDefault(); e.stopPropagation(); dz.classList.remove("drag-over"); });
+    });
+    dz.addEventListener("drop", function (e) {
+      const files = e.dataTransfer ? e.dataTransfer.files : null;
+      if (files && files.length) handleSeasonalFiles(folder.id, files);
+    });
+    wrap.appendChild(dz);
+
+    /* Existing templates grid */
+    const tpls = Array.isArray(folder.templates) ? folder.templates.slice() : [];
+    if (tpls.length === 0) {
+      const empty = document.createElement("div");
+      empty.className = "seasonal-empty";
+      empty.style.marginTop = "10px";
+      empty.textContent = "No templates uploaded to this folder yet.";
+      wrap.appendChild(empty);
+    } else {
+      const grid = document.createElement("div");
+      grid.className = "seasonal-thumb-grid";
+      tpls.sort(function (a, b) { return (b.uploadedAt || 0) - (a.uploadedAt || 0); });
+      tpls.forEach(function (tpl) {
+        const thumb = document.createElement("div");
+        thumb.className = "seasonal-thumb";
+        thumb.innerHTML =
+          '<button type="button" class="seasonal-thumb-remove" title="Remove">&times;</button>' +
+          '<img class="seasonal-thumb-img" src="' + tpl.image + '" alt="">' +
+          '<div class="seasonal-thumb-name">' + escapeHtml(tpl.name || tpl.id) + '</div>';
+        thumb.querySelector(".seasonal-thumb-remove").addEventListener("click", function () {
+          removeHolidayTemplate(folder.id, tpl.id);
+        });
+        grid.appendChild(thumb);
+      });
+      wrap.appendChild(grid);
+    }
+    return wrap;
+  }
+
+  function handleSeasonalFiles(folderId, fileList) {
+    const files = Array.from(fileList || []).filter(function (f) {
+      return f.type === "image/png" || f.type === "image/jpeg";
+    });
+    if (!files.length) return;
+    let pending = files.length;
+    const newOnes = [];
+    const ts = Date.now();
+    files.forEach(function (file, idx) {
+      if (file.size > MAX_FILE_SIZE) {
+        pending--;
+        if (pending === 0) commit();
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const baseName = file.name.replace(/\.[^.]+$/, "");
+        newOnes.push({
+          id: "HOLIDAY_" + folderId + "_" + ts + "_" + idx,
+          name: baseName,
+          image: e.target.result,
+          uploadedOn: todayISO(),
+          uploadedAt: ts + idx
+        });
+        pending--;
+        if (pending === 0) commit();
+      };
+      reader.readAsDataURL(file);
+    });
+    function commit() {
+      if (newOnes.length === 0) return;
+      const all = loadHolidayFolders();
+      const folder = all.find(function (f) { return f.id === folderId; });
+      if (!folder) return;
+      folder.templates = (folder.templates || []).concat(newOnes);
+      saveHolidayFolders(all);
+      renderSeasonalFolders();
+    }
+  }
+
+  function removeHolidayTemplate(folderId, tplId) {
+    const all = loadHolidayFolders();
+    const folder = all.find(function (f) { return f.id === folderId; });
+    if (!folder) return;
+    folder.templates = (folder.templates || []).filter(function (t) { return t.id !== tplId; });
+    saveHolidayFolders(all);
+    renderSeasonalFolders();
+  }
+
+  function handleSeasonalToggle(folderId, on) {
+    const all = loadHolidayFolders();
+    const folder = all.find(function (f) { return f.id === folderId; });
+    if (!folder) return;
+    folder.active = !!on;
+    if (on) folder.lastActivated = todayISO();
+    saveHolidayFolders(all);
+    renderSeasonalFolders();
+    if (on) {
+      /* Show the on-page confirmation message after re-render */
+      setTimeout(function () {
+        const msgEl = document.getElementById("seasonalConfirm_" + folderId);
+        if (!msgEl) return;
+        msgEl.innerHTML = "<strong>" + escapeHtml(folder.name) + " is now active.</strong> " +
+          "Assigned agents will see " + escapeHtml(folder.name) + " templates in their weekly form immediately.";
+        msgEl.classList.remove("fading");
+        msgEl.classList.add("visible");
+        setTimeout(function () {
+          msgEl.classList.add("fading");
+          setTimeout(function () { msgEl.classList.remove("visible", "fading"); msgEl.innerHTML = ""; }, 400);
+        }, 5000);
+      }, 0);
+    }
+  }
+
+  /* ===== Wire up the Add form once on load ===== */
+  (function wireSeasonalAddForm() {
+    const emojiInput = document.getElementById("seasonEmojiSet");
+    if (emojiInput) emojiInput.addEventListener("input", updateSeasonEmojiPreview);
+
+    const selectAllBtn = document.getElementById("seasonSelectAll");
+    if (selectAllBtn) selectAllBtn.addEventListener("click", function () {
+      seasonalSelectedAgents = new Set(AGENTS.map(function (a) { return agentPrefsSlug(a); }));
+      refreshSeasonAgentList();
+    });
+    const clearAllBtn = document.getElementById("seasonClearAll");
+    if (clearAllBtn) clearAllBtn.addEventListener("click", function () {
+      seasonalSelectedAgents.clear();
+      refreshSeasonAgentList();
+    });
+
+    const createBtn = document.getElementById("seasonCreateBtn");
+    if (createBtn) createBtn.addEventListener("click", function () {
+      const nameInput = document.getElementById("seasonHolidayName");
+      const nameErr   = document.getElementById("seasonHolidayNameError");
+      const emojiIn   = document.getElementById("seasonEmojiSet");
+      const toneSel   = document.getElementById("seasonToneSelect");
+      const agErr     = document.getElementById("seasonAgentError");
+      const successEl = document.getElementById("seasonCreateSuccess");
+
+      nameErr.classList.remove("visible"); nameErr.textContent = "";
+      agErr.classList.remove("visible");   agErr.textContent = "";
+      nameInput.classList.remove("input-error");
+
+      const name = (nameInput.value || "").trim();
+      const emoji = (emojiIn.value || "").trim();
+      const tone = toneSel.value;
+      const assigned = Array.from(seasonalSelectedAgents);
+
+      let ok = true;
+      if (!name) {
+        nameErr.textContent = "Please enter a holiday name.";
+        nameErr.classList.add("visible");
+        nameInput.classList.add("input-error");
+        ok = false;
+      } else {
+        const lower = name.toLowerCase();
+        const exists = loadHolidayFolders().some(function (f) { return (f.name || "").toLowerCase() === lower; });
+        if (exists) {
+          nameErr.textContent = "A holiday folder with that name already exists.";
+          nameErr.classList.add("visible");
+          nameInput.classList.add("input-error");
+          ok = false;
+        }
+      }
+      if (assigned.length === 0) {
+        agErr.textContent = "Assign at least one agent.";
+        agErr.classList.add("visible");
+        ok = false;
+      }
+      if (!ok) return;
+
+      const all = loadHolidayFolders();
+      const newFolder = {
+        id: "hf_" + Date.now() + "_" + Math.floor(Math.random() * 10000),
+        name: name,
+        emojiSet: emoji,
+        toneSuggestion: tone,
+        active: false,
+        assignedTo: assigned,
+        templates: [],
+        createdOn: todayISO(),
+        lastActivated: null
+      };
+      all.push(newFolder);
+      saveHolidayFolders(all);
+
+      /* Reset form */
+      nameInput.value = "";
+      emojiIn.value = "";
+      toneSel.value = "Warm and festive";
+      seasonalSelectedAgents.clear();
+      refreshSeasonAgentList();
+      updateSeasonEmojiPreview();
+      renderSeasonalFolders();
+
+      successEl.innerHTML = "<strong>" + escapeHtml(name) + "</strong> folder created. Add templates and flip the toggle on when ready.";
+      successEl.classList.remove("fading");
+      successEl.classList.add("visible");
+      setTimeout(function () {
+        successEl.classList.add("fading");
+        setTimeout(function () { successEl.classList.remove("visible", "fading"); successEl.innerHTML = ""; }, 400);
+      }, 5000);
+    });
+  })();
+
+  /* When the Content tab opens we render UC + ATM + Seasonal too */
   const _origSwitchAdminTab = (typeof switchAdminTab === "function") ? switchAdminTab : null;
   if (_origSwitchAdminTab) {
     switchAdminTab = function (tab) {
@@ -6152,6 +7075,8 @@
         refreshUCPreviewGrid();
         updateUploadBtn();
         renderATM();
+        refreshSeasonAgentList();
+        renderSeasonalFolders();
       }
     };
   }
