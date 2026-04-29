@@ -8503,23 +8503,24 @@
       if (pendingRemoval && pendingRemoval.folderId === folder.id) {
         const tpl = (folder.templates || []).find(function (t) { return t.id === pendingRemoval.tplId; });
         if (tpl) {
-          const confirmEl = document.createElement("div");
-          confirmEl.className = "tf-thumb-remove-confirm";
-          confirmEl.innerHTML =
-            '<span>Remove <strong>' + escapeHtml(tpl.name || tpl.id) + '</strong> from <strong>' + escapeHtml(folder.name) + '</strong>? The template will be deleted permanently.</span>' +
-            '<span class="tf-confirm-actions">' +
-              '<button type="button" class="admin-confirm-yes" data-tf-rmtpl-yes>Confirm</button>' +
-              '<button type="button" class="admin-confirm-cancel" data-tf-rmtpl-no>Cancel</button>' +
-            '</span>';
-          confirmEl.querySelector('[data-tf-rmtpl-yes]').addEventListener("click", function () {
-            removeFolderTemplate(pendingRemoval.folderId, pendingRemoval.tplId);
-            tfState.pendingThumbRemoval = null;
-            renderTemplateFolders();
+          const confirmEl = buildPasswordConfirmPanel({
+            messageHtml:
+              'Remove <strong>' + escapeHtml(tpl.name || tpl.id) + '</strong> from <strong>' +
+              escapeHtml(folder.name) + '</strong>? The template will be deleted permanently.',
+            confirmText: "Confirm",
+            confirmClass: "admin-confirm-yes",
+            onConfirm: function () {
+              removeFolderTemplate(pendingRemoval.folderId, pendingRemoval.tplId);
+              tfState.pendingThumbRemoval = null;
+              renderTemplateFolders();
+            },
+            onCancel: function () {
+              tfState.pendingThumbRemoval = null;
+              renderTemplateFolders();
+            }
           });
-          confirmEl.querySelector('[data-tf-rmtpl-no]').addEventListener("click", function () {
-            tfState.pendingThumbRemoval = null;
-            renderTemplateFolders();
-          });
+          /* The thumb-remove-confirm style spans the full grid width via CSS */
+          confirmEl.style.gridColumn = "1 / -1";
           grid.appendChild(confirmEl);
         }
       }
