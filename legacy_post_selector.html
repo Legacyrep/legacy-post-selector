@@ -6992,6 +6992,9 @@
   let ucSelectedAgents = new Set();
   let atmExpandedAgentIds = new Set();
   let atmOpenCopyDropdownTplId = null;
+  /* When the admin clicks × on a thumbnail we pause and ask for the admin
+     password before actually removing the template. Shape: { tplId, slug }. */
+  let atmPendingRemoval = null;
 
   function loadCustomTemplates() {
     try {
