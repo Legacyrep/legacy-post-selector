@@ -5702,7 +5702,7 @@
     const error = document.getElementById("adminPasswordError");
     const value = input.value;
 
-    if (value === ADMIN_PASSWORD) {
+    if (value === getCurrentAdminPassword()) {
       setAdminSession();
       adminPasswordAttempts = 0;
       input.value = "";
