@@ -1852,6 +1852,135 @@
     box-shadow: var(--shadow);
   }
 
+  /* ===== Change Password form (Settings tab) ===== */
+  .cp-form { display: flex; flex-direction: column; gap: 14px; }
+  .cp-field { display: flex; flex-direction: column; gap: 4px; }
+  .cp-input-row {
+    display: flex;
+    gap: 8px;
+    align-items: stretch;
+  }
+  .cp-input-row input {
+    flex: 1;
+    min-width: 0;
+  }
+  .cp-toggle {
+    background: white;
+    border: 2px solid var(--navy);
+    color: var(--navy);
+    padding: 0 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    min-height: 48px;
+    min-width: 60px;
+    flex-shrink: 0;
+  }
+  .cp-toggle:hover { background: var(--navy); color: white; }
+  .cp-strength {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    margin-top: 4px;
+    height: 16px;
+  }
+  .cp-strength-bar {
+    flex: 1;
+    height: 6px;
+    background: var(--gray-bg);
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+  }
+  .cp-strength-fill {
+    height: 100%;
+    width: 0;
+    background: transparent;
+    transition: width 0.18s ease, background 0.18s ease;
+    border-radius: 3px;
+  }
+  .cp-strength-label { font-weight: 700; min-width: 60px; text-align: right; }
+  .cp-strength.weak   .cp-strength-fill { width: 33%;  background: #c2392e; }
+  .cp-strength.weak   .cp-strength-label { color: #c2392e; }
+  .cp-strength.fair   .cp-strength-fill { width: 66%;  background: var(--gold); }
+  .cp-strength.fair   .cp-strength-label { color: var(--gold-dark); }
+  .cp-strength.strong .cp-strength-fill { width: 100%; background: var(--green); }
+  .cp-strength.strong .cp-strength-label { color: var(--green); }
+
+  .cp-success-block {
+    background: #e8f5ef;
+    border: 2px solid var(--green);
+    color: var(--green);
+    padding: 14px 16px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1.5;
+    display: none;
+  }
+  .cp-success-block.visible { display: block; }
+  .cp-success-block strong { color: var(--green); }
+  .cp-countdown {
+    margin-top: 10px;
+    font-style: italic;
+    color: var(--navy);
+    font-weight: 700;
+  }
+
+  /* ===== Inline password gate for destructive actions ===== */
+  .pwd-confirm {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  .pwd-confirm-row {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .pwd-confirm-input-wrap {
+    display: flex;
+    gap: 6px;
+    align-items: stretch;
+  }
+  .pwd-confirm-input {
+    flex: 1;
+    min-width: 0;
+    padding: 10px 12px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 14px;
+    background: white;
+    color: var(--navy);
+    min-height: 42px;
+  }
+  .pwd-confirm-input:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: 0 0 0 2px rgba(201, 169, 97, 0.2);
+  }
+  .pwd-confirm-input.input-error { border-color: #c2392e; }
+  .pwd-confirm-toggle {
+    background: white;
+    border: 2px solid var(--navy);
+    color: var(--navy);
+    padding: 0 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 600;
+    min-height: 42px;
+    min-width: 56px;
+    flex-shrink: 0;
+  }
+  .pwd-confirm-toggle:hover { background: var(--navy); color: white; }
+  .pwd-confirm-error { margin-top: 4px; }
+
   /* ===== Post Type rows ===== */
   .pt-row {
     display: flex;
