@@ -5764,6 +5764,227 @@
   });
 
   /* ============================================================
+     PASSWORD-GATED INLINE CONFIRMATION (reusable)
+     Builds a confirm panel that contains the existing message text
+     plus an admin-password input. The destructive action (onConfirm)
+     only fires when the entered password matches the current admin
+     password. Wrong password → red error, field cleared, dialog stays
+     open so the admin can retry or Cancel.
+  ============================================================ */
+  function buildPasswordConfirmPanel(opts) {
+    const messageHtml  = opts.messageHtml || "";
+    const confirmText  = opts.confirmText || "Confirm";
+    const cancelText   = opts.cancelText  || "Cancel";
+    const confirmClass = opts.confirmClass || "admin-confirm-yes";
+    const onConfirm    = opts.onConfirm   || function () {};
+    const onCancel     = opts.onCancel    || function () {};
+    const onWrong      = opts.onWrong     || null;
+
+    const wrap = document.createElement("div");
+    wrap.className = "admin-confirm-row pwd-confirm";
+    wrap.innerHTML =
+      '<div class="admin-confirm-message" style="width:100%;">' + messageHtml + '</div>' +
+      '<div class="pwd-confirm-row">' +
+        '<label class="field-label" style="margin:0 0 4px;">Enter admin password to confirm:</label>' +
+        '<div class="pwd-confirm-input-wrap">' +
+          '<input type="password" class="pwd-confirm-input" autocomplete="current-password" placeholder="Admin password">' +
+          '<button type="button" class="pwd-confirm-toggle">Show</button>' +
+        '</div>' +
+        '<div class="admin-error pwd-confirm-error"></div>' +
+      '</div>' +
+      '<div class="admin-confirm-actions">' +
+        '<button type="button" class="' + confirmClass + ' pwd-confirm-yes">' + escapeHtml(confirmText) + '</button>' +
+        '<button type="button" class="admin-confirm-cancel pwd-confirm-no">' + escapeHtml(cancelText) + '</button>' +
+      '</div>';
+
+    const input  = wrap.querySelector(".pwd-confirm-input");
+    const errEl  = wrap.querySelector(".pwd-confirm-error");
+    const toggle = wrap.querySelector(".pwd-confirm-toggle");
+    const yesBtn = wrap.querySelector(".pwd-confirm-yes");
+    const noBtn  = wrap.querySelector(".pwd-confirm-no");
+
+    toggle.addEventListener("click", function () {
+      if (input.type === "password") { input.type = "text"; toggle.textContent = "Hide"; }
+      else { input.type = "password"; toggle.textContent = "Show"; }
+      input.focus();
+    });
+    input.addEventListener("input", function () {
+      input.classList.remove("input-error");
+      errEl.classList.remove("visible");
+      errEl.textContent = "";
+    });
+    input.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") { e.preventDefault(); yesBtn.click(); }
+    });
+    yesBtn.addEventListener("click", function () {
+      const entered = input.value;
+      if (entered && entered === getCurrentAdminPassword()) {
+        errEl.classList.remove("visible");
+        errEl.textContent = "";
+        onConfirm();
+      } else {
+        errEl.textContent = "Incorrect password. Action was not completed.";
+        errEl.classList.add("visible");
+        input.value = "";
+        input.classList.add("input-error");
+        input.focus();
+        if (onWrong) onWrong();
+      }
+    });
+    noBtn.addEventListener("click", function () { onCancel(); });
+    /* Auto-focus shortly after insertion so admin can type immediately */
+    setTimeout(function () { try { input.focus(); } catch (e) {} }, 30);
+    return wrap;
+  }
+
+  /* ============================================================
+     CHANGE ADMIN PASSWORD (Settings tab)
+  ============================================================ */
+  (function wireChangePasswordForm() {
+    const form        = document.getElementById("cpForm");
+    if (!form) return;
+    const currentEl   = document.getElementById("cpCurrent");
+    const newEl       = document.getElementById("cpNew");
+    const confirmEl   = document.getElementById("cpConfirm");
+    const currentErr  = document.getElementById("cpCurrentError");
+    const newErr      = document.getElementById("cpNewError");
+    const confirmErr  = document.getElementById("cpConfirmError");
+    const submitBtn   = document.getElementById("cpSubmitBtn");
+    const successBox  = document.getElementById("cpSuccess");
+    const countdownEl = document.getElementById("cpCountdown");
+    const strengthBox = document.getElementById("cpStrength");
+    const strengthLbl = strengthBox.querySelector(".cp-strength-label");
+
+    /* Show/Hide toggles for each password field */
+    Array.prototype.forEach.call(form.querySelectorAll(".cp-toggle"), function (btn) {
+      btn.addEventListener("click", function () {
+        const targetId = btn.getAttribute("data-cp-toggle");
+        const inp = document.getElementById(targetId);
+        if (!inp) return;
+        if (inp.type === "password") { inp.type = "text"; btn.textContent = "Hide"; }
+        else { inp.type = "password"; btn.textContent = "Show"; }
+        inp.focus();
+      });
+    });
+
+    function strengthOf(p) {
+      if (!p) return "empty";
+      let score = 0;
+      if (p.length >= 8) score++;
+      if (p.length >= 12) score++;
+      if (/[0-9]/.test(p)) score++;
+      if (/[^A-Za-z0-9]/.test(p)) score++;
+      if (/[A-Z]/.test(p) && /[a-z]/.test(p)) score++;
+      if (score <= 2) return "weak";
+      if (score === 3) return "fair";
+      return "strong";
+    }
+    function updateStrength() {
+      const v = newEl.value;
+      strengthBox.classList.remove("weak", "fair", "strong");
+      if (!v) { strengthLbl.textContent = ""; return; }
+      const s = strengthOf(v);
+      strengthBox.classList.add(s);
+      strengthLbl.textContent = s.charAt(0).toUpperCase() + s.slice(1);
+    }
+    newEl.addEventListener("input", function () {
+      newEl.classList.remove("input-error");
+      newErr.classList.remove("visible");
+      newErr.textContent = "";
+      updateStrength();
+    });
+    [currentEl, confirmEl].forEach(function (el) {
+      el.addEventListener("input", function () {
+        el.classList.remove("input-error");
+        const errId = el === currentEl ? currentErr : confirmErr;
+        errId.classList.remove("visible");
+        errId.textContent = "";
+      });
+    });
+
+    function showFieldError(input, errEl, msg) {
+      errEl.textContent = msg;
+      errEl.classList.add("visible");
+      input.classList.add("input-error");
+    }
+    function clearAllErrors() {
+      [currentErr, newErr, confirmErr].forEach(function (e) {
+        e.classList.remove("visible");
+        e.textContent = "";
+      });
+      [currentEl, newEl, confirmEl].forEach(function (i) { i.classList.remove("input-error"); });
+    }
+
+    submitBtn.addEventListener("click", function () {
+      clearAllErrors();
+      const cur     = currentEl.value;
+      const next    = newEl.value;
+      const confirm = confirmEl.value;
+      let ok = true;
+
+      if (!cur || cur !== getCurrentAdminPassword()) {
+        showFieldError(currentEl, currentErr, "Current password is incorrect.");
+        ok = false;
+      }
+      if (!next) {
+        showFieldError(newEl, newErr, "New password cannot be empty.");
+        ok = false;
+      } else if (next.length < 8) {
+        showFieldError(newEl, newErr, "New password must be at least 8 characters long.");
+        ok = false;
+      } else if (!/[0-9]/.test(next)) {
+        showFieldError(newEl, newErr, "New password must contain at least one number.");
+        ok = false;
+      } else if (!/[^A-Za-z0-9]/.test(next)) {
+        showFieldError(newEl, newErr, "New password must contain at least one special character.");
+        ok = false;
+      } else if (cur && next === cur) {
+        showFieldError(newEl, newErr, "New password cannot be the same as the current password.");
+        ok = false;
+      }
+      if (!confirm) {
+        showFieldError(confirmEl, confirmErr, "Please confirm the new password.");
+        ok = false;
+      } else if (next && confirm !== next) {
+        showFieldError(confirmEl, confirmErr, "Confirmation does not match the new password.");
+        ok = false;
+      }
+      if (!ok) return;
+
+      /* Persist + clear fields + show success + start logout countdown */
+      setStoredAdminPassword(next);
+      currentEl.value = "";
+      newEl.value = "";
+      confirmEl.value = "";
+      strengthBox.classList.remove("weak", "fair", "strong");
+      strengthLbl.textContent = "";
+      successBox.classList.add("visible");
+
+      /* 5-4-3-2-1 countdown then auto-logout */
+      let remaining = 5;
+      function tick() {
+        if (remaining > 0) {
+          countdownEl.textContent = "Logging you out in " + remaining + " second" + (remaining === 1 ? "" : "s") + " so you can test your new password...";
+          remaining--;
+          submitBtn.disabled = true;
+          setTimeout(tick, 1000);
+        } else {
+          countdownEl.textContent = "Logging out...";
+          clearAdminSession();
+          showPage("homePage");
+          /* Reset the success block so it doesn't show next time admin opens the panel */
+          setTimeout(function () {
+            successBox.classList.remove("visible");
+            countdownEl.textContent = "";
+            submitBtn.disabled = false;
+          }, 800);
+        }
+      }
+      tick();
+    });
+  })();
+
+  /* ============================================================
      AGENT PIN PAGE
   ============================================================ */
   let currentPinAgent = null;
