@@ -6268,30 +6268,75 @@
     });
   }
 
-  /* ===== Tab switching ===== */
+  /* ===== Top-level admin tab switching =====
+     Tabs: agents | content | templates | settings
+     Default tab is "agents". */
+  const ADMIN_TABS = ["agents", "content", "templates", "settings"];
   function switchAdminTab(tab) {
-    const btnAgents = document.getElementById("adminTabBtnAgents");
-    const btnContent = document.getElementById("adminTabBtnContent");
-    const panelAgents = document.getElementById("adminTabAgents");
-    const panelContent = document.getElementById("adminTabContent");
-    if (!btnAgents || !btnContent || !panelAgents || !panelContent) return;
+    if (ADMIN_TABS.indexOf(tab) === -1) tab = "agents";
+    const refs = {
+      agents:    { btn: "adminTabBtnAgents",    panel: "adminTabAgents"    },
+      content:   { btn: "adminTabBtnContent",   panel: "adminTabContent"   },
+      templates: { btn: "adminTabBtnTemplates", panel: "adminTabTemplates" },
+      settings:  { btn: "adminTabBtnSettings",  panel: "adminTabSettings"  }
+    };
+    /* Bail if any expected element is missing (defensive — should never happen). */
+    for (const k in refs) {
+      if (!document.getElementById(refs[k].btn) || !document.getElementById(refs[k].panel)) return;
+    }
+    ADMIN_TABS.forEach(function (key) {
+      const btn = document.getElementById(refs[key].btn);
+      const panel = document.getElementById(refs[key].panel);
+      if (key === tab) {
+        btn.classList.add("active");
+        panel.classList.remove("hidden");
+      } else {
+        btn.classList.remove("active");
+        panel.classList.add("hidden");
+      }
+    });
+    /* Per-tab refresh. Templates renders are wired via the patcher below. */
     if (tab === "content") {
-      btnAgents.classList.remove("active");
-      btnContent.classList.add("active");
-      panelAgents.classList.add("hidden");
-      panelContent.classList.remove("hidden");
       removingPostTypeIdx = null;
       clearAddPostTypeForm();
       renderPostTypeList();
-    } else {
-      btnAgents.classList.add("active");
-      btnContent.classList.remove("active");
-      panelAgents.classList.remove("hidden");
-      panelContent.classList.add("hidden");
+    } else if (tab === "templates") {
+      switchTemplateSubtab(currentTemplateSubtab || "upload");
     }
   }
   document.getElementById("adminTabBtnAgents").addEventListener("click", function () { switchAdminTab("agents"); });
   document.getElementById("adminTabBtnContent").addEventListener("click", function () { switchAdminTab("content"); });
+  document.getElementById("adminTabBtnTemplates").addEventListener("click", function () { switchAdminTab("templates"); });
+  document.getElementById("adminTabBtnSettings").addEventListener("click", function () { switchAdminTab("settings"); });
+
+  /* ===== Template Manager sub-tabs =====
+     Sub-tabs: upload | folders | seasonal. Default is "upload". */
+  const TEMPLATE_SUBTABS = ["upload", "folders", "seasonal"];
+  let currentTemplateSubtab = "upload";
+  function switchTemplateSubtab(sub) {
+    if (TEMPLATE_SUBTABS.indexOf(sub) === -1) sub = "upload";
+    currentTemplateSubtab = sub;
+    const refs = {
+      upload:   { btn: "templateSubtabBtnUpload",   panel: "templateSubpanelUpload"   },
+      folders:  { btn: "templateSubtabBtnFolders",  panel: "templateSubpanelFolders"  },
+      seasonal: { btn: "templateSubtabBtnSeasonal", panel: "templateSubpanelSeasonal" }
+    };
+    TEMPLATE_SUBTABS.forEach(function (key) {
+      const btn = document.getElementById(refs[key].btn);
+      const panel = document.getElementById(refs[key].panel);
+      if (!btn || !panel) return;
+      if (key === sub) {
+        btn.classList.add("active");
+        panel.classList.remove("hidden");
+      } else {
+        btn.classList.remove("active");
+        panel.classList.add("hidden");
+      }
+    });
+  }
+  document.getElementById("templateSubtabBtnUpload").addEventListener("click", function () { switchTemplateSubtab("upload"); });
+  document.getElementById("templateSubtabBtnFolders").addEventListener("click", function () { switchTemplateSubtab("folders"); });
+  document.getElementById("templateSubtabBtnSeasonal").addEventListener("click", function () { switchTemplateSubtab("seasonal"); });
 
   /* ===== Render Post Types list ===== */
   function renderPostTypeList() {
