@@ -1805,6 +1805,53 @@
     border-bottom-color: var(--gold);
   }
 
+  /* ===== Template Manager sub-tabs ===== */
+  .template-subtabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+  }
+  .template-subtab {
+    background: var(--gray-bg);
+    border: 2px solid transparent;
+    border-radius: 10px;
+    padding: 10px 16px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    color: var(--navy);
+    min-height: 42px;
+    flex: 1 1 120px;
+    text-align: center;
+    transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease, transform 0.12s ease;
+  }
+  .template-subtab:hover { background: var(--cream); }
+  .template-subtab.active {
+    background: var(--navy);
+    color: var(--gold);
+    border-color: var(--navy);
+  }
+  .template-subpanel {
+    animation: fadeIn 0.2s ease;
+  }
+  .admin-tab-panel { animation: fadeIn 0.2s ease; }
+
+  /* ===== Settings tab placeholder ===== */
+  .settings-placeholder {
+    background: white;
+    border: 2px dashed var(--border);
+    border-radius: 12px;
+    padding: 60px 20px;
+    text-align: center;
+    color: var(--gray-muted);
+    font-size: 16px;
+    font-style: italic;
+    box-shadow: var(--shadow);
+  }
+
   /* ===== Post Type rows ===== */
   .pt-row {
     display: flex;
