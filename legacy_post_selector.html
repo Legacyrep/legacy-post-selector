@@ -7359,11 +7359,39 @@
             rmBtn.className = "atm-folder-remove";
             rmBtn.textContent = "Remove Folder";
             rmBtn.addEventListener("click", function () {
-              removeFolderFromAgent(folder.id, slug);
+              atmPendingFolderRemoval = { folderId: folder.id, slug: slug };
+              renderATM();
             });
             row.appendChild(info);
             row.appendChild(rmBtn);
             fblock.appendChild(row);
+            /* Inline password-gated confirm for THIS folder + THIS agent */
+            if (atmPendingFolderRemoval
+                && atmPendingFolderRemoval.folderId === folder.id
+                && atmPendingFolderRemoval.slug === slug) {
+              const confirmRow = document.createElement("div");
+              confirmRow.style.width = "100%";
+              confirmRow.style.marginTop = "8px";
+              confirmRow.appendChild(buildPasswordConfirmPanel({
+                messageHtml:
+                  'Unassign <strong>' + escapeHtml(folder.name) + '</strong> from <strong>' +
+                  escapeHtml(agent.name) + '</strong>? The folder and its templates are kept ' +
+                  'for any other assigned agents.',
+                confirmText: "Confirm Unassign",
+                confirmClass: "admin-confirm-yes",
+                onConfirm: function () {
+                  const f = atmPendingFolderRemoval.folderId;
+                  const s = atmPendingFolderRemoval.slug;
+                  atmPendingFolderRemoval = null;
+                  removeFolderFromAgent(f, s);
+                },
+                onCancel: function () {
+                  atmPendingFolderRemoval = null;
+                  renderATM();
+                }
+              }));
+              fblock.appendChild(confirmRow);
+            }
           });
           body.appendChild(fblock);
         }
