@@ -1,0 +1,4 @@
+# Personal Claude Code overrides — user-specific permissions etc.
+# .claude/settings.json IS committed (project-level hook config).
+.claude/settings.local.json
+.claude/worktrees/
