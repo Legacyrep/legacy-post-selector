@@ -7802,6 +7802,10 @@
   const HOLIDAY_FOLDERS_KEY = "legacy_holiday_folders";
   let seasonalExpandedFolderId = null;
   let seasonalSelectedAgents   = new Set();
+  /* Pending password-gated deletion state for the holiday Delete button. */
+  let seasonalDeletingFolderId = null;
+  /* Pending password-gated thumb removal — { folderId, tplId }. */
+  let seasonalPendingThumbRemoval = null;
 
   function loadHolidayFolders() {
     try {
