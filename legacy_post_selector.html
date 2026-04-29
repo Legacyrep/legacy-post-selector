@@ -3797,8 +3797,49 @@
   </div>
 
   <div class="admin-tab-panel hidden" id="adminTabSettings">
-    <div class="settings-placeholder">
-      Settings coming soon.
+    <div class="admin-section">
+      <h3 class="admin-section-title">Change Admin Password</h3>
+      <p style="font-size:13px;color:var(--gray-muted);margin:0 0 14px;">Pick a strong password — at least 8 characters with at least one number and one special character. After you save, you will be logged out so you can verify the new password works.</p>
+
+      <div class="cp-form" id="cpForm">
+        <div class="cp-field">
+          <label class="field-label" for="cpCurrent">Current Password</label>
+          <div class="cp-input-row">
+            <input type="password" id="cpCurrent" placeholder="Enter current password" autocomplete="current-password">
+            <button type="button" class="cp-toggle" data-cp-toggle="cpCurrent">Show</button>
+          </div>
+          <div class="admin-error" id="cpCurrentError"></div>
+        </div>
+
+        <div class="cp-field">
+          <label class="field-label" for="cpNew">New Password</label>
+          <div class="cp-input-row">
+            <input type="password" id="cpNew" placeholder="Enter new password" autocomplete="new-password">
+            <button type="button" class="cp-toggle" data-cp-toggle="cpNew">Show</button>
+          </div>
+          <div class="cp-strength" id="cpStrength" aria-live="polite">
+            <span class="cp-strength-bar"><span class="cp-strength-fill"></span></span>
+            <span class="cp-strength-label"></span>
+          </div>
+          <div class="admin-error" id="cpNewError"></div>
+        </div>
+
+        <div class="cp-field">
+          <label class="field-label" for="cpConfirm">Confirm New Password</label>
+          <div class="cp-input-row">
+            <input type="password" id="cpConfirm" placeholder="Confirm new password" autocomplete="new-password">
+            <button type="button" class="cp-toggle" data-cp-toggle="cpConfirm">Show</button>
+          </div>
+          <div class="admin-error" id="cpConfirmError"></div>
+        </div>
+
+        <button type="button" class="admin-add-btn" id="cpSubmitBtn">Change Password</button>
+        <div class="cp-success-block" id="cpSuccess">
+          <strong>Admin password has been updated successfully.</strong>
+          Use your new password next time you log in.
+          <div class="cp-countdown" id="cpCountdown"></div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
