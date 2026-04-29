@@ -6363,23 +6363,14 @@
         row.appendChild(form);
       }
 
-      /* Remove confirmation inline (preserved from original) */
+      /* Remove confirmation inline — gated by admin password */
       if (adminConfirmingId === agent.id) {
-        const confirm = document.createElement("div");
-        confirm.className = "admin-confirm-row";
-        confirm.innerHTML =
-          '<div class="admin-confirm-message">Are you sure you want to remove ' +
-          escapeHtml(agent.name) + '?</div>' +
-          '<div class="admin-confirm-actions">' +
-            '<button type="button" class="admin-confirm-yes">Yes, Remove</button>' +
-            '<button type="button" class="admin-confirm-cancel">Cancel</button>' +
-          '</div>';
-        confirm.querySelector(".admin-confirm-yes").addEventListener("click", function () {
-          removeAgent(agent.id);
-        });
-        confirm.querySelector(".admin-confirm-cancel").addEventListener("click", function () {
-          adminConfirmingId = null;
-          renderAdminAgentList();
+        const confirm = buildPasswordConfirmPanel({
+          messageHtml: 'Are you sure you want to remove <strong>' + escapeHtml(agent.name) + '</strong>?',
+          confirmText: "Yes, Remove",
+          confirmClass: "admin-confirm-yes",
+          onConfirm: function () { removeAgent(agent.id); },
+          onCancel:  function () { adminConfirmingId = null; renderAdminAgentList(); }
         });
         row.appendChild(confirm);
       }
