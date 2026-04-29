@@ -7452,6 +7452,37 @@
             grid.appendChild(thumb);
           });
           body.appendChild(grid);
+
+          /* If a thumb-remove is pending for THIS agent, show the inline
+             password-gated confirmation directly below the grid. */
+          if (atmPendingRemoval && atmPendingRemoval.slug === slug) {
+            const pendingTpl = customs.find(function (t) { return t.id === atmPendingRemoval.tplId; });
+            if (pendingTpl) {
+              const confirmEl = buildPasswordConfirmPanel({
+                messageHtml:
+                  'Remove <strong>' + escapeHtml(pendingTpl.name || pendingTpl.id) +
+                  '</strong> from <strong>' + escapeHtml(agent.name) + '</strong>? ' +
+                  'If this is the last agent assigned to this template, the template will be deleted permanently.',
+                confirmText: "Confirm Remove",
+                confirmClass: "admin-confirm-yes",
+                onConfirm: function () {
+                  const tplId = atmPendingRemoval.tplId;
+                  const sl = atmPendingRemoval.slug;
+                  atmPendingRemoval = null;
+                  removeTemplateFromAgent(tplId, sl);
+                },
+                onCancel: function () {
+                  atmPendingRemoval = null;
+                  renderATM();
+                }
+              });
+              confirmEl.style.marginTop = "10px";
+              body.appendChild(confirmEl);
+            } else {
+              /* Stale pending pointer (template already gone) — clear it. */
+              atmPendingRemoval = null;
+            }
+          }
         }
 
         wrap.appendChild(body);
