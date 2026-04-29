@@ -7962,10 +7962,7 @@
     delBtn.className = "seasonal-delete-btn";
     delBtn.textContent = "Delete";
     delBtn.addEventListener("click", function () {
-      if (!window.confirm("Delete the holiday folder \"" + (folder.name || "") + "\"? Templates inside it will also be removed.")) return;
-      const all = loadHolidayFolders().filter(function (f) { return f.id !== folder.id; });
-      saveHolidayFolders(all);
-      if (seasonalExpandedFolderId === folder.id) seasonalExpandedFolderId = null;
+      seasonalDeletingFolderId = (seasonalDeletingFolderId === folder.id) ? null : folder.id;
       renderSeasonalFolders();
     });
 
@@ -7978,6 +7975,30 @@
     row.appendChild(info);
     row.appendChild(actions);
     card.appendChild(row);
+
+    /* Inline password-gated delete confirmation */
+    if (seasonalDeletingFolderId === folder.id) {
+      const delConfirm = buildPasswordConfirmPanel({
+        messageHtml:
+          'Delete the holiday folder <strong>' + escapeHtml(folder.name || "") + '</strong>? ' +
+          'All templates inside it will be deleted permanently.',
+        confirmText: "Confirm Delete",
+        confirmClass: "admin-confirm-yes",
+        onConfirm: function () {
+          const all = loadHolidayFolders().filter(function (f) { return f.id !== folder.id; });
+          saveHolidayFolders(all);
+          if (seasonalExpandedFolderId === folder.id) seasonalExpandedFolderId = null;
+          seasonalDeletingFolderId = null;
+          renderSeasonalFolders();
+        },
+        onCancel: function () {
+          seasonalDeletingFolderId = null;
+          renderSeasonalFolders();
+        }
+      });
+      delConfirm.style.marginTop = "10px";
+      card.appendChild(delConfirm);
+    }
 
     /* Confirmation slot (used after toggling on) */
     const confirm = document.createElement("div");
