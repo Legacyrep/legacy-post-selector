@@ -8334,12 +8334,12 @@
     });
   })();
 
-  /* When the Content tab opens we render UC + ATM + Seasonal + Folders too */
+  /* When the Template Manager tab opens we render UC + ATM + Seasonal + Folders */
   const _origSwitchAdminTab = (typeof switchAdminTab === "function") ? switchAdminTab : null;
   if (_origSwitchAdminTab) {
     switchAdminTab = function (tab) {
       _origSwitchAdminTab(tab);
-      if (tab === "content") {
+      if (tab === "templates") {
         refreshUCAgentList();
         refreshUCPreviewGrid();
         updateUploadBtn();
