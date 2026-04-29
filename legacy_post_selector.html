@@ -7407,7 +7407,9 @@
               '<div class="atm-thumb-name">' + escapeHtml(tpl.name) + '</div>' +
               '<button type="button" class="atm-thumb-copy">Copy to…</button>';
             thumb.querySelector(".atm-thumb-remove").addEventListener("click", function () {
-              removeTemplateFromAgent(tpl.id, slug);
+              atmPendingRemoval = { tplId: tpl.id, slug: slug };
+              atmOpenCopyDropdownTplId = null;
+              renderATM();
             });
             const copyBtn = thumb.querySelector(".atm-thumb-copy");
             copyBtn.addEventListener("click", function (e) {
