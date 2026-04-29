@@ -6800,34 +6800,24 @@
 
       row.appendChild(actions);
 
-      /* Inline permanent-delete confirmation */
+      /* Inline permanent-delete confirmation — gated by admin password */
       if (removingPostTypeIdx === idx) {
-        const confirm = document.createElement("div");
-        confirm.className = "admin-confirm-row";
-        confirm.style.flexDirection = "column";
-        confirm.style.alignItems = "stretch";
-        confirm.innerHTML =
-          '<div class="admin-confirm-message" style="margin-bottom:6px;">' +
-            'Are you sure you want to permanently delete <strong>' + escapeHtml(pt.name) + '</strong>?' +
-          '</div>' +
-          '<div style="font-size:12px;color:#8a271f;line-height:1.5;margin-bottom:10px;">This will:' +
+        const messageHtml =
+          'Are you sure you want to permanently delete <strong>' + escapeHtml(pt.name) + '</strong>?' +
+          '<div style="font-size:12px;color:#8a271f;line-height:1.5;margin-top:6px;">This will:' +
             '<ul style="margin:4px 0 0 18px;padding:0;">' +
               '<li>Remove it from the agent weekly form dropdown forever</li>' +
               '<li>Remove all templates assigned to this post type</li>' +
               '<li>Remove any favorites agents have set for this post type</li>' +
               '<li>This cannot be undone</li>' +
             '</ul>' +
-          '</div>' +
-          '<div class="admin-confirm-actions">' +
-            '<button type="button" class="admin-confirm-yes">Yes, Delete Permanently</button>' +
-            '<button type="button" class="admin-confirm-cancel">Cancel</button>' +
           '</div>';
-        confirm.querySelector(".admin-confirm-yes").addEventListener("click", function () {
-          permanentlyDeletePostType(idx);
-        });
-        confirm.querySelector(".admin-confirm-cancel").addEventListener("click", function () {
-          removingPostTypeIdx = null;
-          renderPostTypeList();
+        const confirm = buildPasswordConfirmPanel({
+          messageHtml: messageHtml,
+          confirmText: "Yes, Delete Permanently",
+          confirmClass: "admin-confirm-yes",
+          onConfirm: function () { permanentlyDeletePostType(idx); },
+          onCancel:  function () { removingPostTypeIdx = null; renderPostTypeList(); }
         });
         row.appendChild(confirm);
       }
