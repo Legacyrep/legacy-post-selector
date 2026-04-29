@@ -8072,11 +8072,41 @@
           '<img class="seasonal-thumb-img" src="' + tpl.image + '" alt="">' +
           '<div class="seasonal-thumb-name">' + escapeHtml(tpl.name || tpl.id) + '</div>';
         thumb.querySelector(".seasonal-thumb-remove").addEventListener("click", function () {
-          removeHolidayTemplate(folder.id, tpl.id);
+          seasonalPendingThumbRemoval = { folderId: folder.id, tplId: tpl.id };
+          renderSeasonalFolders();
         });
         grid.appendChild(thumb);
       });
       wrap.appendChild(grid);
+
+      /* Inline password-gated confirm for thumbnail deletion in this folder */
+      if (seasonalPendingThumbRemoval && seasonalPendingThumbRemoval.folderId === folder.id) {
+        const tpl = tpls.find(function (t) { return t.id === seasonalPendingThumbRemoval.tplId; });
+        if (tpl) {
+          const confirmEl = buildPasswordConfirmPanel({
+            messageHtml:
+              'Remove <strong>' + escapeHtml(tpl.name || tpl.id) + '</strong> from <strong>' +
+              escapeHtml(folder.name) + '</strong>? The template will be deleted permanently.',
+            confirmText: "Confirm",
+            confirmClass: "admin-confirm-yes",
+            onConfirm: function () {
+              const f = seasonalPendingThumbRemoval.folderId;
+              const t = seasonalPendingThumbRemoval.tplId;
+              seasonalPendingThumbRemoval = null;
+              removeHolidayTemplate(f, t);
+              renderSeasonalFolders();
+            },
+            onCancel: function () {
+              seasonalPendingThumbRemoval = null;
+              renderSeasonalFolders();
+            }
+          });
+          confirmEl.style.marginTop = "10px";
+          wrap.appendChild(confirmEl);
+        } else {
+          seasonalPendingThumbRemoval = null;
+        }
+      }
     }
     return wrap;
   }
