@@ -2802,6 +2802,421 @@
     background: var(--cream);
     padding: 0 12px;
   }
+
+  /* ===== Template Folders (admin) ===== */
+  .tf-section {
+    background: var(--cream);
+    border: 1px dashed var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 18px;
+  }
+  .tf-section-title {
+    font-size: 15px;
+    color: var(--navy);
+    margin: 0 0 8px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .tf-section-sub {
+    font-size: 13px;
+    color: var(--gray-muted);
+    margin: 0 0 12px;
+    line-height: 1.45;
+  }
+  .tf-folder-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .tf-folder-empty {
+    text-align: center;
+    color: var(--gray-muted);
+    padding: 12px 0;
+    font-style: italic;
+    font-size: 13px;
+  }
+  .tf-folder-card {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+  }
+  .tf-folder-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .tf-folder-info {
+    flex: 1 1 220px;
+    min-width: 0;
+  }
+  .tf-folder-name {
+    font-weight: 700;
+    color: var(--navy);
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .tf-folder-icon { font-size: 18px; }
+  .tf-folder-meta {
+    font-size: 12px;
+    color: var(--gray-muted);
+    margin-top: 4px;
+    line-height: 1.4;
+  }
+  .tf-folder-meta strong { color: var(--navy); font-weight: 600; }
+  .tf-folder-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .tf-action-btn {
+    padding: 7px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    min-height: 36px;
+    border: 2px solid;
+  }
+  .tf-view-btn { background: white; border-color: var(--navy); color: var(--navy); }
+  .tf-view-btn:hover { background: var(--navy); color: var(--gold); }
+  .tf-edit-btn { background: white; border-color: var(--gold-dark); color: var(--gold-dark); }
+  .tf-edit-btn:hover { background: var(--gold); color: var(--navy); border-color: var(--gold); }
+  .tf-delete-btn { background: white; border-color: #c2392e; color: #c2392e; }
+  .tf-delete-btn:hover { background: #c2392e; color: white; }
+
+  .tf-folder-detail,
+  .tf-edit-form,
+  .tf-delete-confirm {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--border);
+  }
+  .tf-edit-form,
+  .tf-delete-confirm { border-top: none; padding: 12px; border-radius: 10px; }
+  .tf-edit-form {
+    background: var(--cream);
+    border: 2px solid var(--gold);
+  }
+  .tf-delete-confirm {
+    background: #fdebe9;
+    border: 2px solid #c2392e;
+    color: #8a271f;
+    font-weight: 600;
+    font-size: 13px;
+  }
+  .tf-confirm-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+  }
+  .tf-detail-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--navy);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0 0 10px;
+  }
+  .tf-dropzone {
+    border: 2px dashed var(--gold);
+    border-radius: 10px;
+    padding: 18px 14px;
+    text-align: center;
+    background: #fffbf2;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+  .tf-dropzone:hover, .tf-dropzone.drag-over {
+    background: #fff5dd;
+    border-color: var(--gold-dark);
+  }
+  .tf-dropzone-icon { font-size: 22px; color: var(--gold-dark); margin-bottom: 6px; }
+  .tf-dropzone-text { color: var(--navy); font-weight: 600; font-size: 14px; }
+  .tf-dropzone-sub { color: var(--gray-muted); font-size: 12px; margin-top: 4px; }
+  .tf-pending-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-top: 12px;
+  }
+  @media (min-width: 600px) {
+    .tf-pending-grid { grid-template-columns: repeat(4, 1fr); }
+  }
+  .tf-pending-card {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    padding: 6px;
+    position: relative;
+  }
+  .tf-pending-img {
+    width: 100%;
+    aspect-ratio: 1 / 1.1;
+    object-fit: cover;
+    border-radius: 4px;
+    background: #fff;
+  }
+  .tf-pending-name-input {
+    width: 100%;
+    margin-top: 4px;
+    padding: 4px 6px;
+    font-size: 11px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-family: inherit;
+  }
+  .tf-pending-meta {
+    font-size: 10px;
+    color: var(--gray-muted);
+    text-align: center;
+    margin-top: 2px;
+  }
+  .tf-pending-remove {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: none;
+    background: #c2392e;
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
+    font-weight: 700;
+  }
+  .tf-thumb-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-top: 12px;
+  }
+  @media (min-width: 600px) {
+    .tf-thumb-grid { grid-template-columns: repeat(5, 1fr); }
+  }
+  .tf-thumb {
+    position: relative;
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    padding: 6px;
+  }
+  .tf-thumb-img {
+    width: 100%;
+    aspect-ratio: 1 / 1.1;
+    object-fit: cover;
+    border-radius: 4px;
+    background: #fff;
+  }
+  .tf-thumb-name {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--navy);
+    text-align: center;
+    margin-top: 4px;
+    word-break: break-word;
+  }
+  .tf-thumb-remove {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: none;
+    background: #c2392e;
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
+    font-weight: 700;
+  }
+  .tf-thumb-remove:hover { background: #a6322a; }
+  .tf-thumb-remove-confirm {
+    grid-column: 1 / -1;
+    background: #fdebe9;
+    border: 2px solid #c2392e;
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 13px;
+    color: #8a271f;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  .tf-add-form {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .tf-agent-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+  .tf-agent-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--navy);
+    padding: 4px 0;
+  }
+  .tf-agent-row input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--gold);
+  }
+  .tf-agent-shortcuts {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .tf-agent-shortcut {
+    background: white;
+    border: 1px solid var(--navy);
+    color: var(--navy);
+    padding: 5px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    min-height: 32px;
+  }
+  .tf-agent-shortcut:hover { background: var(--navy); color: white; }
+  .tf-general-note {
+    margin-bottom: 12px;
+  }
+
+  /* ===== Folder sections in agent template picker ===== */
+  .folder-section {
+    margin-top: 14px;
+    margin-bottom: 6px;
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 12px;
+  }
+  .folder-section-label {
+    font-weight: 700;
+    font-size: 12px;
+    color: var(--navy);
+    letter-spacing: 0.6px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-transform: uppercase;
+  }
+  .folder-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  @media (min-width: 600px) {
+    .folder-grid { grid-template-columns: repeat(5, 1fr); }
+  }
+  .folder-section .favorites-header {
+    font-size: 13px;
+    padding: 8px 12px;
+    margin-top: 6px;
+  }
+  .folder-section .favorites-grid {
+    margin-bottom: 8px;
+  }
+
+  /* ===== ATM folders subsection ===== */
+  .atm-folders-block {
+    background: var(--cream);
+    border: 1px dashed var(--border);
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 12px;
+  }
+  .atm-folders-section-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    margin: 0 0 8px;
+  }
+  .atm-folder-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .atm-folder-row:last-child { border-bottom: none; }
+  .atm-folder-row-info {
+    flex: 1 1 200px;
+    min-width: 0;
+  }
+  .atm-folder-row-name {
+    font-weight: 600;
+    color: var(--navy);
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .atm-folder-row-meta { font-size: 12px; color: var(--gray-muted); }
+  .atm-folder-remove {
+    background: white;
+    border: 1px solid #c2392e;
+    color: #c2392e;
+    padding: 5px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    min-height: 32px;
+  }
+  .atm-folder-remove:hover { background: #c2392e; color: white; }
+  .atm-general-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    margin: 4px 0 8px;
+  }
+  .atm-general-hidden-note {
+    font-size: 11px;
+    color: var(--gold-dark);
+    font-style: italic;
+    margin-bottom: 8px;
+  }
 </style>
 </head>
 <body>
@@ -3095,6 +3510,39 @@
         Templates uploaded here are stored in your browser. To make them permanent across all devices connect the website to your Cloudinary account. Talk to your developer when you are ready to go live.
       </div>
 
+      <div class="tf-section">
+        <h4 class="tf-section-title"><span class="tf-folder-icon">📁</span> Template Folders</h4>
+        <p class="tf-section-sub">
+          Optional organizational containers. Assign a folder to one or more agents and any templates uploaded inside it will only be available to those agents — replacing the general pool for them. Templates outside any folder still go through the general pool below.
+        </p>
+
+        <div id="tfFolderList"></div>
+
+        <h4 style="margin:18px 0 10px;color:var(--navy);font-size:14px;">Add New Folder</h4>
+        <div class="tf-add-form">
+          <div>
+            <label class="field-label" for="tfFolderName">Folder Name</label>
+            <input type="text" id="tfFolderName" placeholder="e.g. Sabrina's Templates, Grand Rapids Collection, Luxury Templates">
+            <div class="admin-error" id="tfFolderNameError"></div>
+          </div>
+          <div>
+            <label class="field-label">Assign to Agents</label>
+            <div class="tf-agent-shortcuts">
+              <button type="button" class="tf-agent-shortcut" id="tfSelectAll">Select All</button>
+              <button type="button" class="tf-agent-shortcut" id="tfClearAll">Clear All</button>
+            </div>
+            <div class="tf-agent-list" id="tfAgentList"></div>
+            <div class="admin-error" id="tfAgentError"></div>
+          </div>
+          <button type="button" class="admin-add-btn" id="tfCreateBtn">Create Folder</button>
+          <div class="admin-success" id="tfCreateSuccess"></div>
+        </div>
+      </div>
+
+      <div class="uc-note tf-general-note">
+        <strong>General pool:</strong> Templates uploaded below go into the general pool and are available to any agent you assign them to directly. To create agent-specific template collections use Template Folders above.
+      </div>
+
       <div class="uc-grid uc-grid-2col">
         <div class="uc-area">
           <h4 class="uc-area-title">1. Drop Files</h4>
@@ -3138,6 +3586,9 @@
               <option value="">Select action…</option>
               <option value="copy">Copy all templates from one agent to another</option>
               <option value="removeAll">Remove all templates for a specific agent</option>
+              <option value="copyFolderToAgent">Copy folder to another agent</option>
+              <option value="removeFolderFromAgent">Remove folder from agent</option>
+              <option value="moveTemplateBetweenFolders">Move template between folders</option>
             </select>
             <button type="button" class="atm-bulk-go" id="atmBulkGo">Go</button>
           </div>
@@ -3707,11 +4158,13 @@
         };
       });
       /* Ensure the selected template is actually in the displayed grid.
-         Holiday templates render from their own holiday section, not templateIds. */
+         Holiday and folder templates render from their own sections, not templateIds. */
       days.forEach(function (day) {
-        if (day.selectedTemplate && day.templateIds.indexOf(day.selectedTemplate) === -1
-            && String(day.selectedTemplate).indexOf("HOLIDAY_") !== 0) {
-          day.templateIds.unshift(day.selectedTemplate);
+        const sel = day.selectedTemplate;
+        if (sel && day.templateIds.indexOf(sel) === -1
+            && String(sel).indexOf("HOLIDAY_") !== 0
+            && String(sel).indexOf("FOLDER_TPL_") !== 0) {
+          day.templateIds.unshift(sel);
         }
       });
       weekState[offset] = days;
@@ -4212,11 +4665,12 @@
         '</div>' +
         '<div class="holiday-sections"></div>' +
         '<div class="holiday-divider hidden"><span class="holiday-divider-label">Your Regular Templates</span></div>' +
+        '<div class="folder-sections"></div>' +
         '<div class="favorites-section hidden">' +
           '<div class="favorites-header">\u2b50 Your Favorites</div>' +
           '<div class="favorites-grid"></div>' +
-          '<div class="favorites-full-msg"></div>' +
         '</div>' +
+        '<div class="favorites-full-msg"></div>' +
         '<div class="more-section">' +
           '<div class="more-header">More Templates</div>' +
           '<div class="template-grid"></div>' +
@@ -4303,12 +4757,14 @@
         dayState.templateIds = picked.ids;
         dayState.favoriteSet = picked.favoriteSet;
         if (dayState.selectedTemplate && dayState.templateIds.indexOf(dayState.selectedTemplate) === -1) {
-          /* Keep a holiday selection alive across rerolls (it lives in its own grid).
-             Also keep favorited templates (still rendered in the favorites section). */
-          const isHoliday = String(dayState.selectedTemplate).indexOf("HOLIDAY_") === 0;
+          /* Keep holiday and folder selections alive across rerolls (they live in
+             their own grids). Also keep favorited templates. */
+          const sel = dayState.selectedTemplate;
+          const isHoliday = String(sel).indexOf("HOLIDAY_") === 0;
+          const isFolder = String(sel).indexOf("FOLDER_TPL_") === 0;
           const isFavorite = currentAgent && dayState.topic
-            && loadUserFavorites(currentAgent, dayState.topic).indexOf(dayState.selectedTemplate) !== -1;
-          if (!isHoliday && !isFavorite) dayState.selectedTemplate = null;
+            && loadUserFavorites(currentAgent, dayState.topic).indexOf(sel) !== -1;
+          if (!isHoliday && !isFolder && !isFavorite) dayState.selectedTemplate = null;
         }
         renderTemplateGrid(card, dayState, true);
         updateDayState(card, isToday, dayState);
@@ -4345,6 +4801,13 @@
                   '<span class="num" style="font-size:11px;letter-spacing:0;">' + escapeHtml(ht.template.name || id) + '</span>';
       }
     }
+    if (!imgPart && id && id.indexOf("FOLDER_TPL_") === 0 && typeof folderTemplateById === "function") {
+      const ft = folderTemplateById(id);
+      if (ft && ft.template && ft.template.image) {
+        imgPart = '<img class="template-img" style="background:#fff;object-fit:cover;" src="' + ft.template.image + '" alt="' + escapeHtml(ft.template.name || id) + '">' +
+                  '<span class="num" style="font-size:11px;letter-spacing:0;">' + escapeHtml(ft.template.name || id) + '</span>';
+      }
+    }
     if (!imgPart) imgPart = '<span class="num">' + id + '</span>';
 
     btn.innerHTML =
@@ -4371,10 +4834,12 @@
   function renderTemplateGrid(card, dayState, animateIn) {
     const favSection = card.querySelector(".favorites-section");
     const favGrid = card.querySelector(".favorites-grid");
+    const moreSection = card.querySelector(".more-section");
     const moreGrid = card.querySelector(".template-grid");
     if (!favSection || !favGrid || !moreGrid) return;
 
-    /* Section 0: holiday sections (one per active holiday folder assigned to this agent) */
+    /* Section 0: holiday sections (one per active holiday folder assigned to this agent).
+       Always rendered first, regardless of whether the agent has a personal folder. */
     const holidaysContainer = card.querySelector(".holiday-sections");
     const dividerEl = card.querySelector(".holiday-divider");
     if (holidaysContainer && dividerEl) {
@@ -4410,8 +4875,75 @@
       }
     }
 
-    /* Section 1: user favorites */
+    /* Section A: personal Template Folders assigned to this agent.
+       When folders are assigned the agent sees ONLY folder templates here \u2014
+       no general pool, no reroll. Each folder is its own labeled section
+       with a per-folder favorites strip and the rest of its templates below. */
+    const folderContainer = card.querySelector(".folder-sections");
+    let agentFolders = [];
+    if (currentAgent && typeof getTemplateFoldersForAgent === "function") {
+      agentFolders = getTemplateFoldersForAgent(agentPrefsSlug(currentAgent))
+        .filter(function (f) { return Array.isArray(f.templates) && f.templates.length > 0; });
+    }
+    const hasFolders = agentFolders.length > 0;
     const userFavs = loadUserFavorites(currentAgent, dayState.topic);
+
+    if (folderContainer) {
+      folderContainer.innerHTML = "";
+      if (hasFolders) {
+        agentFolders.forEach(function (folder) {
+          const section = document.createElement("div");
+          section.className = "folder-section";
+          const label = document.createElement("div");
+          label.className = "folder-section-label";
+          label.innerHTML = '<span>\ud83d\udcc1</span><span>' + escapeHtml(folder.name) + '</span>';
+          section.appendChild(label);
+
+          const folderTplIds = (folder.templates || []).map(function (t) { return t.id; });
+          const folderFavIds = userFavs.filter(function (id) { return folderTplIds.indexOf(id) !== -1; });
+          const folderRestIds = folderTplIds.filter(function (id) { return folderFavIds.indexOf(id) === -1; });
+
+          if (folderFavIds.length > 0) {
+            const favHead = document.createElement("div");
+            favHead.className = "favorites-header";
+            favHead.innerHTML = '\u2b50 Your Favorites';
+            section.appendChild(favHead);
+            const favG = document.createElement("div");
+            favG.className = "favorites-grid";
+            folderFavIds.forEach(function (id) {
+              favG.appendChild(buildTemplateCardEl(id, { isFavorite: true, animateIn: false }, card, dayState));
+            });
+            for (let i = folderFavIds.length; i < USER_FAV_MAX; i++) {
+              const slot = document.createElement("div");
+              slot.className = "favorite-empty-slot";
+              slot.innerHTML = "Tap \u2605 on any<br>template below<br>to add it here";
+              favG.appendChild(slot);
+            }
+            section.appendChild(favG);
+          }
+
+          const grid = document.createElement("div");
+          grid.className = "folder-grid";
+          folderRestIds.forEach(function (id) {
+            grid.appendChild(buildTemplateCardEl(id, { isFavorite: false, animateIn: false }, card, dayState));
+          });
+          section.appendChild(grid);
+          folderContainer.appendChild(section);
+        });
+      }
+    }
+
+    /* If folder(s) assigned, suppress the general-pool sections entirely. */
+    if (hasFolders) {
+      favSection.classList.add("hidden");
+      favGrid.innerHTML = "";
+      if (moreSection) moreSection.classList.add("hidden");
+      moreGrid.innerHTML = "";
+      return;
+    }
+    if (moreSection) moreSection.classList.remove("hidden");
+
+    /* Section 1: user favorites (general pool) */
     favGrid.innerHTML = "";
     if (userFavs.length === 0) {
       favSection.classList.add("hidden");
@@ -4441,17 +4973,17 @@
 
   function handleFavoriteToggle(card, dayState, id) {
     if (!currentAgent || !dayState.topic) return;
+    const hasFolders = (typeof getTemplateFoldersForAgent === "function")
+      && getTemplateFoldersForAgent(agentPrefsSlug(currentAgent)).length > 0;
     const result = toggleUserFavorite(currentAgent, dayState.topic, id);
     const msgEl = card.querySelector(".favorites-full-msg");
     if (result.full) {
-      /* Block \u2014 show the friendly message */
+      /* Block \u2014 show the friendly message. The msg element now lives outside
+         .favorites-section so it is always visible regardless of folder mode. */
       if (msgEl) {
         msgEl.textContent = "You already have " + USER_FAV_MAX + " favorites for this post type. Remove one before adding another.";
         msgEl.classList.remove("fading");
         msgEl.classList.add("visible");
-        /* Make sure the favorites section is visible so the message shows */
-        const favSection = card.querySelector(".favorites-section");
-        if (favSection) favSection.classList.remove("hidden");
         clearTimeout(card._favMsgTimer);
         card._favMsgTimer = setTimeout(function () {
           msgEl.classList.add("fading");
@@ -4460,16 +4992,24 @@
       }
       return;
     }
-    /* Refresh the random pool so Section 2 fills the spot if a favorite was removed,
-       and so a newly-favorited template is no longer shown in Section 2. */
     if (msgEl) { msgEl.classList.remove("visible", "fading"); msgEl.textContent = ""; }
-    const picked = pickTemplatesForTopic(currentAgent, dayState.topic, []);
-    dayState.templateIds = picked.ids;
-    dayState.favoriteSet = picked.favoriteSet;
+    /* Refresh the random pool so Section 2 fills the spot if a favorite was removed,
+       and so a newly-favorited template is no longer shown in Section 2. Skip this
+       for folder users \u2014 their picker doesn't render the general pool. */
+    if (!hasFolders) {
+      const picked = pickTemplatesForTopic(currentAgent, dayState.topic, []);
+      dayState.templateIds = picked.ids;
+      dayState.favoriteSet = picked.favoriteSet;
+    }
     if (dayState.selectedTemplate) {
-      const stillVisible = (dayState.templateIds.indexOf(dayState.selectedTemplate) !== -1)
-        || (loadUserFavorites(currentAgent, dayState.topic).indexOf(dayState.selectedTemplate) !== -1);
-      if (!stillVisible) dayState.selectedTemplate = null;
+      const sel = dayState.selectedTemplate;
+      const inGridOrFav = (dayState.templateIds.indexOf(sel) !== -1)
+        || (loadUserFavorites(currentAgent, dayState.topic).indexOf(sel) !== -1);
+      const inHoliday = String(sel).indexOf("HOLIDAY_") === 0
+        && typeof holidayTemplateById === "function" && !!holidayTemplateById(sel);
+      const inFolder = String(sel).indexOf("FOLDER_TPL_") === 0
+        && typeof folderTemplateById === "function" && !!folderTemplateById(sel);
+      if (!inGridOrFav && !inHoliday && !inFolder) dayState.selectedTemplate = null;
     }
     renderTemplateGrid(card, dayState, false);
     updateDayState(card, card.classList.contains("is-today"), dayState);
@@ -4792,6 +5332,11 @@
         } else if (id.indexOf("HOLIDAY_") === 0 && typeof holidayTemplateById === "function") {
           const ht = holidayTemplateById(id);
           if (ht && ht.template && ht.template.name) label = ht.template.name;
+        } else if (id.indexOf("FOLDER_TPL_") === 0 && typeof folderTemplateById === "function") {
+          const ft = folderTemplateById(id);
+          if (ft && ft.template && ft.template.name) {
+            label = ft.template.name + (ft.folder && ft.folder.name ? " (" + ft.folder.name + ")" : "");
+          }
         }
         templ = "<br><strong>Template:</strong> " + escapeHtml(label);
       }
@@ -6418,7 +6963,40 @@
         const body = document.createElement("div");
         body.className = "atm-agent-body";
 
-        /* Flat list of all templates assigned to this agent, most-recent first */
+        /* Folders assigned to this agent (Template Folders) */
+        const agentFolders = (typeof getTemplateFoldersForAgent === "function")
+          ? getTemplateFoldersForAgent(slug) : [];
+        if (agentFolders.length > 0) {
+          const fblock = document.createElement("div");
+          fblock.className = "atm-folders-block";
+          const ftitle = document.createElement("div");
+          ftitle.className = "atm-folders-section-title";
+          ftitle.textContent = "Folders Assigned to " + agent.name;
+          fblock.appendChild(ftitle);
+          agentFolders.forEach(function (folder) {
+            const row = document.createElement("div");
+            row.className = "atm-folder-row";
+            const tplCount = Array.isArray(folder.templates) ? folder.templates.length : 0;
+            const info = document.createElement("div");
+            info.className = "atm-folder-row-info";
+            info.innerHTML =
+              '<div class="atm-folder-row-name"><span>📁</span><span>' + escapeHtml(folder.name) + '</span></div>' +
+              '<div class="atm-folder-row-meta">' + tplCount + ' template' + (tplCount === 1 ? "" : "s") + '</div>';
+            const rmBtn = document.createElement("button");
+            rmBtn.type = "button";
+            rmBtn.className = "atm-folder-remove";
+            rmBtn.textContent = "Remove Folder";
+            rmBtn.addEventListener("click", function () {
+              removeFolderFromAgent(folder.id, slug);
+            });
+            row.appendChild(info);
+            row.appendChild(rmBtn);
+            fblock.appendChild(row);
+          });
+          body.appendChild(fblock);
+        }
+
+        /* Flat list of all general-pool templates assigned to this agent */
         const tpls = customs
           .filter(function (t) { return Array.isArray(t.assignedTo) && t.assignedTo.indexOf(slug) !== -1; })
           .sort(function (a, b) {
@@ -6428,10 +7006,22 @@
             return (a.id < b.id ? 1 : a.id > b.id ? -1 : 0);
           });
 
+        const generalLabel = document.createElement("div");
+        generalLabel.className = "atm-general-label";
+        generalLabel.textContent = "General Templates Assigned";
+        body.appendChild(generalLabel);
+
+        if (agentFolders.length > 0 && tpls.length > 0) {
+          const note = document.createElement("div");
+          note.className = "atm-general-hidden-note";
+          note.textContent = "Currently hidden from this agent's picker — they have a folder assigned. Templates are not deleted.";
+          body.appendChild(note);
+        }
+
         if (tpls.length === 0) {
           const empty = document.createElement("div");
           empty.className = "atm-empty-pt";
-          empty.textContent = "No templates assigned to this agent yet.";
+          empty.textContent = "No general-pool templates assigned to this agent yet.";
           body.appendChild(empty);
         } else {
           const grid = document.createElement("div");
@@ -6516,6 +7106,18 @@
     refreshUCAgentList();
   }
 
+  /* Unassign a Template Folder from an agent without deleting the folder
+     or its templates. The folder stays available for other assigned agents. */
+  function removeFolderFromAgent(folderId, agentSlug) {
+    const all = loadTemplateFolders();
+    const folder = all.find(function (f) { return f.id === folderId; });
+    if (!folder) return;
+    folder.assignedTo = (folder.assignedTo || []).filter(function (s) { return s !== agentSlug; });
+    saveTemplateFolders(all);
+    if (typeof renderTemplateFolders === "function") renderTemplateFolders();
+    renderATM();
+  }
+
   function copyTemplateToAgent(tplId, agentSlug, agentName) {
     const all = loadCustomTemplates();
     const tpl = all.find(function (t) { return t.id === tplId; });
@@ -6564,6 +7166,18 @@
       return '<label class="field-label" style="margin-bottom:4px;">' + escapeHtml(label) + '</label>' +
         '<select id="' + id + '">' + opts + '</select>';
     }
+    function folderSelectHTML(id, label, filterAgentSlug) {
+      const folders = (typeof loadTemplateFolders === "function") ? loadTemplateFolders() : [];
+      const filtered = filterAgentSlug
+        ? folders.filter(function (f) { return Array.isArray(f.assignedTo) && f.assignedTo.indexOf(filterAgentSlug) !== -1; })
+        : folders;
+      let opts = '<option value="">— ' + label + ' —</option>';
+      filtered.forEach(function (f) {
+        opts += '<option value="' + escapeHtml(f.id) + '">' + escapeHtml(f.name) + '</option>';
+      });
+      return '<label class="field-label" style="margin-bottom:4px;">' + escapeHtml(label) + '</label>' +
+        '<select id="' + id + '">' + opts + '</select>';
+    }
     if (action === "copy") {
       extra.innerHTML =
         '<div>' + agentSelectHTML("bulkFromAgent", "Copy from agent") + '</div>' +
@@ -6571,6 +7185,43 @@
     } else if (action === "removeAll") {
       extra.innerHTML =
         '<div>' + agentSelectHTML("bulkRaAgent", "Agent") + '</div>';
+    } else if (action === "copyFolderToAgent") {
+      extra.innerHTML =
+        '<div>' + folderSelectHTML("bulkCfFolder", "Folder") + '</div>' +
+        '<div>' + agentSelectHTML("bulkCfAgent", "Add agent") + '</div>';
+    } else if (action === "removeFolderFromAgent") {
+      extra.innerHTML =
+        '<div>' + agentSelectHTML("bulkRfAgent", "Agent") + '</div>' +
+        '<div id="bulkRfFolderSlot"><label class="field-label" style="margin-bottom:4px;">Folder</label>' +
+        '<select id="bulkRfFolder" disabled><option>— Pick agent first —</option></select></div>';
+      const agentSel = document.getElementById("bulkRfAgent");
+      if (agentSel) {
+        agentSel.addEventListener("change", function () {
+          const slot = document.getElementById("bulkRfFolderSlot");
+          slot.innerHTML = folderSelectHTML("bulkRfFolder", "Folder", agentSel.value);
+        });
+      }
+    } else if (action === "moveTemplateBetweenFolders") {
+      extra.innerHTML =
+        '<div>' + folderSelectHTML("bulkMtSrc", "Source folder") + '</div>' +
+        '<div id="bulkMtTplSlot"><label class="field-label" style="margin-bottom:4px;">Template</label>' +
+        '<select id="bulkMtTpl" disabled><option>— Pick source folder first —</option></select></div>' +
+        '<div>' + folderSelectHTML("bulkMtDst", "Destination folder") + '</div>';
+      const srcSel = document.getElementById("bulkMtSrc");
+      if (srcSel) {
+        srcSel.addEventListener("change", function () {
+          const slot = document.getElementById("bulkMtTplSlot");
+          const folder = (typeof findTemplateFolder === "function") ? findTemplateFolder(srcSel.value) : null;
+          let opts = '<option value="">— Template —</option>';
+          if (folder && Array.isArray(folder.templates)) {
+            folder.templates.forEach(function (t) {
+              opts += '<option value="' + escapeHtml(t.id) + '">' + escapeHtml(t.name || t.id) + '</option>';
+            });
+          }
+          slot.innerHTML = '<label class="field-label" style="margin-bottom:4px;">Template</label>' +
+            '<select id="bulkMtTpl">' + opts + '</select>';
+        });
+      }
     }
   }
 
@@ -6635,6 +7286,76 @@
           refreshUCAgentList();
         }
       });
+    } else if (action === "copyFolderToAgent") {
+      const folderId = (document.getElementById("bulkCfFolder") || {}).value;
+      const slug     = (document.getElementById("bulkCfAgent")  || {}).value;
+      if (!folderId || !slug) { showUCError("ucGeneralError", "Pick a folder and an agent."); return; }
+      const all = loadTemplateFolders();
+      const folder = all.find(function (f) { return f.id === folderId; });
+      if (!folder) { showUCError("ucGeneralError", "Folder not found."); return; }
+      if (!Array.isArray(folder.assignedTo)) folder.assignedTo = [];
+      if (folder.assignedTo.indexOf(slug) === -1) folder.assignedTo.push(slug);
+      saveTemplateFolders(all);
+      const ag = AGENTS.find(function (a) { return agentPrefsSlug(a) === slug; });
+      const successEl = document.getElementById("ucSuccess");
+      successEl.innerHTML = "<strong>Folder " + escapeHtml(folder.name) + " is now assigned to " +
+        escapeHtml(ag ? ag.name : slug) + ".</strong>";
+      successEl.classList.remove("fading");
+      successEl.classList.add("visible");
+      setTimeout(function () {
+        successEl.classList.add("fading");
+        setTimeout(function () { successEl.classList.remove("visible", "fading"); successEl.innerHTML = ""; }, 400);
+      }, 4000);
+      renderTemplateFolders();
+      renderATM();
+    } else if (action === "removeFolderFromAgent") {
+      const slug     = (document.getElementById("bulkRfAgent")  || {}).value;
+      const folderId = (document.getElementById("bulkRfFolder") || {}).value;
+      if (!slug || !folderId) { showUCError("ucGeneralError", "Pick an agent and a folder."); return; }
+      const all = loadTemplateFolders();
+      const folder = all.find(function (f) { return f.id === folderId; });
+      if (!folder) { showUCError("ucGeneralError", "Folder not found."); return; }
+      folder.assignedTo = (folder.assignedTo || []).filter(function (s) { return s !== slug; });
+      saveTemplateFolders(all);
+      const ag = AGENTS.find(function (a) { return agentPrefsSlug(a) === slug; });
+      const successEl = document.getElementById("ucSuccess");
+      successEl.innerHTML = "<strong>" + escapeHtml(folder.name) + " unassigned from " +
+        escapeHtml(ag ? ag.name : slug) + ".</strong> Folder kept.";
+      successEl.classList.remove("fading");
+      successEl.classList.add("visible");
+      setTimeout(function () {
+        successEl.classList.add("fading");
+        setTimeout(function () { successEl.classList.remove("visible", "fading"); successEl.innerHTML = ""; }, 400);
+      }, 4000);
+      renderTemplateFolders();
+      renderATM();
+    } else if (action === "moveTemplateBetweenFolders") {
+      const srcId = (document.getElementById("bulkMtSrc") || {}).value;
+      const tplId = (document.getElementById("bulkMtTpl") || {}).value;
+      const dstId = (document.getElementById("bulkMtDst") || {}).value;
+      if (!srcId || !tplId || !dstId) { showUCError("ucGeneralError", "Pick source folder, template, and destination folder."); return; }
+      if (srcId === dstId) { showUCError("ucGeneralError", "Source and destination must be different folders."); return; }
+      const all = loadTemplateFolders();
+      const src = all.find(function (f) { return f.id === srcId; });
+      const dst = all.find(function (f) { return f.id === dstId; });
+      if (!src || !dst) { showUCError("ucGeneralError", "Folder not found."); return; }
+      const tplIdx = (src.templates || []).findIndex(function (t) { return t.id === tplId; });
+      if (tplIdx < 0) { showUCError("ucGeneralError", "Template not found in source folder."); return; }
+      const tpl = src.templates.splice(tplIdx, 1)[0];
+      if (!Array.isArray(dst.templates)) dst.templates = [];
+      dst.templates.push(tpl);
+      saveTemplateFolders(all);
+      const successEl = document.getElementById("ucSuccess");
+      successEl.innerHTML = "<strong>Moved " + escapeHtml(tpl.name || tpl.id) + " from " +
+        escapeHtml(src.name) + " to " + escapeHtml(dst.name) + ".</strong>";
+      successEl.classList.remove("fading");
+      successEl.classList.add("visible");
+      setTimeout(function () {
+        successEl.classList.add("fading");
+        setTimeout(function () { successEl.classList.remove("visible", "fading"); successEl.innerHTML = ""; }, 400);
+      }, 4000);
+      renderTemplateFolders();
+      renderATM();
     }
   });
 
@@ -7065,7 +7786,574 @@
     });
   })();
 
-  /* When the Content tab opens we render UC + ATM + Seasonal too */
+  /* ============================================================
+     TEMPLATE FOLDERS
+     Optional organizational containers on top of the existing
+     general-pool template system. A folder has agents assigned and
+     templates uploaded into it. When an agent has any folder assigned
+     they only see folder templates in their picker (no general pool,
+     no reroll). Folder templates live INSIDE the folder, not in
+     legacy_custom_templates — the general pool is untouched.
+  ============================================================ */
+  const TEMPLATE_FOLDERS_KEY = "legacy_template_folders";
+  const tfState = {
+    expandedFolderId: null,
+    editingFolderId: null,
+    deletingFolderId: null,
+    pendingThumbRemoval: null, // { folderId, tplId }
+    selectedAgents: new Set(),
+    editSelectedAgents: new Set(),
+    /* Per-folder transient upload buffer keyed by folderId */
+    pendingFiles: {} // { folderId: [{ name, dataUrl, sizeStr }] }
+  };
+
+  function loadTemplateFolders() {
+    try {
+      const raw = localStorage.getItem(TEMPLATE_FOLDERS_KEY);
+      if (!raw) return [];
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (e) { return []; }
+  }
+  function saveTemplateFolders(arr) {
+    try { localStorage.setItem(TEMPLATE_FOLDERS_KEY, JSON.stringify(arr)); } catch (e) {}
+  }
+  function findTemplateFolder(id) {
+    return loadTemplateFolders().find(function (f) { return f.id === id; });
+  }
+  function getTemplateFoldersForAgent(agentSlug) {
+    return loadTemplateFolders().filter(function (f) {
+      return Array.isArray(f.assignedTo) && f.assignedTo.indexOf(agentSlug) !== -1;
+    });
+  }
+  function folderTemplateById(tplId) {
+    const folders = loadTemplateFolders();
+    for (let i = 0; i < folders.length; i++) {
+      const f = folders[i];
+      const tpls = Array.isArray(f.templates) ? f.templates : [];
+      const t = tpls.find(function (x) { return x.id === tplId; });
+      if (t) return { template: t, folder: f };
+    }
+    return null;
+  }
+
+  /* ===== Render the agent checkbox list inside the Add form ===== */
+  function refreshTfAgentList() {
+    const list = document.getElementById("tfAgentList");
+    if (!list) return;
+    list.innerHTML = "";
+    if (AGENTS.length === 0) {
+      list.innerHTML = '<div class="admin-empty">No agents yet.</div>';
+      return;
+    }
+    AGENTS.forEach(function (agent) {
+      const slug = agentPrefsSlug(agent);
+      const row = document.createElement("label");
+      row.className = "tf-agent-row";
+      const cb = document.createElement("input");
+      cb.type = "checkbox";
+      cb.checked = tfState.selectedAgents.has(slug);
+      cb.addEventListener("change", function () {
+        if (cb.checked) tfState.selectedAgents.add(slug);
+        else tfState.selectedAgents.delete(slug);
+      });
+      const span = document.createElement("span");
+      span.textContent = agent.name;
+      row.appendChild(cb);
+      row.appendChild(span);
+      list.appendChild(row);
+    });
+  }
+
+  /* ===== Render the folder list with View/Edit/Delete ===== */
+  function renderTemplateFolders() {
+    const container = document.getElementById("tfFolderList");
+    if (!container) return;
+    container.innerHTML = "";
+    const folders = loadTemplateFolders();
+    if (folders.length === 0) {
+      container.innerHTML = '<div class="tf-folder-empty">No folders yet. Create one below.</div>';
+      return;
+    }
+    folders.forEach(function (folder) {
+      container.appendChild(buildTfFolderCard(folder));
+    });
+  }
+
+  function buildTfFolderCard(folder) {
+    const card = document.createElement("div");
+    card.className = "tf-folder-card";
+
+    const tplCount = Array.isArray(folder.templates) ? folder.templates.length : 0;
+    const agentCount = Array.isArray(folder.assignedTo) ? folder.assignedTo.length : 0;
+    const assignedNames = (folder.assignedTo || [])
+      .map(function (slug) {
+        const a = AGENTS.find(function (x) { return agentPrefsSlug(x) === slug; });
+        return a ? a.name : slug;
+      });
+
+    const row = document.createElement("div");
+    row.className = "tf-folder-row";
+
+    const info = document.createElement("div");
+    info.className = "tf-folder-info";
+    info.innerHTML =
+      '<div class="tf-folder-name"><span class="tf-folder-icon">📁</span>' +
+        '<span>' + escapeHtml(folder.name || "Untitled folder") + '</span></div>' +
+      '<div class="tf-folder-meta">' +
+        '<strong>Assigned to:</strong> ' + (agentCount === 0 ? 'no agents' : escapeHtml(assignedNames.join(", "))) +
+        ' &middot; ' +
+        '<strong>Templates:</strong> ' + tplCount +
+      '</div>';
+
+    const actions = document.createElement("div");
+    actions.className = "tf-folder-actions";
+
+    const viewBtn = document.createElement("button");
+    viewBtn.type = "button";
+    viewBtn.className = "tf-action-btn tf-view-btn";
+    viewBtn.textContent = (tfState.expandedFolderId === folder.id) ? "Hide Templates" : "View Templates";
+    viewBtn.addEventListener("click", function () {
+      tfState.expandedFolderId = (tfState.expandedFolderId === folder.id) ? null : folder.id;
+      tfState.editingFolderId = null;
+      tfState.deletingFolderId = null;
+      renderTemplateFolders();
+    });
+
+    const editBtn = document.createElement("button");
+    editBtn.type = "button";
+    editBtn.className = "tf-action-btn tf-edit-btn";
+    editBtn.textContent = (tfState.editingFolderId === folder.id) ? "Close" : "Edit";
+    editBtn.addEventListener("click", function () {
+      if (tfState.editingFolderId === folder.id) {
+        tfState.editingFolderId = null;
+      } else {
+        tfState.editingFolderId = folder.id;
+        tfState.editSelectedAgents = new Set(folder.assignedTo || []);
+        tfState.deletingFolderId = null;
+      }
+      renderTemplateFolders();
+    });
+
+    const delBtn = document.createElement("button");
+    delBtn.type = "button";
+    delBtn.className = "tf-action-btn tf-delete-btn";
+    delBtn.textContent = "Delete";
+    delBtn.addEventListener("click", function () {
+      tfState.deletingFolderId = (tfState.deletingFolderId === folder.id) ? null : folder.id;
+      tfState.editingFolderId = null;
+      renderTemplateFolders();
+    });
+
+    actions.appendChild(viewBtn);
+    actions.appendChild(editBtn);
+    actions.appendChild(delBtn);
+
+    row.appendChild(info);
+    row.appendChild(actions);
+    card.appendChild(row);
+
+    if (tfState.editingFolderId === folder.id) {
+      card.appendChild(buildTfEditFormEl(folder));
+    }
+    if (tfState.deletingFolderId === folder.id) {
+      card.appendChild(buildTfDeleteConfirmEl(folder));
+    }
+    if (tfState.expandedFolderId === folder.id) {
+      card.appendChild(buildTfDetailEl(folder));
+    }
+    return card;
+  }
+
+  function buildTfEditFormEl(folder) {
+    const wrap = document.createElement("div");
+    wrap.className = "tf-edit-form";
+    wrap.innerHTML =
+      '<div style="display:flex;flex-direction:column;gap:10px;">' +
+        '<div>' +
+          '<label class="field-label" for="tfEditName_' + folder.id + '">Folder Name</label>' +
+          '<input type="text" id="tfEditName_' + folder.id + '" value="' + escapeHtml(folder.name || "") + '">' +
+          '<div class="admin-error" id="tfEditNameErr_' + folder.id + '"></div>' +
+        '</div>' +
+        '<div>' +
+          '<label class="field-label">Assign to Agents</label>' +
+          '<div class="tf-agent-list" id="tfEditAgentList_' + folder.id + '"></div>' +
+          '<div class="admin-error" id="tfEditAgentErr_' + folder.id + '"></div>' +
+        '</div>' +
+        '<div class="tf-confirm-actions">' +
+          '<button type="button" class="admin-add-btn" data-tf-edit-save="' + folder.id + '">Save Changes</button>' +
+          '<button type="button" class="admin-pin-cancel" data-tf-edit-cancel="' + folder.id + '">Cancel</button>' +
+        '</div>' +
+      '</div>';
+
+    /* Populate agent list */
+    const listEl = wrap.querySelector("#tfEditAgentList_" + folder.id);
+    AGENTS.forEach(function (agent) {
+      const slug = agentPrefsSlug(agent);
+      const row = document.createElement("label");
+      row.className = "tf-agent-row";
+      const cb = document.createElement("input");
+      cb.type = "checkbox";
+      cb.checked = tfState.editSelectedAgents.has(slug);
+      cb.addEventListener("change", function () {
+        if (cb.checked) tfState.editSelectedAgents.add(slug);
+        else tfState.editSelectedAgents.delete(slug);
+      });
+      const span = document.createElement("span");
+      span.textContent = agent.name;
+      row.appendChild(cb);
+      row.appendChild(span);
+      listEl.appendChild(row);
+    });
+
+    wrap.querySelector('[data-tf-edit-save="' + folder.id + '"]').addEventListener("click", function () {
+      handleTfEditSave(folder.id);
+    });
+    wrap.querySelector('[data-tf-edit-cancel="' + folder.id + '"]').addEventListener("click", function () {
+      tfState.editingFolderId = null;
+      renderTemplateFolders();
+    });
+    return wrap;
+  }
+
+  function buildTfDeleteConfirmEl(folder) {
+    const wrap = document.createElement("div");
+    wrap.className = "tf-delete-confirm";
+    wrap.innerHTML =
+      'Are you sure you want to delete <strong>' + escapeHtml(folder.name || "") + '</strong>? ' +
+      'This will delete all templates inside it permanently. This cannot be undone.' +
+      '<div class="tf-confirm-actions">' +
+        '<button type="button" class="admin-confirm-yes" data-tf-del-yes="' + folder.id + '">Confirm Delete</button>' +
+        '<button type="button" class="admin-confirm-cancel" data-tf-del-no="' + folder.id + '">Cancel</button>' +
+      '</div>';
+    wrap.querySelector('[data-tf-del-yes="' + folder.id + '"]').addEventListener("click", function () {
+      handleTfDelete(folder.id);
+    });
+    wrap.querySelector('[data-tf-del-no="' + folder.id + '"]').addEventListener("click", function () {
+      tfState.deletingFolderId = null;
+      renderTemplateFolders();
+    });
+    return wrap;
+  }
+
+  function buildTfDetailEl(folder) {
+    const wrap = document.createElement("div");
+    wrap.className = "tf-folder-detail";
+
+    const title = document.createElement("h5");
+    title.className = "tf-detail-title";
+    title.textContent = "Templates inside " + (folder.name || "Folder");
+    wrap.appendChild(title);
+
+    /* Drop zone (matches main upload center pattern: drop → preview/name → upload) */
+    const dz = document.createElement("div");
+    dz.className = "tf-dropzone";
+    dz.innerHTML =
+      '<div class="tf-dropzone-icon">&uarr;</div>' +
+      '<div class="tf-dropzone-text">Drag templates here or click to browse</div>' +
+      '<div class="tf-dropzone-sub">PNG or JPG. Max 5MB per file. Multiple files OK.</div>';
+    const fileInput = document.createElement("input");
+    fileInput.type = "file";
+    fileInput.multiple = true;
+    fileInput.accept = "image/png,image/jpeg";
+    fileInput.style.display = "none";
+    dz.appendChild(fileInput);
+
+    dz.addEventListener("click", function () { fileInput.click(); });
+    fileInput.addEventListener("change", function () {
+      addTfPendingFiles(folder.id, fileInput.files);
+      fileInput.value = "";
+    });
+    ["dragenter","dragover"].forEach(function (evt) {
+      dz.addEventListener(evt, function (e) { e.preventDefault(); e.stopPropagation(); dz.classList.add("drag-over"); });
+    });
+    ["dragleave","drop"].forEach(function (evt) {
+      dz.addEventListener(evt, function (e) { e.preventDefault(); e.stopPropagation(); dz.classList.remove("drag-over"); });
+    });
+    dz.addEventListener("drop", function (e) {
+      const files = e.dataTransfer ? e.dataTransfer.files : null;
+      if (files && files.length) addTfPendingFiles(folder.id, files);
+    });
+    wrap.appendChild(dz);
+
+    /* Pending preview/name grid */
+    const pending = tfState.pendingFiles[folder.id] || [];
+    if (pending.length) {
+      const pgrid = document.createElement("div");
+      pgrid.className = "tf-pending-grid";
+      pending.forEach(function (pf, idx) {
+        const pcard = document.createElement("div");
+        pcard.className = "tf-pending-card";
+        pcard.innerHTML =
+          '<button type="button" class="tf-pending-remove" data-tf-pending-remove="' + idx + '">&times;</button>' +
+          '<img class="tf-pending-img" src="' + pf.dataUrl + '" alt="">' +
+          '<input type="text" class="tf-pending-name-input" data-tf-pending-name="' + idx + '" value="' + escapeHtml(pf.name) + '">' +
+          '<div class="tf-pending-meta">' + escapeHtml(pf.sizeStr) + '</div>';
+        pcard.querySelector('[data-tf-pending-remove="' + idx + '"]').addEventListener("click", function () {
+          tfState.pendingFiles[folder.id].splice(idx, 1);
+          renderTemplateFolders();
+        });
+        pcard.querySelector('[data-tf-pending-name="' + idx + '"]').addEventListener("input", function (e) {
+          tfState.pendingFiles[folder.id][idx].name = e.target.value;
+        });
+        pgrid.appendChild(pcard);
+      });
+      wrap.appendChild(pgrid);
+
+      const uploadBtn = document.createElement("button");
+      uploadBtn.type = "button";
+      uploadBtn.className = "uc-upload-btn";
+      uploadBtn.style.marginTop = "12px";
+      uploadBtn.textContent = "Upload " + pending.length + " Template" + (pending.length === 1 ? "" : "s") + " to Folder";
+      uploadBtn.addEventListener("click", function () {
+        commitTfPendingFiles(folder.id);
+      });
+      wrap.appendChild(uploadBtn);
+    }
+
+    /* Existing folder templates as thumbnails */
+    const tpls = Array.isArray(folder.templates) ? folder.templates.slice() : [];
+    if (tpls.length === 0) {
+      const empty = document.createElement("div");
+      empty.className = "tf-folder-empty";
+      empty.style.marginTop = "10px";
+      empty.textContent = "No templates uploaded to this folder yet.";
+      wrap.appendChild(empty);
+    } else {
+      const grid = document.createElement("div");
+      grid.className = "tf-thumb-grid";
+      tpls.sort(function (a, b) { return (b.uploadedAt || 0) - (a.uploadedAt || 0); });
+
+      const pendingRemoval = tfState.pendingThumbRemoval;
+      tpls.forEach(function (tpl) {
+        const thumb = document.createElement("div");
+        thumb.className = "tf-thumb";
+        thumb.innerHTML =
+          '<button type="button" class="tf-thumb-remove" title="Remove">&times;</button>' +
+          '<img class="tf-thumb-img" src="' + tpl.image + '" alt="">' +
+          '<div class="tf-thumb-name">' + escapeHtml(tpl.name || tpl.id) + '</div>';
+        thumb.querySelector(".tf-thumb-remove").addEventListener("click", function () {
+          tfState.pendingThumbRemoval = { folderId: folder.id, tplId: tpl.id };
+          renderTemplateFolders();
+        });
+        grid.appendChild(thumb);
+      });
+
+      if (pendingRemoval && pendingRemoval.folderId === folder.id) {
+        const tpl = (folder.templates || []).find(function (t) { return t.id === pendingRemoval.tplId; });
+        if (tpl) {
+          const confirmEl = document.createElement("div");
+          confirmEl.className = "tf-thumb-remove-confirm";
+          confirmEl.innerHTML =
+            '<span>Remove <strong>' + escapeHtml(tpl.name || tpl.id) + '</strong> from <strong>' + escapeHtml(folder.name) + '</strong>? The template will be deleted permanently.</span>' +
+            '<span class="tf-confirm-actions">' +
+              '<button type="button" class="admin-confirm-yes" data-tf-rmtpl-yes>Confirm</button>' +
+              '<button type="button" class="admin-confirm-cancel" data-tf-rmtpl-no>Cancel</button>' +
+            '</span>';
+          confirmEl.querySelector('[data-tf-rmtpl-yes]').addEventListener("click", function () {
+            removeFolderTemplate(pendingRemoval.folderId, pendingRemoval.tplId);
+            tfState.pendingThumbRemoval = null;
+            renderTemplateFolders();
+          });
+          confirmEl.querySelector('[data-tf-rmtpl-no]').addEventListener("click", function () {
+            tfState.pendingThumbRemoval = null;
+            renderTemplateFolders();
+          });
+          grid.appendChild(confirmEl);
+        }
+      }
+
+      wrap.appendChild(grid);
+    }
+    return wrap;
+  }
+
+  function addTfPendingFiles(folderId, fileList) {
+    const files = Array.from(fileList || []).filter(function (f) {
+      return f.type === "image/png" || f.type === "image/jpeg";
+    });
+    if (!files.length) return;
+    if (!tfState.pendingFiles[folderId]) tfState.pendingFiles[folderId] = [];
+    let pending = files.length;
+    files.forEach(function (file) {
+      if (file.size > MAX_FILE_SIZE) {
+        pending--;
+        if (pending === 0) renderTemplateFolders();
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const baseName = file.name.replace(/\.[^.]+$/, "");
+        tfState.pendingFiles[folderId].push({
+          name: baseName,
+          dataUrl: e.target.result,
+          sizeStr: formatFileSize(file.size)
+        });
+        pending--;
+        if (pending === 0) renderTemplateFolders();
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function commitTfPendingFiles(folderId) {
+    const pending = tfState.pendingFiles[folderId] || [];
+    if (pending.length === 0) return;
+    const all = loadTemplateFolders();
+    const folder = all.find(function (f) { return f.id === folderId; });
+    if (!folder) return;
+    if (!Array.isArray(folder.templates)) folder.templates = [];
+    const ts = Date.now();
+    pending.forEach(function (pf, idx) {
+      const cleanName = (pf.name || "").trim() || ("Template " + (idx + 1));
+      folder.templates.push({
+        id: "FOLDER_TPL_" + folderId + "_" + ts + "_" + idx,
+        name: cleanName,
+        image: pf.dataUrl,
+        uploadedOn: todayISO(),
+        uploadedAt: ts + idx
+      });
+    });
+    saveTemplateFolders(all);
+    delete tfState.pendingFiles[folderId];
+    renderTemplateFolders();
+  }
+
+  function removeFolderTemplate(folderId, tplId) {
+    const all = loadTemplateFolders();
+    const folder = all.find(function (f) { return f.id === folderId; });
+    if (!folder) return;
+    folder.templates = (folder.templates || []).filter(function (t) { return t.id !== tplId; });
+    saveTemplateFolders(all);
+  }
+
+  function handleTfEditSave(folderId) {
+    const all = loadTemplateFolders();
+    const folder = all.find(function (f) { return f.id === folderId; });
+    if (!folder) return;
+    const nameInput = document.getElementById("tfEditName_" + folderId);
+    const nameErr = document.getElementById("tfEditNameErr_" + folderId);
+    const agentErr = document.getElementById("tfEditAgentErr_" + folderId);
+
+    nameErr.classList.remove("visible"); nameErr.textContent = "";
+    agentErr.classList.remove("visible"); agentErr.textContent = "";
+
+    const newName = (nameInput.value || "").trim();
+    const newAgents = Array.from(tfState.editSelectedAgents);
+
+    let ok = true;
+    if (!newName) {
+      nameErr.textContent = "Folder name cannot be empty.";
+      nameErr.classList.add("visible");
+      ok = false;
+    } else if (all.some(function (f) {
+      return f.id !== folderId && (f.name || "").toLowerCase() === newName.toLowerCase();
+    })) {
+      nameErr.textContent = "Another folder already has that name.";
+      nameErr.classList.add("visible");
+      ok = false;
+    }
+    if (newAgents.length === 0) {
+      agentErr.textContent = "Assign at least one agent.";
+      agentErr.classList.add("visible");
+      ok = false;
+    }
+    if (!ok) return;
+
+    folder.name = newName;
+    folder.assignedTo = newAgents;
+    saveTemplateFolders(all);
+    tfState.editingFolderId = null;
+    renderTemplateFolders();
+    if (typeof renderATM === "function") renderATM();
+  }
+
+  function handleTfDelete(folderId) {
+    const all = loadTemplateFolders().filter(function (f) { return f.id !== folderId; });
+    saveTemplateFolders(all);
+    if (tfState.expandedFolderId === folderId) tfState.expandedFolderId = null;
+    if (tfState.editingFolderId === folderId) tfState.editingFolderId = null;
+    tfState.deletingFolderId = null;
+    delete tfState.pendingFiles[folderId];
+    renderTemplateFolders();
+    if (typeof renderATM === "function") renderATM();
+  }
+
+  /* ===== Wire the Add form once on load ===== */
+  (function wireTfAddForm() {
+    const selectAllBtn = document.getElementById("tfSelectAll");
+    if (selectAllBtn) selectAllBtn.addEventListener("click", function () {
+      tfState.selectedAgents = new Set(AGENTS.map(function (a) { return agentPrefsSlug(a); }));
+      refreshTfAgentList();
+    });
+    const clearAllBtn = document.getElementById("tfClearAll");
+    if (clearAllBtn) clearAllBtn.addEventListener("click", function () {
+      tfState.selectedAgents.clear();
+      refreshTfAgentList();
+    });
+
+    const createBtn = document.getElementById("tfCreateBtn");
+    if (createBtn) createBtn.addEventListener("click", function () {
+      const nameInput = document.getElementById("tfFolderName");
+      const nameErr = document.getElementById("tfFolderNameError");
+      const agentErr = document.getElementById("tfAgentError");
+      const successEl = document.getElementById("tfCreateSuccess");
+
+      nameErr.classList.remove("visible"); nameErr.textContent = "";
+      agentErr.classList.remove("visible"); agentErr.textContent = "";
+      nameInput.classList.remove("input-error");
+
+      const name = (nameInput.value || "").trim();
+      const assigned = Array.from(tfState.selectedAgents);
+
+      let ok = true;
+      if (!name) {
+        nameErr.textContent = "Folder name cannot be empty.";
+        nameErr.classList.add("visible");
+        nameInput.classList.add("input-error");
+        ok = false;
+      } else if (loadTemplateFolders().some(function (f) {
+        return (f.name || "").toLowerCase() === name.toLowerCase();
+      })) {
+        nameErr.textContent = "A folder with that name already exists.";
+        nameErr.classList.add("visible");
+        nameInput.classList.add("input-error");
+        ok = false;
+      }
+      if (assigned.length === 0) {
+        agentErr.textContent = "Assign at least one agent.";
+        agentErr.classList.add("visible");
+        ok = false;
+      }
+      if (!ok) return;
+
+      const all = loadTemplateFolders();
+      all.push({
+        id: "FOLDER_" + Date.now() + "_" + Math.floor(Math.random() * 10000),
+        name: name,
+        assignedTo: assigned,
+        templates: [],
+        createdOn: todayISO()
+      });
+      saveTemplateFolders(all);
+
+      nameInput.value = "";
+      tfState.selectedAgents.clear();
+      refreshTfAgentList();
+      renderTemplateFolders();
+      if (typeof renderATM === "function") renderATM();
+
+      successEl.innerHTML = "<strong>" + escapeHtml(name) + "</strong> has been created. Now upload templates to it by clicking <strong>View Templates</strong>.";
+      successEl.classList.remove("fading");
+      successEl.classList.add("visible");
+      setTimeout(function () {
+        successEl.classList.add("fading");
+        setTimeout(function () { successEl.classList.remove("visible", "fading"); successEl.innerHTML = ""; }, 400);
+      }, 5000);
+    });
+  })();
+
+  /* When the Content tab opens we render UC + ATM + Seasonal + Folders too */
   const _origSwitchAdminTab = (typeof switchAdminTab === "function") ? switchAdminTab : null;
   if (_origSwitchAdminTab) {
     switchAdminTab = function (tab) {
@@ -7077,6 +8365,8 @@
         renderATM();
         refreshSeasonAgentList();
         renderSeasonalFolders();
+        refreshTfAgentList();
+        renderTemplateFolders();
       }
     };
   }
