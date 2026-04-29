@@ -6995,6 +6995,8 @@
   /* When the admin clicks × on a thumbnail we pause and ask for the admin
      password before actually removing the template. Shape: { tplId, slug }. */
   let atmPendingRemoval = null;
+  /* Same idea for the Remove Folder button. Shape: { folderId, slug }. */
+  let atmPendingFolderRemoval = null;
 
   function loadCustomTemplates() {
     try {
