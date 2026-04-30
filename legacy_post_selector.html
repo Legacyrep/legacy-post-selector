@@ -4068,7 +4068,14 @@
   });
 
   function agentPrefsSlug(agent) {
-    return String((agent && agent.name) || "").toLowerCase().replace(/\s+/g, "");
+    /* Prefer the hyphenated id (e.g. "sabrina-thompson") so the slug matches
+       the env var convention NOTION_SABRINA_THOMPSON_DB on the Cloudflare
+       worker. Fall back to a hyphen-slugified name for any agent without id. */
+    if (agent && agent.id) return String(agent.id).toLowerCase();
+    return String((agent && agent.name) || "")
+      .toLowerCase().trim()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
   }
   function topicPrefsSlug(topic) {
     return String(topic || "").toLowerCase().replace(/\s+/g, "");
