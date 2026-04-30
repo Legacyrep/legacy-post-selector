@@ -5402,9 +5402,37 @@
 
   /* Simulated submission Promise — wired so a real backend can replace this later */
   function performSubmission() {
-    return new Promise(function (resolve) {
-      setTimeout(function () { resolve({ ok: true }); }, 700);
-    });
+    /* If the Notion proxy isn't configured, fall back to the local-only
+       success path so this still works offline / pre-launch. */
+    if (!proxyEnabled() || !currentAgent) {
+      return new Promise(function (resolve) {
+        setTimeout(function () { resolve({ ok: true }); }, 700);
+      });
+    }
+    const monday = getWeekMonday(weekOffset);
+    const sunday = new Date(monday); sunday.setDate(monday.getDate() + 6);
+    const days = (weekState[weekOffset] || []).map(serializeDay);
+    /* If every day is blank, route through /skip instead of /submit
+       (worker rejects /submit when no day has a topic). */
+    const anyTopic = days.some(function (d) { return d && d.topic; });
+    if (!anyTopic) {
+      return proxyCall("POST", "/skip", {
+        agentSlug: agentPrefsSlug(currentAgent),
+        agentName: currentAgent.name,
+        weekStart: mondayISO(monday),
+        weekRange: formatWeekRangeShort(monday, sunday)
+      }).then(function (r) { return { ok: !!(r && r.ok), result: r }; })
+        .catch(function (e) { return { ok: false, error: e && e.message }; });
+    }
+    return proxyCall("POST", "/submit", {
+      agentSlug: agentPrefsSlug(currentAgent),
+      agentName: currentAgent.name,
+      weekStart: mondayISO(monday),
+      weekRange: formatWeekRangeShort(monday, sunday),
+      days: days,
+      weeklyNotes: (typeof getWeeklyNotesFromForm === "function") ? getWeeklyNotesFromForm() : null
+    }).then(function (r) { return { ok: !!(r && r.ok), result: r }; })
+      .catch(function (e) { return { ok: false, error: e && e.message }; });
   }
 
   document.getElementById("submitBtn").addEventListener("click", function () {
