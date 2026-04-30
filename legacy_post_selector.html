@@ -5668,7 +5668,7 @@
     document.getElementById("skipWeekBtn").classList.remove("hidden");
   });
   document.getElementById("skipWeekYes").addEventListener("click", function () {
-    /* Reset every day in this week to "blank / skipped" */
+    /* Reset every day in this week to "blank / skipped" — instant UI feedback */
     const state = ensureWeekState(weekOffset);
     for (let i = 0; i < 7; i++) {
       state[i].topic = "";
@@ -5683,6 +5683,19 @@
     document.getElementById("skipWeekBtn").classList.remove("hidden");
     renderWeek();
     updateSubmitButtonText();
+    /* Path B: also write the Week Skipped row to Notion via the worker.
+       No-op if NOTION_PROXY_URL is empty. Errors are non-fatal — local state
+       is already reset and the user will hit Submit My Week to confirm. */
+    if (proxyEnabled() && currentAgent) {
+      const monday = getWeekMonday(weekOffset);
+      const sunday = new Date(monday); sunday.setDate(monday.getDate() + 6);
+      proxyCall("POST", "/skip", {
+        agentSlug: agentPrefsSlug(currentAgent),
+        agentName: currentAgent.name,
+        weekStart: mondayISO(monday),
+        weekRange: formatWeekRangeShort(monday, sunday)
+      }).catch(function (e) { console.warn("[skip] proxy failed", e); });
+    }
   });
 
   /* ============================================================
