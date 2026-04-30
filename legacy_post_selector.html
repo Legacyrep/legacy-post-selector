@@ -4332,8 +4332,15 @@
   function serverFetchPostStatuses(agent, weekStartISO) {
     if (!proxyEnabled() || !agent) return Promise.resolve(null);
     return proxyCall("GET",
-      "/post-statuses?agentSlug=" + encodeURIComponent(agentPrefsSlug(agent)) +
+      "/submissions?agentSlug=" + encodeURIComponent(agentPrefsSlug(agent)) +
+      "&agentName=" + encodeURIComponent(agent.name) +
       "&weekStart=" + encodeURIComponent(weekStartISO), undefined)
+      .then(function (resp) {
+        /* The /submissions endpoint returns { submission, statuses }; the
+           Submissions page only needs the statuses array — adapt the shape. */
+        if (resp && Array.isArray(resp.statuses)) return { statuses: resp.statuses };
+        return null;
+      })
       .catch(function () { return null; });
   }
 
