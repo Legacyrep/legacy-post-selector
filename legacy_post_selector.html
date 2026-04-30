@@ -4285,8 +4285,23 @@
     const opts = { method: method, headers: { "Content-Type": "application/json" } };
     if (body !== undefined) opts.body = JSON.stringify(body);
     return fetch(url, opts).then(function (res) {
-      if (!res.ok) throw new Error("Proxy " + method + " " + path + " failed: " + res.status);
-      return res.json().catch(function () { return null; });
+      /* Always read the body so we can surface the actual server error
+         message (the worker returns it in JSON `error` field). */
+      return res.text().then(function (text) {
+        let parsed = null;
+        try { parsed = text ? JSON.parse(text) : null; } catch (_) {}
+        if (!res.ok) {
+          const detail = (parsed && (parsed.error || parsed.message))
+            || (text ? text.slice(0, 400) : "")
+            || ("status " + res.status);
+          const e = new Error("Proxy " + method + " " + path + " failed: " + res.status + " — " + detail);
+          e.status = res.status;
+          e.body = parsed;
+          console.error("[proxyCall]", method, path, "→", res.status, parsed || text);
+          throw e;
+        }
+        return parsed;
+      });
     });
   }
 
