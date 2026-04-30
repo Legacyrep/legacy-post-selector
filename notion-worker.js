@@ -206,27 +206,28 @@ function addDaysISO(weekStartISO, idx) {
 // ============================================================
 // PAGE BUILDERS
 // ============================================================
+/* All five agents share one Notion DB (Weekly Selector Submissions). The
+ * property names below match that DB's existing schema; "Agent Name" is the
+ * key that scopes rows to a specific agent. */
 function buildSubmittedDayPage(dbId, agentName, dayIdx, weekStartISO, weekRange, day, weeklyNotes, submittedAtISO) {
   const dateISO = addDaysISO(weekStartISO, dayIdx);
   const dayName = DAY_NAMES[dayIdx] || "";
-  const title = `${dayName} ${dateISO} — ${day.topic || ""}`.trim();
+  const title = `${agentName} — ${dayName} ${dateISO} — ${day.topic || ""}`.trim();
   const wn = weeklyNotes || {};
   return {
     parent: { database_id: dbId },
     properties: {
-      "Name":                  titleProp(title),
+      "Submission":            titleProp(title),
       "Status":                selectProp("Submitted"),
-      "Agent":                 richTextProp(agentName),
-      "Day":                   selectProp(dayName),
-      "Date":                  dateProp(dateISO),
-      "Week Of":               richTextProp(weekRange),
-      "Week Start":            dateProp(weekStartISO),
-      "Post Topic":            selectProp(day.topic),
-      "Tone":                  selectProp(day.tone),
-      "Template":              richTextProp(day.selectedTemplate),
+      "Agent Name":            richTextProp(agentName),
+      "Day of Week":           selectProp(dayName),
+      "Date to Post":          dateProp(dateISO),
+      "Week of":               dateProp(weekStartISO),
+      "Post Topic":            richTextProp(day.topic),
+      "Tone":                  richTextProp(day.tone),
+      "Canva Design Number":   richTextProp(day.selectedTemplate),
       "Listing URL":           urlProp(day.url),
       "Special Notes":         richTextProp(day.notes),
-      "Submitted At":          dateProp(submittedAtISO),
       "Market Feeling":        richTextProp(wn.marketFeeling),
       "Weekly Context":        richTextProp(wn.weeklyContext),
       "Phrase Preferences":    richTextProp(wn.phrasePreferences),
@@ -235,6 +236,7 @@ function buildSubmittedDayPage(dbId, agentName, dayIdx, weekStartISO, weekRange,
       "Season Emojis":         richTextProp(wn.seasonEmojis),
       "Season Tone":           richTextProp(wn.seasonTone),
       "Holiday Template Used": checkboxProp(wn.holidayTemplateUsed)
+      /* "Submitted At" is auto (created_time); not written here. */
     }
   };
 }
@@ -243,12 +245,11 @@ function buildSkipPage(dbId, agentName, weekStartISO, weekRange, submittedAtISO)
   return {
     parent: { database_id: dbId },
     properties: {
-      "Name":         titleProp(`Week of ${weekRange || weekStartISO} — Skipped`),
-      "Status":       selectProp("Week Skipped"),
-      "Agent":        richTextProp(agentName),
-      "Week Of":      richTextProp(weekRange),
-      "Week Start":   dateProp(weekStartISO),
-      "Submitted At": dateProp(submittedAtISO)
+      "Submission":     titleProp(`${agentName} — Week of ${weekRange || weekStartISO} — Skipped`),
+      "Status":         selectProp("Week Skipped"),
+      "Agent Name":     richTextProp(agentName),
+      "Week of":        dateProp(weekStartISO),
+      "Skip This Week": checkboxProp(true)
     }
   };
 }
@@ -257,11 +258,10 @@ function buildDraftPage(dbId, agentName, weekStartISO, weekRange, savedAtISO, dr
   return {
     parent: { database_id: dbId },
     properties: {
-      "Name":           titleProp(`Draft — ${weekRange || weekStartISO}`),
+      "Submission":     titleProp(`${agentName} — Draft — ${weekRange || weekStartISO}`),
       "Status":         selectProp("Draft"),
-      "Agent":          richTextProp(agentName),
-      "Week Of":        richTextProp(weekRange),
-      "Week Start":     dateProp(weekStartISO),
+      "Agent Name":     richTextProp(agentName),
+      "Week of":        dateProp(weekStartISO),
       "Draft Saved At": dateProp(savedAtISO)
     },
     children: [
@@ -277,14 +277,14 @@ function buildDraftPage(dbId, agentName, weekStartISO, weekRange, savedAtISO, dr
 // ============================================================
 // DRAFT HELPERS
 // ============================================================
-async function archiveDraftPages(env, dbId, weekStartISO) {
+async function archiveDraftPages(env, dbId, agentName, weekStartISO) {
+  const filterParts = [
+    { property: "Status",     select:    { equals: "Draft" } },
+    { property: "Agent Name", rich_text: { equals: agentName } }
+  ];
+  if (weekStartISO) filterParts.push({ property: "Week of", date: { equals: weekStartISO } });
   const data = await notion(env, "POST", `/databases/${dbId}/query`, {
-    filter: {
-      and: [
-        { property: "Status",     select: { equals: "Draft" } },
-        { property: "Week Start", date:   { equals: weekStartISO } }
-      ]
-    },
+    filter: { and: filterParts },
     page_size: 25
   });
   const ids = ((data && data.results) || []).map((p) => p.id);
@@ -334,16 +334,20 @@ function readCheckbox(page, propName) {
   return !!(p && p.checkbox);
 }
 
+function readCreatedTime(page, propName) {
+  const p = page.properties && page.properties[propName];
+  return p ? p.created_time || null : null;
+}
 function extractDayRow(page) {
   return {
-    date:                 readDate(page, "Date"),
-    day:                  readSelect(page, "Day"),
-    topic:                readSelect(page, "Post Topic"),
-    tone:                 readSelect(page, "Tone"),
-    selectedTemplate:     readRichText(page, "Template"),
+    date:                 readDate(page, "Date to Post"),
+    day:                  readSelect(page, "Day of Week"),
+    topic:                readRichText(page, "Post Topic"),
+    tone:                 readRichText(page, "Tone"),
+    selectedTemplate:     readRichText(page, "Canva Design Number"),
     url:                  readUrl(page, "Listing URL"),
     notes:                readRichText(page, "Special Notes"),
-    submittedAt:          readDate(page, "Submitted At"),
+    submittedAt:          readCreatedTime(page, "Submitted At"),
     marketFeeling:        readRichText(page, "Market Feeling"),
     weeklyContext:        readRichText(page, "Weekly Context"),
     phrasePreferences:    readRichText(page, "Phrase Preferences"),
@@ -388,7 +392,7 @@ async function handleSubmit(env, body, origin) {
   }
 
   // Clean up any draft for this week now that it's submitted
-  try { await archiveDraftPages(env, dbId, weekStart); } catch (e) { console.error("draft cleanup failed", e.message); }
+  try { await archiveDraftPages(env, dbId, agentName, weekStart); } catch (e) { console.error("draft cleanup failed", e.message); }
 
   return jsonResp({ ok: true, daysWritten: written.length, written }, 200, origin);
 }
@@ -404,7 +408,7 @@ async function handleSkip(env, body, origin) {
   try {
     const page = buildSkipPage(dbId, agentName, weekStart, weekRange || "", new Date().toISOString());
     const result = await notion(env, "POST", "/pages", page);
-    try { await archiveDraftPages(env, dbId, weekStart); } catch (_) {}
+    try { await archiveDraftPages(env, dbId, agentName, weekStart); } catch (_) {}
     return jsonResp({ ok: true, pageId: result.id }, 200, origin);
   } catch (e) {
     return errorResp(`Skip-week write failed: ${e.message}`, 502, origin);
@@ -431,7 +435,7 @@ async function handleDraftSave(env, body, origin) {
 
   try {
     // Replace any existing draft for this (agent, week) by archiving them first
-    try { await archiveDraftPages(env, dbId, weekStart); } catch (_) {}
+    try { await archiveDraftPages(env, dbId, agentName, weekStart); } catch (_) {}
     const page = buildDraftPage(dbId, agentName, weekStart, weekRange || "", savedAtISO, draftJson);
     const result = await notion(env, "POST", "/pages", page);
     return jsonResp({ ok: true, pageId: result.id }, 200, origin);
@@ -442,17 +446,22 @@ async function handleDraftSave(env, body, origin) {
 
 async function handleDraftRestore(env, url, origin) {
   const agentSlug = url.searchParams.get("agentSlug");
+  const agentName = url.searchParams.get("agentName"); // required (shared DB filter)
   const weekStart = url.searchParams.get("weekStart"); // optional
   if (!agentSlug) return errorResp("Missing agentSlug", 400, origin);
+  if (!agentName) return errorResp("Missing agentName", 400, origin);
   const dbId = getDbId(env, agentSlug);
   if (!dbId) return errorResp(`No Notion DB configured for ${agentSlug}`, 500, origin);
 
-  const filterParts = [{ property: "Status", select: { equals: "Draft" } }];
-  if (weekStart) filterParts.push({ property: "Week Start", date: { equals: weekStart } });
+  const filterParts = [
+    { property: "Status",     select:    { equals: "Draft" } },
+    { property: "Agent Name", rich_text: { equals: agentName } }
+  ];
+  if (weekStart) filterParts.push({ property: "Week of", date: { equals: weekStart } });
 
   try {
     const data = await notion(env, "POST", `/databases/${dbId}/query`, {
-      filter: filterParts.length > 1 ? { and: filterParts } : filterParts[0],
+      filter: { and: filterParts },
       sorts: [{ property: "Draft Saved At", direction: "descending" }],
       page_size: 1
     });
@@ -467,13 +476,15 @@ async function handleDraftRestore(env, url, origin) {
 
 async function handleDraftDelete(env, url, origin) {
   const agentSlug = url.searchParams.get("agentSlug");
+  const agentName = url.searchParams.get("agentName");
   const weekStart = url.searchParams.get("weekStart");
   if (!agentSlug) return errorResp("Missing agentSlug", 400, origin);
+  if (!agentName) return errorResp("Missing agentName", 400, origin);
   if (!weekStart) return errorResp("Missing weekStart", 400, origin);
   const dbId = getDbId(env, agentSlug);
   if (!dbId) return errorResp(`No Notion DB configured for ${agentSlug}`, 500, origin);
   try {
-    const archived = await archiveDraftPages(env, dbId, weekStart);
+    const archived = await archiveDraftPages(env, dbId, agentName, weekStart);
     return jsonResp({ ok: true, archived }, 200, origin);
   } catch (e) {
     return errorResp(`Draft delete failed: ${e.message}`, 502, origin);
@@ -482,8 +493,10 @@ async function handleDraftDelete(env, url, origin) {
 
 async function handleSubmissions(env, url, origin) {
   const agentSlug = url.searchParams.get("agentSlug");
+  const agentName = url.searchParams.get("agentName");
   const weekStart = url.searchParams.get("weekStart");
   if (!agentSlug) return errorResp("Missing agentSlug", 400, origin);
+  if (!agentName) return errorResp("Missing agentName", 400, origin);
   if (!weekStart) return errorResp("Missing weekStart (YYYY-MM-DD Monday of the week to fetch)", 400, origin);
   const dbId = getDbId(env, agentSlug);
   if (!dbId) return errorResp(`No Notion DB configured for ${agentSlug}`, 500, origin);
@@ -494,11 +507,12 @@ async function handleSubmissions(env, url, origin) {
     const data = await notion(env, "POST", `/databases/${dbId}/query`, {
       filter: {
         and: [
-          { property: "Status",     select: { equals: "Submitted" } },
-          { property: "Week Start", date:   { equals: weekStart } }
+          { property: "Status",     select:    { equals: "Submitted" } },
+          { property: "Agent Name", rich_text: { equals: agentName } },
+          { property: "Week of",    date:      { equals: weekStart } }
         ]
       },
-      sorts: [{ property: "Date", direction: "ascending" }],
+      sorts: [{ property: "Date to Post", direction: "ascending" }],
       page_size: 14
     });
     const days = ((data && data.results) || []).map((p) => extractDayRow(p));
@@ -507,19 +521,26 @@ async function handleSubmissions(env, url, origin) {
     return errorResp(`Submissions fetch failed: ${e.message}`, 502, origin);
   }
 
-  // Post statuses (optional — Output DB)
+  // Post statuses from per-agent Output DB (optional — falls through silently if missing or schema differs)
   const outputDbId = getOutputDbId(env, agentSlug);
   let statuses = [];
   if (outputDbId) {
     try {
+      // Output DB has Date to Post (date) but Week of as text. Filter by date range Mon..Sun.
+      const weekEnd = addDaysISO(weekStart, 6);
       const data = await notion(env, "POST", `/databases/${outputDbId}/query`, {
-        filter: { property: "Week Start", date: { equals: weekStart } },
-        sorts: [{ property: "Date", direction: "ascending" }],
+        filter: {
+          and: [
+            { property: "Date to Post", date: { on_or_after:  weekStart } },
+            { property: "Date to Post", date: { on_or_before: weekEnd } }
+          ]
+        },
+        sorts: [{ property: "Date to Post", direction: "ascending" }],
         page_size: 25
       });
       statuses = ((data && data.results) || []).map((p) => ({
-        date:   readDate(p, "Date"),
-        day:    readRichText(p, "Day"),
+        date:   readDate(p, "Date to Post"),
+        day:    readRichText(p, "Day of Week"),
         status: readSelect(p, "Status")
       }));
     } catch (e) {
