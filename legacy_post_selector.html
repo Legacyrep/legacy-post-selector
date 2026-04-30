@@ -4305,14 +4305,18 @@
   }
   function serverFetchDraftFor(agent) {
     if (!proxyEnabled() || !agent) return Promise.resolve(null);
-    return proxyCall("GET", "/draft?agentSlug=" + encodeURIComponent(agentPrefsSlug(agent)), undefined)
+    return proxyCall("GET",
+      "/draft?agentSlug=" + encodeURIComponent(agentPrefsSlug(agent)) +
+      "&agentName=" + encodeURIComponent(agent.name), undefined)
       .catch(function (e) { console.warn("[draft fetch] proxy failed, falling back to localStorage", e); return null; });
   }
   function serverDeleteDraftFor(agent, weekOffset) {
     if (!proxyEnabled() || !agent) return Promise.resolve(null);
     const monday = getWeekMonday(weekOffset);
-    return proxyCall("DELETE", "/draft?agentSlug=" + encodeURIComponent(agentPrefsSlug(agent)) +
-                                "&weekStart=" + encodeURIComponent(mondayISO(monday)), undefined)
+    return proxyCall("DELETE",
+      "/draft?agentSlug=" + encodeURIComponent(agentPrefsSlug(agent)) +
+      "&agentName=" + encodeURIComponent(agent.name) +
+      "&weekStart=" + encodeURIComponent(mondayISO(monday)), undefined)
       .catch(function () { return null; });
   }
   function serverSendConfirmationEmail(agent, weekOffset, submissionRecord) {
