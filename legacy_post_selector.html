@@ -4274,7 +4274,7 @@
      exists. While empty, all server-side calls no-op and the file
      behaves exactly like the localStorage-only version.
   ============================================================ */
-  const NOTION_PROXY_URL = ""; // e.g. "https://legacy-proxy.your-worker.workers.dev"
+  const NOTION_PROXY_URL = "https://notion-worker.brett-bea.workers.dev";
 
   function proxyEnabled() {
     return typeof NOTION_PROXY_URL === "string" && NOTION_PROXY_URL.length > 0;
