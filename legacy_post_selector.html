@@ -5443,7 +5443,8 @@
     performSubmission().then(function (result) {
       if (!result || !result.ok) {
         setSubmitProgress(false);
-        showSubmitError("Something went wrong. Please try again.");
+        const detail = result && (result.error || (result.result && result.result.error));
+        showSubmitError(detail ? ("Could not save: " + detail) : "Something went wrong. Please try again.");
         return;
       }
       const monday = getWeekMonday(weekOffset);
