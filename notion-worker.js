@@ -206,13 +206,18 @@ function addDaysISO(weekStartISO, idx) {
 // ============================================================
 // PAGE BUILDERS
 // ============================================================
-/* All five agents share one Notion DB (Weekly Selector Submissions). The
- * property names below match that DB's existing schema; "Agent Name" is the
- * key that scopes rows to a specific agent. */
+/* Each agent has their own Weekly Submissions DB inside their agent folder
+ * in Notion. The dbId passed in is resolved by getDbId(env, agentSlug) which
+ * reads NOTION_<SLUG>_DB (e.g. NOTION_SABRINA_THOMPSON_DB). Property names
+ * below match the per-agent DB schema. The "Agent Name" rich_text property
+ * and the "Agent Name" filter on queries are kept as defensive metadata —
+ * they're no-ops in a per-agent DB but cheap insurance against a row landing
+ * in the wrong DB. */
 function buildSubmittedDayPage(dbId, agentName, dayIdx, weekStartISO, weekRange, day, weeklyNotes, submittedAtISO) {
   const dateISO = addDaysISO(weekStartISO, dayIdx);
   const dayName = DAY_NAMES[dayIdx] || "";
-  const title = `${agentName} — ${dayName} ${dateISO} — ${day.topic || ""}`.trim();
+  /* Title doesn't need an agentName prefix — each DB only has one agent's rows. */
+  const title = `${dayName} ${dateISO} — ${day.topic || ""}`.trim();
   const wn = weeklyNotes || {};
   return {
     parent: { database_id: dbId },
@@ -245,7 +250,7 @@ function buildSkipPage(dbId, agentName, weekStartISO, weekRange, submittedAtISO)
   return {
     parent: { database_id: dbId },
     properties: {
-      "Submission":     titleProp(`${agentName} — Week of ${weekRange || weekStartISO} — Skipped`),
+      "Submission":     titleProp(`Week of ${weekRange || weekStartISO} — Skipped`),
       "Status":         selectProp("Week Skipped"),
       "Agent Name":     richTextProp(agentName),
       "Week of":        dateProp(weekStartISO),
@@ -258,7 +263,7 @@ function buildDraftPage(dbId, agentName, weekStartISO, weekRange, savedAtISO, dr
   return {
     parent: { database_id: dbId },
     properties: {
-      "Submission":     titleProp(`${agentName} — Draft — ${weekRange || weekStartISO}`),
+      "Submission":     titleProp(`Draft — ${weekRange || weekStartISO}`),
       "Status":         selectProp("Draft"),
       "Agent Name":     richTextProp(agentName),
       "Week of":        dateProp(weekStartISO),
@@ -446,7 +451,7 @@ async function handleDraftSave(env, body, origin) {
 
 async function handleDraftRestore(env, url, origin) {
   const agentSlug = url.searchParams.get("agentSlug");
-  const agentName = url.searchParams.get("agentName"); // required (shared DB filter)
+  const agentName = url.searchParams.get("agentName"); // defensive filter; per-agent DB makes it a no-op
   const weekStart = url.searchParams.get("weekStart"); // optional
   if (!agentSlug) return errorResp("Missing agentSlug", 400, origin);
   if (!agentName) return errorResp("Missing agentName", 400, origin);
