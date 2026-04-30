@@ -8973,7 +8973,7 @@
   /* One-time wipe of every legacy_* localStorage key so the file boots
      fresh for real use. Bumping RESET_VERSION on a future production reset
      will run the wipe again on every browser the next time the page loads. */
-  const RESET_VERSION = "v3-prod-2026-04-29-sync-with-notion";
+  const RESET_VERSION = "v4-prod-2026-04-30-hyphenated-slugs";
   (function resetForRealUse() {
     try {
       if (localStorage.getItem("legacy_reset_version") === RESET_VERSION) return;
