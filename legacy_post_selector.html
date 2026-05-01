@@ -5266,6 +5266,91 @@
     return btn;
   }
 
+  /* ===== Template preview modal =====
+     Opened when an agent taps a thumbnail. Shows the full template at large
+     size with a Select / Deselect button that routes through the existing
+     handleTemplateClick logic. Star (favorite) toggles still happen on the
+     thumbnail itself — clicking the star never opens the preview. */
+  let templatePreviewState = null;
+
+  function resolveTemplateForPreview(id) {
+    if (!id || typeof id !== "string") return { image: "", name: id };
+    if (id.indexOf("CUSTOM_") === 0 && typeof customTemplateById === "function") {
+      const t = customTemplateById(id);
+      if (t) return { image: t.image || "", name: t.name || id };
+    }
+    if (id.indexOf("HOLIDAY_") === 0 && typeof holidayTemplateById === "function") {
+      const ht = holidayTemplateById(id);
+      if (ht && ht.template) return { image: ht.template.image || "", name: ht.template.name || id };
+    }
+    if (id.indexOf("FOLDER_TPL_") === 0 && typeof folderTemplateById === "function") {
+      const ft = folderTemplateById(id);
+      if (ft && ft.template) return { image: ft.template.image || "", name: ft.template.name || id };
+    }
+    return { image: "", name: id };
+  }
+
+  function openTemplatePreview(id, card, dayState) {
+    const overlay = document.getElementById("templatePreviewOverlay");
+    const imgEl   = document.getElementById("templatePreviewImg");
+    const nameEl  = document.getElementById("templatePreviewName");
+    const selBtn  = document.getElementById("templatePreviewSelect");
+    if (!overlay || !imgEl || !nameEl || !selBtn) return;
+    const data = resolveTemplateForPreview(id);
+    if (data.image) {
+      imgEl.src = data.image;
+      imgEl.alt = data.name;
+      imgEl.style.display = "";
+    } else {
+      imgEl.removeAttribute("src");
+      imgEl.alt = "";
+      imgEl.style.display = "none";
+    }
+    nameEl.textContent = data.name;
+    const isSelected = dayState && dayState.selectedTemplate === id;
+    selBtn.textContent = isSelected ? "Deselect This Template" : "Select This Template";
+    templatePreviewState = { id: id, card: card, dayState: dayState };
+    overlay.classList.remove("hidden");
+    overlay.setAttribute("aria-hidden", "false");
+  }
+
+  function closeTemplatePreview() {
+    const overlay = document.getElementById("templatePreviewOverlay");
+    if (!overlay) return;
+    overlay.classList.add("hidden");
+    overlay.setAttribute("aria-hidden", "true");
+    templatePreviewState = null;
+  }
+
+  /* Wire the close + select handlers once on script init. The card click
+     handler (in buildTemplateCardEl) calls openTemplatePreview directly. */
+  (function wireTemplatePreviewHandlers() {
+    const overlay = document.getElementById("templatePreviewOverlay");
+    const closeBtn = document.getElementById("templatePreviewClose");
+    const backBtn  = document.getElementById("templatePreviewBack");
+    const selBtn   = document.getElementById("templatePreviewSelect");
+    if (!overlay || !closeBtn || !backBtn || !selBtn) return;
+
+    closeBtn.addEventListener("click", closeTemplatePreview);
+    backBtn.addEventListener("click", closeTemplatePreview);
+    /* Click outside the card (on the overlay backdrop) closes too. */
+    overlay.addEventListener("click", function (e) {
+      if (e.target === overlay) closeTemplatePreview();
+    });
+    /* Escape key closes the modal */
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && templatePreviewState) closeTemplatePreview();
+    });
+    selBtn.addEventListener("click", function () {
+      if (!templatePreviewState) return;
+      const s = templatePreviewState;
+      if (typeof handleTemplateClick === "function") {
+        handleTemplateClick(s.card, s.dayState, s.id);
+      }
+      closeTemplatePreview();
+    });
+  })();
+
   /* True only if the id resolves to a real uploaded template (custom upload,
      holiday-folder template, or personal-folder template). Used to filter
      orphaned favorite IDs that no longer correspond to anything real. */
