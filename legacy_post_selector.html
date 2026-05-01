@@ -5132,10 +5132,11 @@
       e.stopPropagation();
       handleFavoriteToggle(card, dayState, id);
     });
-    /* Card body click selects/deselects template for the day */
+    /* Card body click → open the preview modal (large view + Select button).
+       The modal's Select button is what actually toggles selection for the day. */
     btn.addEventListener("click", function (e) {
       if (e.target && (e.target === starBtn || (e.target.closest && e.target.closest(".fav-star")))) return;
-      handleTemplateClick(card, dayState, id);
+      openTemplatePreview(id, card, dayState);
     });
     return btn;
   }
