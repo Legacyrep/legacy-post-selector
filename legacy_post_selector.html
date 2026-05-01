@@ -5127,12 +5127,34 @@
     return btn;
   }
 
+  /* True only if the id resolves to a real uploaded template (custom upload,
+     holiday-folder template, or personal-folder template). Used to filter
+     orphaned favorite IDs that no longer correspond to anything real. */
+  function templateExistsAsRealUpload(id) {
+    if (!id || typeof id !== "string") return false;
+    if (id.indexOf("CUSTOM_") === 0 && typeof customTemplateById === "function") {
+      const t = customTemplateById(id);
+      return !!(t && t.image);
+    }
+    if (id.indexOf("HOLIDAY_") === 0 && typeof holidayTemplateById === "function") {
+      const ht = holidayTemplateById(id);
+      return !!(ht && ht.template);
+    }
+    if (id.indexOf("FOLDER_TPL_") === 0 && typeof folderTemplateById === "function") {
+      const ft = folderTemplateById(id);
+      return !!(ft && ft.template);
+    }
+    return false;
+  }
+
   function renderTemplateGrid(card, dayState, animateIn) {
     const favSection = card.querySelector(".favorites-section");
     const favGrid = card.querySelector(".favorites-grid");
     const moreSection = card.querySelector(".more-section");
     const moreGrid = card.querySelector(".template-grid");
+    const emptyState = card.querySelector(".template-empty");
     if (!favSection || !favGrid || !moreGrid) return;
+    if (emptyState) emptyState.classList.add("hidden");
 
     /* Section 0: holiday sections (one per active holiday folder assigned to this agent).
        Always rendered first, regardless of whether the agent has a personal folder. */
