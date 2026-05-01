@@ -447,6 +447,118 @@
   }
   .template-card.selected .check { display: flex; }
 
+  /* ===== Template preview modal (opens when a thumbnail is tapped) ===== */
+  .template-preview-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 37, 64, 0.85);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    cursor: pointer;
+    animation: tplPreviewFade 0.18s ease;
+  }
+  @keyframes tplPreviewFade {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  .template-preview-card {
+    background: white;
+    border: 2px solid var(--gold);
+    border-radius: 14px;
+    padding: 16px;
+    max-width: min(92vw, 560px);
+    max-height: 92vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    cursor: default;
+    position: relative;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+  }
+  .template-preview-close {
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: transparent;
+    font-size: 26px;
+    line-height: 1;
+    cursor: pointer;
+    color: var(--navy);
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+  .template-preview-close:hover { color: var(--gold-dark); }
+  .template-preview-img {
+    max-width: 100%;
+    max-height: min(70vh, 560px);
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    background: var(--gray-bg);
+    border-radius: 8px;
+    display: block;
+  }
+  .template-preview-name {
+    color: var(--navy);
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: 0.5px;
+    text-align: center;
+    word-break: break-word;
+    padding: 0 36px;
+  }
+  .template-preview-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+  }
+  .template-preview-select {
+    background: var(--gold);
+    color: var(--navy);
+    border: 2px solid var(--navy);
+    padding: 12px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    min-height: 48px;
+    letter-spacing: 0.4px;
+    transition: all 0.15s ease;
+  }
+  .template-preview-select:hover {
+    background: var(--navy);
+    color: var(--gold);
+  }
+  .template-preview-back {
+    background: transparent;
+    color: var(--navy);
+    border: 2px solid var(--navy);
+    padding: 11px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    min-height: 46px;
+  }
+  .template-preview-back:hover {
+    background: var(--navy);
+    color: white;
+  }
+
   /* ===== Favorites system ===== */
   .favorites-section {
     margin-top: 8px;
