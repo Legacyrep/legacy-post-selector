@@ -5028,7 +5028,7 @@
     notesInput.addEventListener("input", function () { dayState.notes = notesInput.value; });
 
     rerollBtn.addEventListener("click", function () {
-      if (!dayState.topic || !TEMPLATE_LIBRARY[dayState.topic]) return;
+      if (!dayState.topic) return;
       const currentFillers = (dayState.templateIds || []).filter(function (id) {
         return !dayState.favoriteSet[id];
       });
