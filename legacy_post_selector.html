@@ -5099,21 +5099,21 @@
     if (id && id.indexOf("CUSTOM_") === 0 && typeof customTemplateById === "function") {
       const custom = customTemplateById(id);
       if (custom && custom.image) {
-        imgPart = '<img class="template-img" style="background:#fff;object-fit:cover;" src="' + custom.image + '" alt="' + escapeHtml(custom.name || id) + '">' +
+        imgPart = '<img class="template-img" src="' + custom.image + '" alt="' + escapeHtml(custom.name || id) + '">' +
                   '<span class="num" style="font-size:11px;letter-spacing:0;">' + escapeHtml(custom.name || id) + '</span>';
       }
     }
     if (!imgPart && id && id.indexOf("HOLIDAY_") === 0 && typeof holidayTemplateById === "function") {
       const ht = holidayTemplateById(id);
       if (ht && ht.template && ht.template.image) {
-        imgPart = '<img class="template-img" style="background:#fff;object-fit:cover;" src="' + ht.template.image + '" alt="' + escapeHtml(ht.template.name || id) + '">' +
+        imgPart = '<img class="template-img" src="' + ht.template.image + '" alt="' + escapeHtml(ht.template.name || id) + '">' +
                   '<span class="num" style="font-size:11px;letter-spacing:0;">' + escapeHtml(ht.template.name || id) + '</span>';
       }
     }
     if (!imgPart && id && id.indexOf("FOLDER_TPL_") === 0 && typeof folderTemplateById === "function") {
       const ft = folderTemplateById(id);
       if (ft && ft.template && ft.template.image) {
-        imgPart = '<img class="template-img" style="background:#fff;object-fit:cover;" src="' + ft.template.image + '" alt="' + escapeHtml(ft.template.name || id) + '">' +
+        imgPart = '<img class="template-img" src="' + ft.template.image + '" alt="' + escapeHtml(ft.template.name || id) + '">' +
                   '<span class="num" style="font-size:11px;letter-spacing:0;">' + escapeHtml(ft.template.name || id) + '</span>';
       }
     }
