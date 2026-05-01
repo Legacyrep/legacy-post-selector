@@ -4060,20 +4060,15 @@
     "Staging Tips": "ST",
     "Community Feature": "CF"
   };
-  const TEMPLATES_PER_TOPIC = 100;
   const GRID_SIZE = 10;
   const FAVORITE_COUNT = 3;
 
-  /* Build 1000 templates dynamically: 100 per post type. */
+  /* No hardcoded / placeholder templates. The picker pool is built entirely
+     from real uploads (custom templates assigned to the agent + holiday-folder
+     and personal-folder templates). TEMPLATE_LIBRARY remains as an empty
+     registry so legacy code paths that iterate it stay safe and just produce
+     no entries. */
   const TEMPLATE_LIBRARY = {};
-  Object.keys(TOPIC_PREFIX).forEach(function (topic) {
-    const prefix = TOPIC_PREFIX[topic];
-    TEMPLATE_LIBRARY[topic] = [];
-    for (let i = 1; i <= TEMPLATES_PER_TOPIC; i++) {
-      const idNum = i < 10 ? ("00" + i) : (i < 100 ? ("0" + i) : String(i));
-      TEMPLATE_LIBRARY[topic].push({ id: prefix + "_" + idNum });
-    }
-  });
 
   function agentPrefsSlug(agent) {
     /* Prefer the hyphenated id (e.g. "sabrina-thompson") so the slug matches
