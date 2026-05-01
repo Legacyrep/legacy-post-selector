@@ -4562,14 +4562,16 @@
   }
 
   function pickTemplatesForTopic(agent, topic, excludeIds) {
-    /* Section 2 is fully random with no weighting. Every template in the
-       agent's assigned library that is not already a user favorite has an
-       equal chance of appearing. */
-    const library = TEMPLATE_LIBRARY[topic] || [];
-    const placeholderIds = library.map(function (t) { return t.id; });
+    /* No post-type filtering. The picker pools every uploaded / library
+       template the agent can see, regardless of which post type the agent
+       picked for that day. Favorites + holiday section still scope by topic
+       (handled elsewhere); Section 2 is fully random across the unified pool. */
+    const placeholderIds = [];
+    for (const k in TEMPLATE_LIBRARY) {
+      (TEMPLATE_LIBRARY[k] || []).forEach(function (t) { placeholderIds.push(t.id); });
+    }
 
-    /* Custom templates assigned to this agent are part of the same pool
-       (not pinned to the head). */
+    /* Custom templates assigned to this agent are part of the same pool. */
     let customIds = [];
     try {
       const slug = agentPrefsSlug(agent);
