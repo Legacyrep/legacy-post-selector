@@ -6759,7 +6759,9 @@
     try { localStorage.setItem(POST_TYPES_STORAGE_KEY, JSON.stringify(postTypes)); } catch (e) {}
   }
 
-  /* Rebuild TOPICS, TOPIC_PREFIX, TEMPLATE_LIBRARY in place from postTypes. */
+  /* Rebuild TOPICS and TOPIC_PREFIX from postTypes. We no longer populate
+     TEMPLATE_LIBRARY with placeholder IDs — only real uploaded templates
+     (custom + folder-based) appear in the picker. */
   function rebuildTopicData() {
     TOPICS.length = 0;
     Object.keys(TOPIC_PREFIX).forEach(function (k) { delete TOPIC_PREFIX[k]; });
@@ -6768,12 +6770,7 @@
       if (!pt.active) return;
       TOPICS.push(pt.name);
       TOPIC_PREFIX[pt.name] = pt.code;
-      TEMPLATE_LIBRARY[pt.name] = [];
-      const count = pt.templateCount || 100;
-      for (let i = 1; i <= count; i++) {
-        const n = i < 10 ? ("00" + i) : (i < 100 ? ("0" + i) : String(i));
-        TEMPLATE_LIBRARY[pt.name].push({ id: pt.code + "_" + n });
-      }
+      /* TEMPLATE_LIBRARY[pt.name] intentionally left empty — no placeholder IDs. */
     });
   }
 
