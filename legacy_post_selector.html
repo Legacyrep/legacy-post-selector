@@ -5281,14 +5281,27 @@
       }
     }
 
-    /* Section 2: random / "More Templates" */
+    /* Section 2: random / "More Templates" \u2014 only real uploads. */
     const userFavSet = {};
     userFavs.forEach(function (id) { userFavSet[id] = true; });
     moreGrid.innerHTML = "";
     (dayState.templateIds || []).forEach(function (id) {
       if (userFavSet[id]) return; /* defensive \u2014 should already be excluded */
+      if (!templateExistsAsRealUpload(id)) return; /* skip orphan / placeholder ids */
       moreGrid.appendChild(buildTemplateCardEl(id, { isFavorite: false, animateIn: animateIn }, card, dayState));
     });
+
+    /* Empty-state: nothing renders anywhere in the picker for this agent. */
+    const holidaysContainerEl = card.querySelector(".holiday-sections");
+    const folderContainerEl = card.querySelector(".folder-sections");
+    const hasHolidayContent = !!(holidaysContainerEl && holidaysContainerEl.children.length > 0);
+    const hasFolderContent = !!(folderContainerEl && folderContainerEl.children.length > 0);
+    const hasFavContent = userFavs.length > 0;
+    const hasMoreContent = moreGrid.children.length > 0;
+    if (!hasHolidayContent && !hasFolderContent && !hasFavContent && !hasMoreContent) {
+      if (emptyState) emptyState.classList.remove("hidden");
+      if (moreSection) moreSection.classList.add("hidden");
+    }
   }
 
   function handleFavoriteToggle(card, dayState, id) {
