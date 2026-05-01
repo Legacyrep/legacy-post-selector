@@ -4989,7 +4989,7 @@
     notesInput.value = dayState.notes || "";
 
     /* If a topic is set but no templates picked yet, pick them now */
-    if (dayState.topic && TEMPLATE_LIBRARY[dayState.topic] && (!dayState.templateIds || dayState.templateIds.length === 0)) {
+    if (dayState.topic && (!dayState.templateIds || dayState.templateIds.length === 0)) {
       const picked = pickTemplatesForTopic(currentAgent, dayState.topic, []);
       dayState.templateIds = picked.ids;
       dayState.favoriteSet = picked.favoriteSet;
