@@ -379,58 +379,71 @@
     line-height: 1.4;
   }
 
-  /* ===== Template grid ===== */
+  /* ===== Template grid (compact thumbnails) =====
+     Target: 5 thumbnails per row × 2 rows = 10 visible at a glance with no scroll.
+     Card width ~140px on desktop / aspect-ratio 4:5 → height ~175px including label. */
   .template-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
+    gap: 6px;
     margin-top: 8px;
   }
   .template-card {
     background: var(--navy);
     color: var(--gold);
     border: 2px solid var(--navy);
-    border-radius: 10px;
-    padding: 18px 10px;
+    border-radius: 8px;
+    padding: 4px;
     text-align: center;
     cursor: pointer;
-    transition: all 0.15s ease;
+    transition: transform 0.12s ease, box-shadow 0.15s ease, border-color 0.15s ease;
     position: relative;
-    min-height: 78px;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column;
+    gap: 3px;
     font-family: inherit;
     user-select: none;
   }
-  .template-card:hover {
-    background: var(--navy-light);
-    transform: translateY(-2px);
-  }
+  .template-card:hover { transform: translateY(-2px); border-color: var(--gold-dark); }
   .template-card:active { transform: translateY(0); }
   .template-card.selected {
     border-color: var(--gold);
-    box-shadow: 0 0 0 2px var(--gold), 0 4px 12px rgba(201, 169, 97, 0.3);
+    box-shadow: 0 0 0 2px var(--gold), 0 3px 10px rgba(201, 169, 97, 0.3);
+  }
+  .template-card .template-img {
+    width: 100%;
+    aspect-ratio: 4 / 5;       /* portrait — full design visible with letterbox if needed */
+    object-fit: contain;
+    background: #fff;
+    border-radius: 4px;
+    display: block;
   }
   .template-card .num {
-    font-size: 14px;
+    font-size: 10px;
     font-weight: 700;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.3px;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0 2px;
   }
   .template-card .check {
     position: absolute;
-    top: 6px;
-    right: 6px;
-    width: 22px;
-    height: 22px;
+    top: 4px;
+    right: 4px;
+    width: 18px;
+    height: 18px;
     border-radius: 50%;
     background: var(--gold);
     color: var(--navy);
-    font-size: 14px;
+    font-size: 11px;
     font-weight: 700;
     display: none;
     align-items: center;
     justify-content: center;
+    z-index: 2;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.25);
   }
   .template-card.selected .check { display: flex; }
 
