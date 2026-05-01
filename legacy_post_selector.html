@@ -3386,6 +3386,19 @@
 </head>
 <body>
 
+<!-- Template preview modal (used by the weekly form template picker) -->
+<div class="template-preview-overlay hidden" id="templatePreviewOverlay" aria-hidden="true">
+  <div class="template-preview-card" role="dialog" aria-modal="true" aria-labelledby="templatePreviewName">
+    <button type="button" class="template-preview-close" id="templatePreviewClose" aria-label="Close preview">&times;</button>
+    <img class="template-preview-img" id="templatePreviewImg" alt="">
+    <div class="template-preview-name" id="templatePreviewName"></div>
+    <div class="template-preview-actions">
+      <button type="button" class="template-preview-select" id="templatePreviewSelect">Select This Template</button>
+      <button type="button" class="template-preview-back" id="templatePreviewBack">Back</button>
+    </div>
+  </div>
+</div>
+
 <div class="brand-header">
   <button class="hamburger-btn" id="hamburgerBtn" type="button" aria-label="Open menu">
     <span class="hamburger-lines"><span></span><span></span><span></span></span>
