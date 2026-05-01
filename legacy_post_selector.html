@@ -7149,21 +7149,8 @@
     return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
   }
 
-  /* ===== Build Post Type dropdown for Upload Center ===== */
-  function refreshUCPostTypes() {
-    const sel = document.getElementById("ucPostType");
-    if (!sel) return;
-    const prev = sel.value;
-    sel.innerHTML = '<option value="">— Select a post type —</option>';
-    postTypes.forEach(function (pt) {
-      if (!pt.active) return;
-      const opt = document.createElement("option");
-      opt.value = pt.name;
-      opt.textContent = pt.name + " (" + pt.code + ")";
-      sel.appendChild(opt);
-    });
-    if (prev) sel.value = prev;
-  }
+  /* (Removed dead refreshUCPostTypes — Upload Center no longer scopes uploads
+     to a post type. Templates land in the general pool regardless of topic.) */
 
   /* ===== Render the agent assignment list ===== */
   function refreshUCAgentList() {
