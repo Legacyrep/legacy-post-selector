@@ -5009,7 +5009,7 @@
         toneSelect.value = "";
         urlInput.value = "";
         notesInput.value = "";
-      } else if (topicChanged && TEMPLATE_LIBRARY[dayState.topic]) {
+      } else if (topicChanged) {
         const picked = pickTemplatesForTopic(currentAgent, dayState.topic, []);
         dayState.templateIds = picked.ids;
         dayState.favoriteSet = picked.favoriteSet;
