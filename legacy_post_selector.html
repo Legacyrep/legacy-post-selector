@@ -5204,7 +5204,9 @@
         .filter(function (f) { return Array.isArray(f.templates) && f.templates.length > 0; });
     }
     const hasFolders = agentFolders.length > 0;
-    const userFavs = loadUserFavorites(currentAgent, dayState.topic);
+    /* Only show favorites that still resolve to a real uploaded template. */
+    const userFavs = loadUserFavorites(currentAgent, dayState.topic)
+      .filter(templateExistsAsRealUpload);
 
     if (folderContainer) {
       folderContainer.innerHTML = "";
