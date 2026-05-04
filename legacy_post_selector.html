@@ -9207,17 +9207,14 @@
     });
     const visible = tassFilterTemplates(all);
 
-    /* Bulk-select toolbar + action bar above the grid. The toolbar
-       sits in a wrapper above the grid so Select All only selects
-       templates currently visible after search/filter. */
+    /* Bulk-select toolbar + action bar inside the grid, spanning the
+       full grid width via grid-column: 1 / -1. They re-render with
+       the rest of the grid each call so there's nothing to clean up. */
     const ctx = "tass";
     const visibleIds = visible.map(function (t) { return t.id; });
-    const gridParent = grid.parentNode;
-    /* We append the toolbar/action-bar siblings before the grid only
-       once per render — re-renders rebuild everything, so insert just
-       before the grid element. */
     const toolbar = buildTplSelectToolbar(ctx, visibleIds, function () { renderTemplateAssignments(); });
-    gridParent.insertBefore(toolbar, grid);
+    toolbar.style.gridColumn = "1 / -1";
+    grid.appendChild(toolbar);
     const ab = buildTplActionBar(
       ctx,
       function () { return !!tassState.bulkConfirm; },
@@ -9235,7 +9232,10 @@
       },
       function () { renderTemplateAssignments(); }
     );
-    if (ab) gridParent.insertBefore(ab, grid);
+    if (ab) {
+      ab.style.gridColumn = "1 / -1";
+      grid.appendChild(ab);
+    }
 
     if (visible.length === 0) {
       const empty = document.createElement("div");
