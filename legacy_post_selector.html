@@ -7661,6 +7661,12 @@
       renderPostTypeList();
     } else if (tab === "templates") {
       switchTemplateSubtab(currentTemplateSubtab || "upload");
+    } else if (tab === "settings") {
+      apConfirmingRemoveId = null;
+      const dnSuccess = document.getElementById("dnSuccess");
+      if (dnSuccess) dnSuccess.classList.remove("visible");
+      renderAgentPhotosSection();
+      renderDisplayNamesSection();
     }
   }
   document.getElementById("adminTabBtnAgents").addEventListener("click", function () { switchAdminTab("agents"); });
