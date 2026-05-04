@@ -3880,6 +3880,193 @@
   }
 
   /* ============================================================
+     CLICK-TO-SELECT TEMPLATE THUMBNAILS (Template Manager)
+     Adds a selection state to any thumbnail that has the
+     .tpl-selectable class. Selected thumbs get a gold ring and a
+     gold-circle checkmark in the top-left corner. Pairs with the
+     toolbar (Select All / Deselect All) and the action bar that
+     appears when one or more templates in a context are selected.
+  ============================================================ */
+  .tpl-selectable { cursor: pointer; }
+  .tpl-selectable .tpl-check {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--gold);
+    color: var(--navy);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 1;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.25);
+    border: 2px solid white;
+    z-index: 4;
+    pointer-events: none;
+  }
+  .tpl-selectable.tpl-selected {
+    box-shadow: 0 0 0 2px var(--gold), 0 4px 12px rgba(201, 169, 76, 0.35);
+    border-color: var(--gold);
+    filter: brightness(1.05);
+  }
+  .tpl-selectable.tpl-selected .tpl-check { display: flex; }
+
+  /* Toolbar above each grid: Select All + Deselect All */
+  .tpl-select-toolbar {
+    display: flex;
+    gap: 8px;
+    margin: 0 0 10px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .tpl-select-toolbar-btn {
+    background: white;
+    border: 2px solid var(--navy);
+    color: var(--navy);
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    min-height: 32px;
+  }
+  .tpl-select-toolbar-btn:hover { background: var(--navy); color: white; }
+  .tpl-select-toolbar-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* Action bar that appears when ≥1 selected. Sticky to top of grid
+     on desktop, fixed to bottom of viewport on mobile. */
+  .tpl-action-bar {
+    background: var(--navy);
+    color: var(--gold);
+    border-radius: 10px;
+    padding: 10px 14px;
+    margin: 0 0 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+    box-shadow: 0 4px 14px rgba(10, 37, 64, 0.25);
+    position: sticky;
+    top: 6px;
+    z-index: 6;
+  }
+  .tpl-action-bar-count {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    color: var(--gold);
+  }
+  .tpl-action-bar-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+  .tpl-action-bar-actions button {
+    padding: 7px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    border: 2px solid;
+    min-height: 36px;
+  }
+  .tpl-action-delete {
+    background: #c2392e;
+    border-color: #c2392e;
+    color: white;
+  }
+  .tpl-action-delete:hover { background: #a6322a; border-color: #a6322a; }
+  .tpl-action-deselect {
+    background: transparent;
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+  .tpl-action-deselect:hover { background: var(--gold); color: var(--navy); }
+  @media (max-width: 600px) {
+    .tpl-action-bar {
+      position: fixed;
+      left: 12px;
+      right: 12px;
+      bottom: 12px;
+      top: auto;
+      margin: 0;
+      z-index: 50;
+    }
+  }
+
+  /* Inline confirmation for "Delete N selected" */
+  .tpl-bulk-confirm {
+    background: #fdebe9;
+    border: 2px solid #c2392e;
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin: 0 0 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .tpl-bulk-confirm-msg {
+    color: #8a271f;
+    font-weight: 600;
+    font-size: 13px;
+    flex: 1;
+    min-width: 200px;
+  }
+  .tpl-bulk-confirm-actions { display: flex; gap: 8px; }
+  .tpl-bulk-confirm-actions button {
+    padding: 7px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    border: 2px solid;
+    min-height: 36px;
+  }
+  .tpl-bulk-confirm-yes {
+    background: #c2392e;
+    border-color: #c2392e;
+    color: white;
+  }
+  .tpl-bulk-confirm-yes:hover { background: #a6322a; }
+  .tpl-bulk-confirm-no {
+    background: white;
+    border-color: var(--navy);
+    color: var(--navy);
+  }
+  .tpl-bulk-confirm-no:hover { background: var(--navy); color: white; }
+
+  /* Dark-mode tweaks */
+  [data-theme="dark"] .tpl-select-toolbar-btn {
+    background: #1E2130;
+    color: #F5F5F5;
+    border-color: #3A3D4A;
+  }
+  [data-theme="dark"] .tpl-select-toolbar-btn:hover {
+    background: #2A2D3A;
+    border-color: var(--gold);
+  }
+  [data-theme="dark"] .tpl-bulk-confirm {
+    background: #2B0D0D;
+    border-color: #5C1E1E;
+  }
+  [data-theme="dark"] .tpl-bulk-confirm-msg { color: #F07878; }
+  [data-theme="dark"] .tpl-bulk-confirm-no {
+    background: #1E2130;
+    color: #F5F5F5;
+    border-color: #3A3D4A;
+  }
+
+  /* Belt-and-suspenders: ensure the wrapper classes have relative
+     positioning so the absolutely-positioned checkmark lands right. */
+  .atm-thumb, .tf-thumb, .seasonal-thumb, .tass-card { position: relative; }
+
+  /* ============================================================
      MANAGE TEMPLATE ASSIGNMENTS (Templates → Assignments subtab)
      A searchable, filterable grid of every general-pool template.
      Each card has a Manage button that opens an inline panel with
