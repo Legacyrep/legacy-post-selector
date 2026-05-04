@@ -3981,12 +3981,16 @@
   [data-theme="dark"] .agent-card:hover,
   [data-theme="dark"] .agent-card:focus { background: #22263A; }
 
-  /* Quick Questions pills (unselected) */
+  /* Quick Questions pills (unselected) — labels are primary white */
   [data-theme="dark"] .qq-pill {
     background: #2A2D3A;
     border-color: #2A2D3A;
-    color: #F0F0F0;
+    color: #F5F5F5;
   }
+  /* Quick Questions section labels above pills/textareas */
+  [data-theme="dark"] .qq-label,
+  [data-theme="dark"] .qq-section-title,
+  [data-theme="dark"] .qq-question { color: #F5F5F5; }
   [data-theme="dark"] .qq-pill.selected,
   [data-theme="dark"] .qq-pill[aria-pressed="true"] {
     background: var(--gold);
