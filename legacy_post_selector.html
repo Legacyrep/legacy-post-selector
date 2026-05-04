@@ -9207,6 +9207,36 @@
     });
     const visible = tassFilterTemplates(all);
 
+    /* Bulk-select toolbar + action bar above the grid. The toolbar
+       sits in a wrapper above the grid so Select All only selects
+       templates currently visible after search/filter. */
+    const ctx = "tass";
+    const visibleIds = visible.map(function (t) { return t.id; });
+    const gridParent = grid.parentNode;
+    /* We append the toolbar/action-bar siblings before the grid only
+       once per render — re-renders rebuild everything, so insert just
+       before the grid element. */
+    const toolbar = buildTplSelectToolbar(ctx, visibleIds, function () { renderTemplateAssignments(); });
+    gridParent.insertBefore(toolbar, grid);
+    const ab = buildTplActionBar(
+      ctx,
+      function () { return !!tassState.bulkConfirm; },
+      function (v) { tassState.bulkConfirm = !!v; },
+      function () {
+        const ids = Array.from(getTplSelection(ctx));
+        const n = permanentlyDeleteTemplates(ids);
+        clearTplSelection(ctx);
+        tassState.openTplId = null;
+        if (typeof showTassToast === "function") showTassToast(n + " template" + (n === 1 ? "" : "s") + " deleted successfully.");
+        renderTemplateAssignments();
+        if (typeof renderATM === "function") renderATM();
+        if (typeof renderTemplateFolders === "function") renderTemplateFolders();
+        if (typeof renderSeasonalFolders === "function") renderSeasonalFolders();
+      },
+      function () { renderTemplateAssignments(); }
+    );
+    if (ab) gridParent.insertBefore(ab, grid);
+
     if (visible.length === 0) {
       const empty = document.createElement("div");
       empty.className = "tass-empty";
@@ -9229,7 +9259,9 @@
         '<div class="tass-card-name">' + escapeHtml(tpl.name || tpl.id) + '</div>' +
         '<div class="tass-card-count">' + cnt + (cnt === 1 ? ' agent' : ' agents') + '</div>' +
         '<button type="button" class="tass-card-manage">Manage</button>';
-      card.querySelector(".tass-card-manage").addEventListener("click", function () {
+      wireTplSelectableThumb(card, ctx, tpl.id, function () { renderTemplateAssignments(); });
+      card.querySelector(".tass-card-manage").addEventListener("click", function (e) {
+        e.stopPropagation();
         if (tassState.openTplId === tpl.id) {
           tassState.openTplId = null;
         } else {
