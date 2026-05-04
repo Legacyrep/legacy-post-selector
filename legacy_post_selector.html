@@ -10984,7 +10984,9 @@
     selectedAgents: new Set(),
     editSelectedAgents: new Set(),
     /* Per-folder transient upload buffer keyed by folderId */
-    pendingFiles: {} // { folderId: [{ name, dataUrl, sizeStr }] }
+    pendingFiles: {}, // { folderId: [{ name, dataUrl, sizeStr }] }
+    /* Per-folder pending "Delete Selected" confirmation */
+    bulkConfirm: Object.create(null)
   };
 
   function loadTemplateFolders() {
