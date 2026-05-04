@@ -1746,6 +1746,130 @@
     font-size: 14px;
     line-height: 1.6;
   }
+
+  /* ===== Past Submissions — folder-based view ===== */
+  .psf-folder {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 12px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    transition: border-color 0.15s ease;
+  }
+  .psf-folder.open { border-color: var(--gold); }
+  .psf-folder-head {
+    width: 100%;
+    background: transparent;
+    border: none;
+    padding: 16px 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    cursor: pointer;
+    font-family: inherit;
+    text-align: left;
+    color: inherit;
+    min-height: 64px;
+    transition: background 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .psf-folder-head:hover,
+  .psf-folder-head:focus { background: rgba(201, 169, 76, 0.08); outline: none; }
+  .psf-folder-icon {
+    color: var(--gold);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+  }
+  .psf-folder-icon svg {
+    width: 28px;
+    height: 28px;
+    display: block;
+  }
+  .psf-folder-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .psf-folder-name {
+    font-weight: 700;
+    color: var(--navy);
+    font-size: 15px;
+    line-height: 1.3;
+  }
+  .psf-folder-count {
+    color: var(--gray-muted);
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .psf-folder-chevron {
+    color: var(--gold);
+    font-size: 24px;
+    font-weight: 700;
+    flex-shrink: 0;
+    transition: transform 0.25s ease;
+    line-height: 1;
+    width: 14px;
+    text-align: center;
+  }
+  .psf-folder.open .psf-folder-chevron { transform: rotate(90deg); }
+  .psf-folder-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+    padding: 0 18px;
+    border-top: 0 solid var(--border);
+  }
+  .psf-folder.open .psf-folder-body {
+    max-height: 3000px;
+    padding: 6px 18px 14px;
+    border-top: 1px solid var(--border);
+  }
+  .psf-day-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .psf-day-row:last-child { border-bottom: none; }
+  .psf-day-info { flex: 1; min-width: 0; }
+  .psf-day-row-name {
+    font-weight: 700;
+    color: var(--navy);
+    font-size: 14px;
+  }
+  .psf-day-row-date {
+    color: var(--gray-muted);
+    font-size: 12px;
+    margin-left: 6px;
+    font-weight: 500;
+  }
+  .psf-day-row-meta {
+    color: var(--navy-light);
+    font-size: 13px;
+    margin-top: 4px;
+    line-height: 1.5;
+  }
+  .psf-day-row-meta strong { color: var(--navy); }
+  .psf-status-badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 12px;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+  .psf-status-badge.pending  { background: #d9dde3; color: #5b6470; }
+  .psf-status-badge.ready    { background: var(--gold); color: var(--navy); }
+  .psf-status-badge.updated  { background: #2f6db8; color: white; }
+  .psf-status-badge.approved { background: var(--green); color: white; }
   .submit-error {
     background: #fdebe9;
     border: 2px solid #c2392e;
