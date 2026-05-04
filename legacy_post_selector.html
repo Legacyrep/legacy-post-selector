@@ -4037,7 +4037,8 @@
     border-color: var(--gold);
   }
 
-  /* Text colors: titles/headings/labels were navy — go light in dark mode */
+  /* Primary text (#F5F5F5) — headings, agent names, form labels,
+     section titles, anything important that must read at a glance. */
   [data-theme="dark"] h1, [data-theme="dark"] h2, [data-theme="dark"] h3,
   [data-theme="dark"] h4, [data-theme="dark"] h5,
   [data-theme="dark"] .home-title,
@@ -4045,17 +4046,41 @@
   [data-theme="dark"] .field-label,
   [data-theme="dark"] .admin-section-title,
   [data-theme="dark"] .admin-agent-name-cell,
-  [data-theme="dark"] .day-title,
   [data-theme="dark"] .ap-name,
   [data-theme="dark"] .ap-modal-title,
   [data-theme="dark"] .dn-name,
-  [data-theme="dark"] label,
+  [data-theme="dark"] .form-agent-name,
+  [data-theme="dark"] label { color: #F5F5F5; }
+
+  /* Admin "table content" tone (#E0E0E0) — slightly softer than the
+     #F5F5F5 primary so admin lists feel like a list, not headings. */
+  [data-theme="dark"] .admin-agent-row,
+  [data-theme="dark"] .admin-agent-row * { color: #E0E0E0; }
+  [data-theme="dark"] .admin-agent-name-cell { color: #F5F5F5; }
+
+  /* Secondary text (gold #C9A84C) — supporting copy, dates,
+     subtitles, helper paragraphs, captions. Keeps the brand identity
+     while staying easily readable on dark surfaces. */
   [data-theme="dark"] .home-subtitle,
   [data-theme="dark"] .ap-help,
-  [data-theme="dark"] .agent-cta { color: #F0F0F0; }
-  [data-theme="dark"] .home-subtitle,
-  [data-theme="dark"] .ap-help,
-  [data-theme="dark"] .agent-cta { color: #A0A3B1; }
+  [data-theme="dark"] .cp-help,
+  [data-theme="dark"] .agent-cta,
+  [data-theme="dark"] .form-week,
+  [data-theme="dark"] .subm-empty,
+  [data-theme="dark"] .subm-empty-day,
+  [data-theme="dark"] .pt-add-helper,
+  [data-theme="dark"] .uc-note { color: #C9A84C; }
+
+  /* Day headers on the weekly form — gold, per spec */
+  [data-theme="dark"] .day-name,
+  [data-theme="dark"] .day-date { color: #C9A84C; }
+
+  /* Submissions-list day rows: gold day name + date, white meta body
+     with gold "Topic:" / "Tone:" labels for scan-ability. */
+  [data-theme="dark"] .subm-day-name,
+  [data-theme="dark"] .subm-day-date { color: #C9A84C; }
+  [data-theme="dark"] .subm-day-meta { color: #F5F5F5; }
+  [data-theme="dark"] .subm-day-meta strong { color: #C9A84C; }
 
   /* Admin tabs */
   [data-theme="dark"] .admin-tab {
