@@ -5210,10 +5210,15 @@
       const btn = document.createElement("button");
       btn.className = "agent-card";
       btn.type = "button";
+      const photo = getAgentPhoto(agent.id);
+      const displayName = resolveDisplayName(agent);
+      const avatarHtml = photo
+        ? '<div class="agent-avatar"><img src="' + photo + '" alt="' + escapeHtml(displayName) + '"></div>'
+        : '<div class="agent-avatar">' + initials(agent.name) + '</div>';
       btn.innerHTML =
-        '<div class="agent-avatar">' + initials(agent.name) + '</div>' +
+        avatarHtml +
         '<div class="agent-info">' +
-          '<div class="agent-name">' + agent.name + '</div>' +
+          '<div class="agent-name">' + escapeHtml(displayName) + '</div>' +
           '<div class="agent-cta">Tap to start your weekly selection</div>' +
         '</div>' +
         '<div class="agent-arrow">&rsaquo;</div>';
