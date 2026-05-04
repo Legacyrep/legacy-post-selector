@@ -4264,6 +4264,22 @@
   </div>
 </div>
 
+<!-- Photo upload preview modal -->
+<div class="ap-modal-backdrop" id="apModalBackdrop">
+  <div class="ap-modal" role="dialog" aria-modal="true" aria-labelledby="apModalTitle">
+    <h3 class="ap-modal-title" id="apModalTitle">Preview Photo</h3>
+    <div class="ap-modal-preview" id="apModalPreview"></div>
+    <p class="ap-modal-help">This is how the photo will appear on the home page agent card. The photo has been auto-cropped to a square.</p>
+    <div class="ap-modal-actions">
+      <button type="button" class="ap-modal-cancel" id="apModalCancel">Cancel</button>
+      <button type="button" class="ap-modal-save" id="apModalSave">Save Photo</button>
+    </div>
+  </div>
+</div>
+
+<!-- Hidden file input used by Agent Photos uploader -->
+<input type="file" id="apFileInput" accept="image/jpeg,image/png,image/webp" style="display:none;">
+
 <script>
   /* ============================================================
      CONFIG
