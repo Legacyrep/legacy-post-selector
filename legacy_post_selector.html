@@ -5037,6 +5037,24 @@
         </div>
       </div>
     </div>
+
+    <div class="template-subpanel hidden" id="templateSubpanelAssignments">
+      <div class="admin-section">
+        <h3 class="admin-section-title">Manage Template Assignments</h3>
+        <p style="font-size:13px;color:var(--gray-muted);margin:0 0 12px;">
+          See every uploaded template and manage which agents have it assigned. Click <strong>Manage</strong> on a template to add or remove agents one at a time, or use the quick actions to add or remove from every agent at once.
+        </p>
+        <div class="tass-toolbar">
+          <input type="text" class="tass-search" id="tassSearchInput" placeholder="Search templates..." autocomplete="off">
+          <select class="tass-filter" id="tassFilterSelect">
+            <option value="all">Show all templates</option>
+            <option value="assigned">Show only assigned templates</option>
+            <option value="unassigned">Show only unassigned templates</option>
+          </select>
+        </div>
+        <div class="tass-grid" id="tassGrid"></div>
+      </div>
+    </div>
   </div>
 
   <div class="admin-tab-panel hidden" id="adminTabSettings">
