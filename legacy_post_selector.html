@@ -9083,7 +9083,7 @@
           if (atmPendingRemoval && atmPendingRemoval.slug === slug) {
             const pendingTpl = customs.find(function (t) { return t.id === atmPendingRemoval.tplId; });
             if (pendingTpl) {
-              const confirmEl = buildPasswordConfirmPanel({
+              const confirmEl = buildSimpleConfirmPanel({
                 messageHtml:
                   'Remove <strong>' + escapeHtml(pendingTpl.name || pendingTpl.id) +
                   '</strong> from <strong>' + escapeHtml(agent.name) + '</strong>? ' +
