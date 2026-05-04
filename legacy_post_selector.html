@@ -8659,16 +8659,17 @@
   document.getElementById("adminTabBtnSettings").addEventListener("click", function () { switchAdminTab("settings"); });
 
   /* ===== Template Manager sub-tabs =====
-     Sub-tabs: upload | folders | seasonal. Default is "upload". */
-  const TEMPLATE_SUBTABS = ["upload", "folders", "seasonal"];
+     Sub-tabs: upload | folders | seasonal | assignments. Default is "upload". */
+  const TEMPLATE_SUBTABS = ["upload", "folders", "seasonal", "assignments"];
   let currentTemplateSubtab = "upload";
   function switchTemplateSubtab(sub) {
     if (TEMPLATE_SUBTABS.indexOf(sub) === -1) sub = "upload";
     currentTemplateSubtab = sub;
     const refs = {
-      upload:   { btn: "templateSubtabBtnUpload",   panel: "templateSubpanelUpload"   },
-      folders:  { btn: "templateSubtabBtnFolders",  panel: "templateSubpanelFolders"  },
-      seasonal: { btn: "templateSubtabBtnSeasonal", panel: "templateSubpanelSeasonal" }
+      upload:      { btn: "templateSubtabBtnUpload",      panel: "templateSubpanelUpload"      },
+      folders:     { btn: "templateSubtabBtnFolders",     panel: "templateSubpanelFolders"     },
+      seasonal:    { btn: "templateSubtabBtnSeasonal",    panel: "templateSubpanelSeasonal"    },
+      assignments: { btn: "templateSubtabBtnAssignments", panel: "templateSubpanelAssignments" }
     };
     TEMPLATE_SUBTABS.forEach(function (key) {
       const btn = document.getElementById(refs[key].btn);
@@ -8682,10 +8683,14 @@
         panel.classList.add("hidden");
       }
     });
+    if (sub === "assignments" && typeof renderTemplateAssignments === "function") {
+      renderTemplateAssignments();
+    }
   }
   document.getElementById("templateSubtabBtnUpload").addEventListener("click", function () { switchTemplateSubtab("upload"); });
   document.getElementById("templateSubtabBtnFolders").addEventListener("click", function () { switchTemplateSubtab("folders"); });
   document.getElementById("templateSubtabBtnSeasonal").addEventListener("click", function () { switchTemplateSubtab("seasonal"); });
+  document.getElementById("templateSubtabBtnAssignments").addEventListener("click", function () { switchTemplateSubtab("assignments"); });
 
   /* ===== Render Post Types list ===== */
   function renderPostTypeList() {
