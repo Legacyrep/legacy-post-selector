@@ -9571,9 +9571,9 @@
     row.appendChild(actions);
     card.appendChild(row);
 
-    /* Inline password-gated delete confirmation */
+    /* Inline simple delete confirmation */
     if (seasonalDeletingFolderId === folder.id) {
-      const delConfirm = buildPasswordConfirmPanel({
+      const delConfirm = buildSimpleConfirmPanel({
         messageHtml:
           'Delete the holiday folder <strong>' + escapeHtml(folder.name || "") + '</strong>? ' +
           'All templates inside it will be deleted permanently.',
