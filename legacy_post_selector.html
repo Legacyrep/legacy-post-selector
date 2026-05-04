@@ -7411,44 +7411,24 @@
         '<div class="ap-name">' + escapeHtml(agent.name) + '</div>' +
         '<div class="ap-actions"></div>';
       const actions = card.querySelector(".ap-actions");
-      if (apConfirmingRemoveId === agent.id) {
-        const confirmBox = document.createElement("div");
-        confirmBox.className = "ap-confirm";
-        confirmBox.innerHTML =
-          '<div class="ap-confirm-msg">Remove photo for ' + escapeHtml(agent.name) + '?</div>' +
-          '<div class="ap-confirm-actions">' +
-            '<button type="button" class="ap-confirm-yes">Yes, Remove</button>' +
-            '<button type="button" class="ap-confirm-no">Cancel</button>' +
-          '</div>';
-        confirmBox.querySelector(".ap-confirm-yes").addEventListener("click", function () {
+      const upBtn = document.createElement("button");
+      upBtn.type = "button";
+      upBtn.className = "ap-btn ap-btn-upload";
+      upBtn.textContent = photo ? "Replace Photo" : "Upload Photo";
+      upBtn.addEventListener("click", function () { startAgentPhotoUpload(agent.id); });
+      actions.appendChild(upBtn);
+      if (photo) {
+        /* One-click remove — no confirmation needed per spec. */
+        const rmBtn = document.createElement("button");
+        rmBtn.type = "button";
+        rmBtn.className = "ap-btn ap-btn-remove";
+        rmBtn.textContent = "Remove Photo";
+        rmBtn.addEventListener("click", function () {
           removeAgentPhotoStorage(agent.id);
-          apConfirmingRemoveId = null;
           renderAgentPhotosSection();
           renderHome();
         });
-        confirmBox.querySelector(".ap-confirm-no").addEventListener("click", function () {
-          apConfirmingRemoveId = null;
-          renderAgentPhotosSection();
-        });
-        actions.appendChild(confirmBox);
-      } else {
-        const upBtn = document.createElement("button");
-        upBtn.type = "button";
-        upBtn.className = "ap-btn ap-btn-upload";
-        upBtn.textContent = photo ? "Replace Photo" : "Upload Photo";
-        upBtn.addEventListener("click", function () { startAgentPhotoUpload(agent.id); });
-        actions.appendChild(upBtn);
-        if (photo) {
-          const rmBtn = document.createElement("button");
-          rmBtn.type = "button";
-          rmBtn.className = "ap-btn ap-btn-remove";
-          rmBtn.textContent = "Remove Photo";
-          rmBtn.addEventListener("click", function () {
-            apConfirmingRemoveId = agent.id;
-            renderAgentPhotosSection();
-          });
-          actions.appendChild(rmBtn);
-        }
+        actions.appendChild(rmBtn);
       }
       grid.appendChild(card);
     });
