@@ -6587,11 +6587,49 @@
          No-ops if NOTION_PROXY_URL is empty. */
       if (currentAgent && record) serverSendConfirmationEmail(currentAgent, weekOffset, record);
       if (currentAgent) serverDeleteDraftFor(currentAgent, weekOffset);
+      /* Reset the form so it shows up totally blank next time the agent
+         opens it. Success banner already showing, so the user sees the
+         confirmation first; the form clears beneath/behind it. */
+      resetCurrentWeekForm();
     }).catch(function () {
       setSubmitProgress(false);
       showSubmitError("Something went wrong. Please try again.");
     });
   });
+
+  /* ============================================================
+     RESET CURRENT WEEK FORM
+     Wipes weekState[weekOffset] back to a blank 7-day array,
+     clears Quick Questions for this (agent, week), clears the
+     localStorage draft, resets the Skip This Week confirmation,
+     and re-renders the form. The week navigation stays put — only
+     this week's content is cleared.
+  ============================================================ */
+  function resetCurrentWeekForm() {
+    /* In-memory state: drop any reference and rebuild via ensureWeekState */
+    weekState[weekOffset] = null;
+    delete weekState[weekOffset];
+    ensureWeekState(weekOffset);
+
+    /* Clear persisted Quick Questions for this (agent, week) */
+    if (currentAgent && typeof clearWeeklyNotes === "function") {
+      clearWeeklyNotes(currentAgent, weekOffset);
+    }
+
+    /* Clear the localStorage draft so a re-login after submit shows blank */
+    if (currentAgent && typeof clearDraftForWeek === "function") {
+      clearDraftForWeek(currentAgent, weekOffset);
+    }
+
+    /* Re-render the day cards (this also calls loadWeeklyNotesIntoForm,
+       which empties the pills and the three textareas when nothing is
+       saved). renderWeek() also resets the Skip This Week confirmation. */
+    if (typeof renderWeek === "function") renderWeek();
+
+    /* Refresh the submit button label so a freshly-cleared week shows
+       "Submit My Week" instead of "Submit — Skipping This Week". */
+    if (typeof updateSubmitButtonText === "function") updateSubmitButtonText();
+  }
 
   /* ============================================================
      SUBMISSIONS PAGE (read-only history)
