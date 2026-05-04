@@ -10102,7 +10102,7 @@
   }
 
   function buildTfDeleteConfirmEl(folder) {
-    return buildPasswordConfirmPanel({
+    return buildSimpleConfirmPanel({
       messageHtml:
         'Are you sure you want to delete <strong>' + escapeHtml(folder.name || "") + '</strong>? ' +
         'This will delete all templates inside it permanently. This cannot be undone.',
