@@ -4041,6 +4041,18 @@
   /* Avatars: ap-circle background stays navy (good), but on dark cards
      the gold border still pops, so leave it alone. */
 </style>
+<!-- Apply theme as early as possible to avoid a flash of the wrong mode. -->
+<script>
+  (function () {
+    try {
+      var saved = localStorage.getItem("legacy_theme_preference");
+      if (saved !== "dark" && saved !== "light") saved = "light";
+      document.documentElement.setAttribute("data-theme", saved);
+    } catch (e) {
+      document.documentElement.setAttribute("data-theme", "light");
+    }
+  })();
+</script>
 </head>
 <body>
 
