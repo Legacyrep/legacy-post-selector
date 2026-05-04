@@ -3880,6 +3880,347 @@
   }
 
   /* ============================================================
+     MANAGE TEMPLATE ASSIGNMENTS (Templates → Assignments subtab)
+     A searchable, filterable grid of every general-pool template.
+     Each card has a Manage button that opens an inline panel with
+     "Assigned To" and "Not Assigned To" lists, plus quick "Add to
+     all" / "Remove from all" buttons and a Done button.
+  ============================================================ */
+  .tass-toolbar {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 4px 0 14px;
+  }
+  .tass-search {
+    flex: 1 1 200px;
+    min-width: 0;
+    padding: 10px 12px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--navy);
+    background: white;
+    min-height: 42px;
+  }
+  .tass-search:focus {
+    border-color: var(--gold);
+    outline: none;
+  }
+  .tass-filter {
+    flex: 0 0 auto;
+    padding: 10px 12px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--navy);
+    background: white;
+    min-height: 42px;
+    cursor: pointer;
+  }
+  .tass-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  @media (min-width: 540px) { .tass-grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (min-width: 760px) { .tass-grid { grid-template-columns: repeat(4, 1fr); } }
+  @media (min-width: 960px) { .tass-grid { grid-template-columns: repeat(5, 1fr); } }
+  .tass-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .tass-card.open { border-color: var(--gold); }
+  .tass-card-img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 6px;
+    background: var(--gray-bg);
+    display: block;
+  }
+  .tass-card-name {
+    font-size: 11px;
+    color: var(--navy);
+    text-align: center;
+    word-break: break-word;
+    line-height: 1.25;
+    font-weight: 600;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    min-height: 28px;
+  }
+  .tass-card-manage {
+    background: var(--navy);
+    color: var(--gold);
+    border: 2px solid var(--navy);
+    border-radius: 6px;
+    padding: 6px 8px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    min-height: 32px;
+  }
+  .tass-card-manage:hover { background: var(--gold); color: var(--navy); }
+  .tass-card-count {
+    font-size: 10px;
+    color: var(--gray-muted);
+    text-align: center;
+    margin-top: -2px;
+  }
+  .tass-empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: var(--gray-muted);
+    padding: 30px 20px;
+    font-size: 14px;
+  }
+
+  /* Inline panel that drops below the grid when Manage is clicked */
+  .tass-panel {
+    grid-column: 1 / -1;
+    background: var(--cream);
+    border: 2px solid var(--gold);
+    border-radius: 12px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    animation: tassFade 0.2s ease;
+  }
+  @keyframes tassFade {
+    from { opacity: 0; transform: translateY(-4px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .tass-panel-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .tass-panel-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--navy);
+    margin: 0;
+  }
+  .tass-panel-close {
+    background: white;
+    border: 2px solid var(--navy);
+    color: var(--navy);
+    padding: 6px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    min-height: 36px;
+  }
+  .tass-panel-close:hover { background: var(--navy); color: white; }
+  .tass-panel-quick {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .tass-quick-btn {
+    flex: 1 1 200px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    border: 2px solid;
+    min-height: 40px;
+  }
+  .tass-quick-add {
+    background: #2d8a5f;
+    border-color: #2d8a5f;
+    color: white;
+  }
+  .tass-quick-add:hover { background: #226e4c; border-color: #226e4c; }
+  .tass-quick-remove {
+    background: white;
+    border-color: #c2392e;
+    color: #c2392e;
+  }
+  .tass-quick-remove:hover { background: #c2392e; color: white; }
+  .tass-section {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+  }
+  .tass-section-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    margin: 0 0 8px;
+  }
+  .tass-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .tass-row:last-child { border-bottom: none; }
+  .tass-row-name {
+    font-size: 14px;
+    color: var(--navy);
+    font-weight: 600;
+    flex: 1;
+    min-width: 0;
+  }
+  .tass-row-empty {
+    font-size: 13px;
+    color: var(--gray-muted);
+    font-style: italic;
+    padding: 6px 0;
+  }
+  .tass-row-add, .tass-row-remove {
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    border: 2px solid;
+    min-height: 32px;
+    flex-shrink: 0;
+  }
+  .tass-row-add {
+    background: #2d8a5f;
+    border-color: #2d8a5f;
+    color: white;
+  }
+  .tass-row-add:hover { background: #226e4c; border-color: #226e4c; }
+  .tass-row-remove {
+    background: white;
+    border-color: #c2392e;
+    color: #c2392e;
+  }
+  .tass-row-remove:hover { background: #c2392e; color: white; }
+
+  /* Inline confirmation row used inside the Manage panel for destructive ops */
+  .tass-confirm {
+    background: #fdebe9;
+    border: 2px solid #c2392e;
+    border-radius: 8px;
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 6px;
+  }
+  .tass-confirm-msg {
+    color: #8a271f;
+    font-weight: 600;
+    font-size: 13px;
+    flex: 1;
+    min-width: 180px;
+  }
+  .tass-confirm-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+  .tass-confirm-actions button {
+    padding: 7px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    border: 2px solid;
+    min-height: 34px;
+  }
+  .tass-confirm-yes {
+    background: #c2392e;
+    border-color: #c2392e;
+    color: white;
+  }
+  .tass-confirm-yes:hover { background: #a6322a; border-color: #a6322a; }
+  .tass-confirm-no {
+    background: white;
+    border-color: var(--navy);
+    color: var(--navy);
+  }
+  .tass-confirm-no:hover { background: var(--navy); color: white; }
+
+  /* Brief toast for successful add/remove actions */
+  .tass-toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: #2d8a5f;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 14px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    z-index: 99999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+  }
+  .tass-toast.visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* Dark mode overrides */
+  [data-theme="dark"] .tass-search,
+  [data-theme="dark"] .tass-filter {
+    background: #1E2130;
+    color: #F5F5F5;
+    border-color: #3A3D4A;
+  }
+  [data-theme="dark"] .tass-card { background: #1A1D27; border-color: #2A2D3A; }
+  [data-theme="dark"] .tass-card.open { border-color: var(--gold); }
+  [data-theme="dark"] .tass-card-name { color: #F5F5F5; }
+  [data-theme="dark"] .tass-card-count { color: #C9A84C; }
+  [data-theme="dark"] .tass-panel {
+    background: #1A1D27;
+    border-color: var(--gold);
+  }
+  [data-theme="dark"] .tass-panel-title { color: #F5F5F5; }
+  [data-theme="dark"] .tass-panel-close {
+    background: #1E2130;
+    border-color: #3A3D4A;
+    color: #F5F5F5;
+  }
+  [data-theme="dark"] .tass-panel-close:hover { background: #2A2D3A; border-color: var(--gold); }
+  [data-theme="dark"] .tass-quick-remove { background: #1E2130; }
+  [data-theme="dark"] .tass-section { background: #22263A; border-color: #2A2D3A; }
+  [data-theme="dark"] .tass-section-title { color: #C9A84C; }
+  [data-theme="dark"] .tass-row { border-bottom-color: #2A2D3A; }
+  [data-theme="dark"] .tass-row-name { color: #F5F5F5; }
+  [data-theme="dark"] .tass-row-empty { color: #C9A84C; }
+  [data-theme="dark"] .tass-row-remove { background: #1E2130; }
+  [data-theme="dark"] .tass-confirm { background: #2B0D0D; border-color: #5C1E1E; }
+  [data-theme="dark"] .tass-confirm-msg { color: #F07878; }
+  [data-theme="dark"] .tass-confirm-no {
+    background: #1E2130;
+    color: #F5F5F5;
+    border-color: #3A3D4A;
+  }
+
+  /* ============================================================
      THEME TOGGLE (home page top-right pill)
   ============================================================ */
   .theme-toggle-wrap {
