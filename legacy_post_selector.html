@@ -6743,6 +6743,212 @@
   })();
 
   /* ============================================================
+     AGENT PHOTOS (Settings tab — Feature 1)
+     Renders a grid of agents with their current photo (or placeholder
+     initials), an Upload Photo button, and a Remove Photo button when
+     a photo exists. Upload opens a file picker, crops to a square,
+     and shows a preview modal before saving to localStorage.
+  ============================================================ */
+  let apPendingAgentId = null;       // slug of the agent we are uploading for
+  let apPendingDataUrl = null;       // cropped jpeg dataURL waiting for save
+  let apConfirmingRemoveId = null;   // slug currently showing inline remove confirm
+
+  function renderAgentPhotosSection() {
+    const grid = document.getElementById("apGrid");
+    if (!grid) return;
+    grid.innerHTML = "";
+    AGENTS.forEach(function (agent) {
+      const card = document.createElement("div");
+      card.className = "ap-card";
+      const photo = getAgentPhoto(agent.id);
+      const displayName = resolveDisplayName(agent);
+      const circleHtml = photo
+        ? '<div class="ap-circle"><img src="' + photo + '" alt="' + escapeHtml(displayName) + '"></div>'
+        : '<div class="ap-circle">' + escapeHtml(initials(agent.name)) + '</div>';
+      card.innerHTML =
+        circleHtml +
+        '<div class="ap-name">' + escapeHtml(agent.name) + '</div>' +
+        '<div class="ap-actions"></div>';
+      const actions = card.querySelector(".ap-actions");
+      if (apConfirmingRemoveId === agent.id) {
+        const confirmBox = document.createElement("div");
+        confirmBox.className = "ap-confirm";
+        confirmBox.innerHTML =
+          '<div class="ap-confirm-msg">Remove photo for ' + escapeHtml(agent.name) + '?</div>' +
+          '<div class="ap-confirm-actions">' +
+            '<button type="button" class="ap-confirm-yes">Yes, Remove</button>' +
+            '<button type="button" class="ap-confirm-no">Cancel</button>' +
+          '</div>';
+        confirmBox.querySelector(".ap-confirm-yes").addEventListener("click", function () {
+          removeAgentPhotoStorage(agent.id);
+          apConfirmingRemoveId = null;
+          renderAgentPhotosSection();
+          renderHome();
+        });
+        confirmBox.querySelector(".ap-confirm-no").addEventListener("click", function () {
+          apConfirmingRemoveId = null;
+          renderAgentPhotosSection();
+        });
+        actions.appendChild(confirmBox);
+      } else {
+        const upBtn = document.createElement("button");
+        upBtn.type = "button";
+        upBtn.className = "ap-btn ap-btn-upload";
+        upBtn.textContent = photo ? "Replace Photo" : "Upload Photo";
+        upBtn.addEventListener("click", function () { startAgentPhotoUpload(agent.id); });
+        actions.appendChild(upBtn);
+        if (photo) {
+          const rmBtn = document.createElement("button");
+          rmBtn.type = "button";
+          rmBtn.className = "ap-btn ap-btn-remove";
+          rmBtn.textContent = "Remove Photo";
+          rmBtn.addEventListener("click", function () {
+            apConfirmingRemoveId = agent.id;
+            renderAgentPhotosSection();
+          });
+          actions.appendChild(rmBtn);
+        }
+      }
+      grid.appendChild(card);
+    });
+  }
+
+  function startAgentPhotoUpload(agentId) {
+    apPendingAgentId = agentId;
+    const fi = document.getElementById("apFileInput");
+    if (!fi) return;
+    /* Reset so selecting the same file fires "change" again */
+    fi.value = "";
+    fi.click();
+  }
+
+  (function wireAgentPhotoUpload() {
+    const fi = document.getElementById("apFileInput");
+    if (!fi) return;
+    fi.addEventListener("change", function () {
+      const file = fi.files && fi.files[0];
+      if (!file || !apPendingAgentId) return;
+      const okTypes = ["image/jpeg", "image/png", "image/webp"];
+      if (okTypes.indexOf(file.type) === -1) {
+        alert("Please choose a JPG, PNG, or WEBP image.");
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = function (ev) {
+        const img = new Image();
+        img.onload = function () {
+          try {
+            apPendingDataUrl = cropImageToSquareDataUrl(img, 256);
+            openAgentPhotoPreview(apPendingDataUrl);
+          } catch (e) {
+            alert("Could not process the image. Please try a different file.");
+          }
+        };
+        img.onerror = function () {
+          alert("Could not read the image. Please try a different file.");
+        };
+        img.src = ev.target.result;
+      };
+      reader.onerror = function () {
+        alert("Could not read the file. Please try again.");
+      };
+      reader.readAsDataURL(file);
+    });
+  })();
+
+  function openAgentPhotoPreview(dataUrl) {
+    const modal   = document.getElementById("apModalBackdrop");
+    const preview = document.getElementById("apModalPreview");
+    if (!modal || !preview) return;
+    preview.innerHTML = '<img src="' + dataUrl + '" alt="Preview">';
+    modal.classList.add("visible");
+  }
+
+  function closeAgentPhotoPreview() {
+    const modal = document.getElementById("apModalBackdrop");
+    if (modal) modal.classList.remove("visible");
+    apPendingDataUrl = null;
+    apPendingAgentId = null;
+  }
+
+  (function wireAgentPhotoModal() {
+    const modal     = document.getElementById("apModalBackdrop");
+    const cancelBtn = document.getElementById("apModalCancel");
+    const saveBtn   = document.getElementById("apModalSave");
+    if (!modal || !cancelBtn || !saveBtn) return;
+    cancelBtn.addEventListener("click", closeAgentPhotoPreview);
+    modal.addEventListener("click", function (e) {
+      if (e.target === modal) closeAgentPhotoPreview();
+    });
+    saveBtn.addEventListener("click", function () {
+      if (!apPendingAgentId || !apPendingDataUrl) { closeAgentPhotoPreview(); return; }
+      const ok = setAgentPhoto(apPendingAgentId, apPendingDataUrl);
+      if (!ok) {
+        alert("Could not save the photo. Browser storage may be full.");
+        closeAgentPhotoPreview();
+        return;
+      }
+      closeAgentPhotoPreview();
+      renderAgentPhotosSection();
+      renderHome();
+    });
+  })();
+
+  /* ============================================================
+     AGENT DISPLAY NAMES (Settings tab — Feature 2)
+     Renders an editable list of agents and their display names.
+     "Save Changes" persists every input value to localStorage,
+     re-renders the home page, and shows a green confirmation.
+  ============================================================ */
+  function renderDisplayNamesSection() {
+    const list = document.getElementById("dnList");
+    if (!list) return;
+    list.innerHTML = "";
+    AGENTS.forEach(function (agent) {
+      const row = document.createElement("div");
+      row.className = "dn-row";
+      const current = resolveDisplayName(agent);
+      row.innerHTML =
+        '<div class="dn-name">' + escapeHtml(agent.name) + '</div>' +
+        '<input type="text" class="dn-input" data-agent-id="' + escapeHtml(agent.id) + '" ' +
+          'value="' + escapeHtml(current) + '" placeholder="' + escapeHtml(firstNameOf(agent.name) || agent.name) + '" ' +
+          'maxlength="60" autocomplete="off">';
+      list.appendChild(row);
+    });
+    /* Hide success banner whenever the user starts editing */
+    const successEl = document.getElementById("dnSuccess");
+    list.querySelectorAll(".dn-input").forEach(function (inp) {
+      inp.addEventListener("input", function () {
+        if (successEl) successEl.classList.remove("visible");
+      });
+    });
+  }
+
+  (function wireDisplayNamesSave() {
+    const btn = document.getElementById("dnSaveBtn");
+    const successEl = document.getElementById("dnSuccess");
+    if (!btn) return;
+    btn.addEventListener("click", function () {
+      const inputs = document.querySelectorAll("#dnList .dn-input");
+      inputs.forEach(function (inp) {
+        const slug = inp.getAttribute("data-agent-id");
+        const value = (inp.value || "").trim();
+        setAgentDisplayNameOverride(slug, value);
+        /* Mirror the override into the in-memory AGENTS object so any
+           render path that reads agent.displayName picks it up too. */
+        const agent = AGENTS.find(function (a) { return a.id === slug; });
+        if (agent) {
+          if (value) agent.displayName = value;
+          else delete agent.displayName;
+        }
+      });
+      if (successEl) successEl.classList.add("visible");
+      renderHome();
+      renderDisplayNamesSection();
+    });
+  })();
+
+  /* ============================================================
      AGENT PIN PAGE
   ============================================================ */
   let currentPinAgent = null;
