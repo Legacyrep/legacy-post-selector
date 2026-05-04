@@ -4113,28 +4113,32 @@
   [data-theme="dark"] .back-btn {
     background: transparent;
     border-color: #3A3D4A;
-    color: #F0F0F0;
+    color: #F5F5F5;
   }
   [data-theme="dark"] .back-btn:hover {
     background: #2A2D3A;
-    color: #F0F0F0;
+    color: #F5F5F5;
     border-color: var(--gold);
   }
 
-  /* Success / error / warning blocks */
+  /* Success messages — bright green for clear positive feedback */
   [data-theme="dark"] .cp-success-block,
   [data-theme="dark"] .dn-success {
     background: #0D2B1A;
-    color: #4CAF7D;
+    color: #6FD99A;
     border-color: #1E5C38;
   }
   [data-theme="dark"] .cp-success-block strong,
-  [data-theme="dark"] .dn-success strong { color: #4CAF7D; }
+  [data-theme="dark"] .dn-success strong { color: #6FD99A; }
+
+  /* Error messages — bright red for clear urgency */
   [data-theme="dark"] .admin-error,
   [data-theme="dark"] .pwd-confirm-error,
-  [data-theme="dark"] .input-error-msg {
+  [data-theme="dark"] .input-error-msg,
+  [data-theme="dark"] .submit-error,
+  [data-theme="dark"] .admin-password-error {
     background: transparent;
-    color: #F07070;
+    color: #F07878;
   }
   [data-theme="dark"] .admin-confirm-row,
   [data-theme="dark"] .ap-confirm {
@@ -4142,13 +4146,14 @@
     border-color: #5C1E1E;
   }
   [data-theme="dark"] .admin-confirm-message,
-  [data-theme="dark"] .ap-confirm-msg { color: #F07070; }
+  [data-theme="dark"] .ap-confirm-msg { color: #F07878; }
 
-  /* Inactivity / warning banners */
+  /* Inactivity / warning banners — bright amber so they stand out */
   [data-theme="dark"] .inactivity-banner,
-  [data-theme="dark"] .warning-banner {
+  [data-theme="dark"] .warning-banner,
+  [data-theme="dark"] .admin-lockout-box {
     background: #2B1A0D;
-    color: #F0A050;
+    color: #F0C070;
     border-color: #5C3A1E;
   }
 
