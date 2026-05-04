@@ -9672,6 +9672,9 @@
   let atmPendingRemoval = null;
   /* Same idea for the Remove Folder button. Shape: { folderId, slug }. */
   let atmPendingFolderRemoval = null;
+  /* Pending "Delete Selected" confirmation per ATM grid context.
+     Keyed by "atm:<slug>". true = show inline red confirm box. */
+  const atmBulkConfirm = Object.create(null);
 
   function loadCustomTemplates() {
     try {
