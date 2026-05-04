@@ -10496,6 +10496,8 @@
   let seasonalDeletingFolderId = null;
   /* Pending password-gated thumb removal — { folderId, tplId }. */
   let seasonalPendingThumbRemoval = null;
+  /* Pending "Delete Selected" confirmation per seasonal folder context */
+  const seasonalBulkConfirm = Object.create(null);
 
   function loadHolidayFolders() {
     try {
