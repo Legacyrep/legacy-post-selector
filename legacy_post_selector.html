@@ -6649,19 +6649,168 @@
     return "pending";
   }
 
+  /* Status display labels for the Past Submissions folder badges.
+     Maps each statusClass (returned by statusClassFromValue) to the
+     short, human-readable label the user sees on the badge. */
+  const PSF_STATUS_LABELS = {
+    pending:  "Pending",
+    ready:    "Ready to Post",
+    updated:  "Updated",
+    approved: "Approved"
+  };
+
+  /* Format a folder header label like "Week of May 4 to May 10". */
+  function formatFolderWeekName(record) {
+    if (!record || !record.weekStart) return "Week";
+    const monday = isoToDate(record.weekStart);
+    const sunday = new Date(monday); sunday.setDate(monday.getDate() + 6);
+    return "Week of " +
+      MONTH_NAMES[monday.getMonth()] + " " + monday.getDate() +
+      " to " +
+      MONTH_NAMES[sunday.getMonth()] + " " + sunday.getDate();
+  }
+
+  /* Resolve a friendly name for whatever template id was selected on a
+     given day. Mirrors the lookup logic the original buildDayList used. */
+  function resolveDayTemplateLabel(day) {
+    if (!day || !day.selectedTemplate) return "";
+    const id = day.selectedTemplate;
+    if (id.indexOf("CUSTOM_") === 0 && typeof customTemplateById === "function") {
+      const c = customTemplateById(id);
+      if (c && c.name) return c.name;
+    } else if (id.indexOf("HOLIDAY_") === 0 && typeof holidayTemplateById === "function") {
+      const ht = holidayTemplateById(id);
+      if (ht && ht.template && ht.template.name) return ht.template.name;
+    } else if (id.indexOf("FOLDER_TPL_") === 0 && typeof folderTemplateById === "function") {
+      const ft = folderTemplateById(id);
+      if (ft && ft.template && ft.template.name) {
+        return ft.template.name + (ft.folder && ft.folder.name ? " (" + ft.folder.name + ")" : "");
+      }
+    }
+    return id;
+  }
+
+  /* Build the read-only list of day rows that goes inside an expanded
+     folder. Each row shows day name + date, topic/tone/template lines,
+     and a status badge (gray/pending until the proxy returns real data). */
+  function buildPsfDayRows(record) {
+    const wrap = document.createElement("div");
+    if (!record || !Array.isArray(record.days)) return wrap;
+    const monday = isoToDate(record.weekStart);
+    record.days.forEach(function (day, idx) {
+      if (!day || !day.topic) return; /* Skipped/empty day — hide */
+      const dayDate = new Date(monday); dayDate.setDate(monday.getDate() + idx);
+      const row = document.createElement("div");
+      row.className = "psf-day-row";
+
+      const info = document.createElement("div");
+      info.className = "psf-day-info";
+
+      const head = document.createElement("div");
+      head.innerHTML =
+        '<span class="psf-day-row-name">' + escapeHtml(DAY_NAMES[idx]) + '</span>' +
+        '<span class="psf-day-row-date">' + escapeHtml(formatShort(dayDate)) + '</span>';
+      info.appendChild(head);
+
+      const meta = document.createElement("div");
+      meta.className = "psf-day-row-meta";
+      const toneLine = day.tone ? "<br><strong>Tone:</strong> " + escapeHtml(day.tone) : "";
+      const templLabel = resolveDayTemplateLabel(day);
+      const templLine = templLabel ? "<br><strong>Template:</strong> " + escapeHtml(templLabel) : "";
+      meta.innerHTML = "<strong>Topic:</strong> " + escapeHtml(day.topic) + toneLine + templLine;
+      info.appendChild(meta);
+
+      row.appendChild(info);
+
+      /* Status badge — defaults to gray Pending. If the worker is
+         connected, an async fetch upgrades it after render. */
+      const badge = document.createElement("span");
+      badge.className = "psf-status-badge pending";
+      badge.textContent = PSF_STATUS_LABELS.pending;
+      row.appendChild(badge);
+
+      wrap.appendChild(row);
+    });
+    if (!wrap.children.length) {
+      const empty = document.createElement("div");
+      empty.className = "subm-empty-day";
+      empty.style.padding = "10px 0";
+      empty.textContent = "All days were skipped this week.";
+      wrap.appendChild(empty);
+    }
+    return wrap;
+  }
+
+  /* Build a single folder element for one weekly submission record.
+     Folder header is a button (so taps toggle expand/collapse). */
+  function buildPsfFolder(record) {
+    const folder = document.createElement("div");
+    folder.className = "psf-folder";
+
+    const dayCount = (record.days || []).filter(function (d) { return d && d.topic; }).length;
+    const head = document.createElement("button");
+    head.type = "button";
+    head.className = "psf-folder-head";
+    head.setAttribute("aria-expanded", "false");
+    head.innerHTML =
+      '<span class="psf-folder-icon" aria-hidden="true">' +
+        '<svg viewBox="0 0 24 24" fill="currentColor">' +
+          '<path d="M3 6.5C3 5.67 3.67 5 4.5 5h4.59c.4 0 .78.16 1.06.44L11.5 6.88h8c.83 0 1.5.67 1.5 1.5v9.12c0 .83-.67 1.5-1.5 1.5h-15c-.83 0-1.5-.67-1.5-1.5v-11Z"/>' +
+        '</svg>' +
+      '</span>' +
+      '<span class="psf-folder-info">' +
+        '<span class="psf-folder-name">' + escapeHtml(formatFolderWeekName(record)) + '</span>' +
+        '<span class="psf-folder-count">' + dayCount + (dayCount === 1 ? " post" : " posts") + '</span>' +
+      '</span>' +
+      '<span class="psf-folder-chevron" aria-hidden="true">&rsaquo;</span>';
+
+    const body = document.createElement("div");
+    body.className = "psf-folder-body";
+    const dayWrap = buildPsfDayRows(record);
+    body.appendChild(dayWrap);
+
+    head.addEventListener("click", function () {
+      const opened = folder.classList.toggle("open");
+      head.setAttribute("aria-expanded", opened ? "true" : "false");
+    });
+
+    folder.appendChild(head);
+    folder.appendChild(body);
+
+    /* If the worker is connected, fetch real per-post statuses and
+       upgrade the gray Pending badges in place. Failure is silent —
+       the badges stay gray. */
+    if (proxyEnabled() && currentAgent) {
+      serverFetchPostStatuses(currentAgent, record.weekStart).then(function (resp) {
+        if (!resp || !Array.isArray(resp.statuses)) return;
+        const rows = body.querySelectorAll(".psf-day-row");
+        resp.statuses.forEach(function (s, idx) {
+          const row = rows[idx];
+          if (!row) return;
+          const badge = row.querySelector(".psf-status-badge");
+          if (!badge) return;
+          const cls = statusClassFromValue(s.status);
+          badge.className = "psf-status-badge " + cls;
+          badge.textContent = PSF_STATUS_LABELS[cls] || PSF_STATUS_LABELS.pending;
+        });
+      }).catch(function () { /* leave Pending */ });
+    }
+
+    return folder;
+  }
+
   function renderSubmissionsPage() {
     if (!currentAgent) return;
     document.getElementById("submissionsAgentName").textContent = currentAgent.name;
     const container = document.getElementById("submissionsContent");
     container.innerHTML = "";
 
-    const thisWeekRecord = loadSubmissionForWeek(currentAgent, 0);
-    /* Find most recent past submission, regardless of how many weeks back */
+    /* Pull every saved submission record for this agent from
+       localStorage. Already sorted by weekStart descending — most
+       recent week first. */
     const allSubs = loadAllSubmissionsFor(currentAgent);
-    const todayMonday = mondayISO(getMondayOfWeek(new Date()));
-    const lastWeekRecord = allSubs.filter(function (r) { return r.weekStart < todayMonday; })[0] || null;
 
-    if (!thisWeekRecord && !lastWeekRecord) {
+    if (!allSubs.length) {
       const empty = document.createElement("div");
       empty.className = "subm-empty";
       empty.innerHTML = "<strong>No past submissions yet.</strong><br>Fill out your weekly form to get started.";
@@ -6669,74 +6818,9 @@
       return;
     }
 
-    /* THIS WEEK */
-    const thisSection = document.createElement("div");
-    thisSection.className = "subm-section";
-    const thisHead = document.createElement("div");
-    thisHead.className = "subm-section-head";
-    const thisMon = getWeekMonday(0);
-    const thisSun = new Date(thisMon); thisSun.setDate(thisMon.getDate() + 6);
-    thisHead.innerHTML =
-      '<div>' +
-        '<h3 class="subm-section-title">This Week</h3>' +
-        '<div class="subm-section-week">' + escapeHtml(formatWeekRangeShort(thisMon, thisSun)) + '</div>' +
-      '</div>';
-    const thisStatus = document.createElement("span");
-    thisStatus.className = "subm-status-pill " + (thisWeekRecord ? "subm-status-submitted" : "subm-status-not-submitted");
-    thisStatus.textContent = thisWeekRecord ? "Submitted" : "Not submitted yet";
-    thisHead.appendChild(thisStatus);
-    thisSection.appendChild(thisHead);
-
-    if (thisWeekRecord) {
-      thisSection.appendChild(buildDayList(thisWeekRecord, /*showStatuses*/ false));
-    } else {
-      const empty = document.createElement("div");
-      empty.className = "subm-empty-day";
-      empty.style.padding = "8px 0";
-      empty.textContent = "Your selections for this week haven't been submitted yet.";
-      thisSection.appendChild(empty);
-    }
-    container.appendChild(thisSection);
-
-    /* LAST WEEK */
-    if (lastWeekRecord) {
-      const lastSection = document.createElement("div");
-      lastSection.className = "subm-section";
-      const lastHead = document.createElement("div");
-      lastHead.className = "subm-section-head";
-      lastHead.innerHTML =
-        '<div>' +
-          '<h3 class="subm-section-title">Last Week</h3>' +
-          '<div class="subm-section-week">' + escapeHtml(lastWeekRecord.weekRange || lastWeekRecord.weekStart) + '</div>' +
-        '</div>';
-      const lastStatus = document.createElement("span");
-      lastStatus.className = "subm-status-pill subm-status-submitted";
-      lastStatus.textContent = "Submitted";
-      lastHead.appendChild(lastStatus);
-      lastSection.appendChild(lastHead);
-
-      const dayListEl = buildDayList(lastWeekRecord, /*showStatuses*/ true);
-      lastSection.appendChild(dayListEl);
-      container.appendChild(lastSection);
-
-      /* Path B: try to fetch real per-post statuses from the proxy.
-         If NOTION_PROXY_URL is empty or the call fails, badges stay "Status pending". */
-      if (proxyEnabled()) {
-        serverFetchPostStatuses(currentAgent, lastWeekRecord.weekStart).then(function (resp) {
-          if (!resp || !Array.isArray(resp.statuses)) return;
-          const dayEls = dayListEl.querySelectorAll(".subm-day");
-          resp.statuses.forEach(function (s, idx) {
-            const el = dayEls[idx];
-            if (!el) return;
-            const pill = el.querySelector(".subm-post-status");
-            if (!pill) return;
-            const cls = statusClassFromValue(s.status);
-            pill.className = "subm-post-status " + cls;
-            pill.textContent = STATUS_LABELS[cls] || STATUS_LABELS.pending;
-          });
-        });
-      }
-    }
+    allSubs.forEach(function (record) {
+      container.appendChild(buildPsfFolder(record));
+    });
   }
 
   function buildDayList(record, showStatuses) {
