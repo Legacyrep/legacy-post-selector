@@ -10088,6 +10088,29 @@
           empty.textContent = "No general-pool templates assigned to this agent yet.";
           body.appendChild(empty);
         } else {
+          /* Bulk-select toolbar + action bar above this agent's grid.
+             Selection is scoped per agent ("atm:" + slug). */
+          const ctx = "atm:" + slug;
+          const visibleIds = tpls.map(function (t) { return t.id; });
+          body.appendChild(buildTplSelectToolbar(ctx, visibleIds, function () { renderATM(); }));
+          const ab = buildTplActionBar(
+            ctx,
+            function () { return !!atmBulkConfirm[ctx]; },
+            function (v) { atmBulkConfirm[ctx] = !!v; },
+            function () {
+              const ids = Array.from(getTplSelection(ctx));
+              const n = permanentlyDeleteTemplates(ids);
+              clearTplSelection(ctx);
+              if (typeof showTassToast === "function") showTassToast(n + " template" + (n === 1 ? "" : "s") + " deleted successfully.");
+              renderATM();
+              if (typeof renderTemplateFolders === "function") renderTemplateFolders();
+              if (typeof renderSeasonalFolders === "function") renderSeasonalFolders();
+              if (typeof renderTemplateAssignments === "function") renderTemplateAssignments();
+            },
+            function () { renderATM(); }
+          );
+          if (ab) body.appendChild(ab);
+
           const grid = document.createElement("div");
           grid.className = "atm-thumb-grid";
           tpls.forEach(function (tpl) {
@@ -10098,7 +10121,9 @@
               '<img class="atm-thumb-img" src="' + tpl.image + '" alt="">' +
               '<div class="atm-thumb-name">' + escapeHtml(tpl.name) + '</div>' +
               '<button type="button" class="atm-thumb-copy">Copy to…</button>';
-            thumb.querySelector(".atm-thumb-remove").addEventListener("click", function () {
+            wireTplSelectableThumb(thumb, ctx, tpl.id, function () { renderATM(); });
+            thumb.querySelector(".atm-thumb-remove").addEventListener("click", function (e) {
+              e.stopPropagation();
               atmPendingRemoval = { tplId: tpl.id, slug: slug };
               atmOpenCopyDropdownTplId = null;
               renderATM();
