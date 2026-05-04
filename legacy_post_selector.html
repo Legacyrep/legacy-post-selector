@@ -3954,10 +3954,23 @@
   [data-theme="dark"] .settings-placeholder,
   [data-theme="dark"] .ap-modal,
   [data-theme="dark"] .uc-agent-card,
-  [data-theme="dark"] .ap-card {
+  [data-theme="dark"] .ap-card,
+  [data-theme="dark"] .psf-folder {
     background: #1A1D27;
     border-color: #2A2D3A;
   }
+  [data-theme="dark"] .psf-folder.open { border-color: var(--gold); }
+  [data-theme="dark"] .psf-folder-head:hover,
+  [data-theme="dark"] .psf-folder-head:focus { background: rgba(201, 169, 76, 0.10); }
+  [data-theme="dark"] .psf-folder-name { color: #F0F0F0; }
+  [data-theme="dark"] .psf-folder-count { color: #A0A3B1; }
+  [data-theme="dark"] .psf-folder-body { border-top-color: #2A2D3A; }
+  [data-theme="dark"] .psf-day-row { border-bottom-color: #2A2D3A; }
+  [data-theme="dark"] .psf-day-row-name { color: #F0F0F0; }
+  [data-theme="dark"] .psf-day-row-date { color: #A0A3B1; }
+  [data-theme="dark"] .psf-day-row-meta { color: #C0C3D0; }
+  [data-theme="dark"] .psf-day-row-meta strong { color: #F0F0F0; }
+  [data-theme="dark"] .psf-status-badge.pending { background: #2A2D3A; color: #C0C3D0; }
 
   /* Agent card hover */
   [data-theme="dark"] .agent-card:hover,
