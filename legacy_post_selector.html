@@ -8880,6 +8880,209 @@
   document.getElementById("templateSubtabBtnAssignments").addEventListener("click", function () { switchTemplateSubtab("assignments"); });
 
   /* ============================================================
+     CLICK-TO-SELECT TEMPLATES — selection registry + bulk delete
+     Each grid in the Template Manager has its own selection context
+     keyed by an opaque string (e.g. "atm:sabrina-thompson",
+     "tf:fld_xyz", "seasonal:hf_abc", "tass"). Selections are kept
+     in-memory only — they reset on page reload, which is the right
+     behavior for transient bulk-delete operations.
+  ============================================================ */
+  const TPL_SELECTIONS = Object.create(null);
+  function getTplSelection(ctx) {
+    if (!TPL_SELECTIONS[ctx]) TPL_SELECTIONS[ctx] = new Set();
+    return TPL_SELECTIONS[ctx];
+  }
+  function isTplSelected(ctx, tplId) {
+    return getTplSelection(ctx).has(tplId);
+  }
+  function toggleTplSelection(ctx, tplId) {
+    const set = getTplSelection(ctx);
+    if (set.has(tplId)) set.delete(tplId);
+    else set.add(tplId);
+  }
+  function setTplSelection(ctx, idArray) {
+    TPL_SELECTIONS[ctx] = new Set(idArray || []);
+  }
+  function clearTplSelection(ctx) {
+    if (TPL_SELECTIONS[ctx]) TPL_SELECTIONS[ctx].clear();
+  }
+
+  /* Wire selection-toggle on a thumb element. The thumb may have
+     inner buttons (× remove, "Copy to…", Manage); clicks on those
+     should NOT toggle the selection. We check e.target up the tree
+     for any <button> ancestor before flipping the state. */
+  function wireTplSelectableThumb(thumbEl, ctx, tplId, onChange) {
+    thumbEl.classList.add("tpl-selectable");
+    if (isTplSelected(ctx, tplId)) thumbEl.classList.add("tpl-selected");
+    /* Insert checkmark badge once */
+    if (!thumbEl.querySelector(".tpl-check")) {
+      const check = document.createElement("span");
+      check.className = "tpl-check";
+      check.textContent = "✓";
+      thumbEl.appendChild(check);
+    }
+    thumbEl.addEventListener("click", function (e) {
+      /* Don't toggle when an inner button was clicked */
+      let n = e.target;
+      while (n && n !== thumbEl) {
+        if (n.tagName === "BUTTON" || n.tagName === "A" || n.tagName === "SELECT") return;
+        n = n.parentNode;
+      }
+      toggleTplSelection(ctx, tplId);
+      if (typeof onChange === "function") onChange();
+    });
+  }
+
+  /* Build the toolbar: Select All Visible + Deselect All. visibleIds
+     is the array of template IDs currently shown in this grid (the
+     "selectable universe" — used by Select All so that an active
+     search filter only selects matching results). */
+  function buildTplSelectToolbar(ctx, visibleIds, onChange) {
+    const wrap = document.createElement("div");
+    wrap.className = "tpl-select-toolbar";
+    const selBtn = document.createElement("button");
+    selBtn.type = "button";
+    selBtn.className = "tpl-select-toolbar-btn";
+    selBtn.textContent = "Select All";
+    selBtn.disabled = !visibleIds || visibleIds.length === 0;
+    selBtn.addEventListener("click", function () {
+      setTplSelection(ctx, visibleIds || []);
+      if (typeof onChange === "function") onChange();
+    });
+    const desBtn = document.createElement("button");
+    desBtn.type = "button";
+    desBtn.className = "tpl-select-toolbar-btn";
+    desBtn.textContent = "Deselect All";
+    desBtn.disabled = getTplSelection(ctx).size === 0;
+    desBtn.addEventListener("click", function () {
+      clearTplSelection(ctx);
+      if (typeof onChange === "function") onChange();
+    });
+    wrap.appendChild(selBtn);
+    wrap.appendChild(desBtn);
+    return wrap;
+  }
+
+  /* Build the navy/gold action bar that appears when ≥1 selected.
+     `pendingConfirm` is a boolean: if true, show the inline red
+     confirm box instead of the action bar. onDelete actually performs
+     the deletion (caller handles the storage update + re-render). */
+  function buildTplActionBar(ctx, pendingConfirmGetter, pendingConfirmSetter, onDelete, onDeselect) {
+    const set = getTplSelection(ctx);
+    if (set.size === 0) return null;
+    const wrap = document.createElement("div");
+    if (pendingConfirmGetter()) {
+      wrap.className = "tpl-bulk-confirm";
+      wrap.innerHTML =
+        '<div class="tpl-bulk-confirm-msg">Delete ' + set.size +
+          ' selected template' + (set.size === 1 ? '' : 's') +
+          '? This will remove them permanently.</div>' +
+        '<div class="tpl-bulk-confirm-actions">' +
+          '<button type="button" class="tpl-bulk-confirm-yes">Yes, Delete All</button>' +
+          '<button type="button" class="tpl-bulk-confirm-no">Cancel</button>' +
+        '</div>';
+      wrap.querySelector(".tpl-bulk-confirm-yes").addEventListener("click", function () {
+        pendingConfirmSetter(false);
+        onDelete();
+      });
+      wrap.querySelector(".tpl-bulk-confirm-no").addEventListener("click", function () {
+        pendingConfirmSetter(false);
+        onDeselect && onDeselect(/*keepSelection*/ true);
+      });
+    } else {
+      wrap.className = "tpl-action-bar";
+      wrap.innerHTML =
+        '<div class="tpl-action-bar-count">' + set.size +
+          ' template' + (set.size === 1 ? '' : 's') + ' selected</div>' +
+        '<div class="tpl-action-bar-actions">' +
+          '<button type="button" class="tpl-action-delete">Delete Selected</button>' +
+          '<button type="button" class="tpl-action-deselect">Deselect All</button>' +
+        '</div>';
+      wrap.querySelector(".tpl-action-delete").addEventListener("click", function () {
+        pendingConfirmSetter(true);
+        onDeselect && onDeselect(/*keepSelection*/ true);
+      });
+      wrap.querySelector(".tpl-action-deselect").addEventListener("click", function () {
+        clearTplSelection(ctx);
+        onDeselect && onDeselect(/*keepSelection*/ false);
+      });
+    }
+    return wrap;
+  }
+
+  /* Hard-delete a list of template IDs from EVERY storage location:
+       - General pool (legacy_custom_templates)
+       - Each agent's folder (legacy_template_folders[*].templates)
+       - Each holiday folder (legacy_holiday_folders[*].templates)
+       - Every saved favorites entry (legacy_favorites_*)
+     Returns the count of templates actually purged from the general
+     pool. The caller is responsible for re-rendering the relevant UI. */
+  function permanentlyDeleteTemplates(idArray) {
+    if (!Array.isArray(idArray) || idArray.length === 0) return 0;
+    const ids = new Set(idArray);
+
+    /* General pool */
+    let removedFromPool = 0;
+    try {
+      const pool = loadCustomTemplates();
+      const next = pool.filter(function (t) {
+        if (ids.has(t.id)) { removedFromPool++; return false; }
+        return true;
+      });
+      saveCustomTemplates(next);
+    } catch (e) {}
+
+    /* Template folders */
+    try {
+      const tfs = loadTemplateFolders();
+      let changed = false;
+      tfs.forEach(function (folder) {
+        if (!Array.isArray(folder.templates)) return;
+        const before = folder.templates.length;
+        folder.templates = folder.templates.filter(function (t) { return !ids.has(t.id); });
+        if (folder.templates.length !== before) changed = true;
+      });
+      if (changed && typeof saveTemplateFolders === "function") saveTemplateFolders(tfs);
+    } catch (e) {}
+
+    /* Holiday folders */
+    try {
+      const hfs = loadHolidayFolders();
+      let changed = false;
+      hfs.forEach(function (folder) {
+        if (!Array.isArray(folder.templates)) return;
+        const before = folder.templates.length;
+        folder.templates = folder.templates.filter(function (t) { return !ids.has(t.id); });
+        if (folder.templates.length !== before) changed = true;
+      });
+      if (changed && typeof saveHolidayFolders === "function") saveHolidayFolders(hfs);
+    } catch (e) {}
+
+    /* Favorites — every legacy_favorites_<slug>_<topic> key */
+    try {
+      const favKeys = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (k && k.indexOf("legacy_favorites_") === 0) favKeys.push(k);
+      }
+      favKeys.forEach(function (k) {
+        try {
+          const raw = localStorage.getItem(k);
+          if (!raw) return;
+          const arr = JSON.parse(raw);
+          if (!Array.isArray(arr)) return;
+          const next = arr.filter(function (id) { return !ids.has(id); });
+          if (next.length !== arr.length) {
+            localStorage.setItem(k, JSON.stringify(next));
+          }
+        } catch (e) {}
+      });
+    } catch (e) {}
+
+    return idArray.length;
+  }
+
+  /* ============================================================
      MANAGE TEMPLATE ASSIGNMENTS (Templates → Assignments subtab)
      Operates on the general-pool customTemplates store. Each template
      has an `assignedTo` array of agent slugs; this UI lets the admin
