@@ -3933,15 +3933,18 @@
   :root[data-theme="dark"] {
     --cream: #0F1117;
     --gray-bg: #1A1D27;
-    --gray-muted: #A0A3B1;
-    --gray-text: #A0A3B1;
+    /* In dark mode "muted" becomes brand gold so secondary text reads
+       clearly against #1A1D27/#22263A surfaces. Body/table-style copy
+       uses --gray-text (#E0E0E0) instead. */
+    --gray-muted: #C9A84C;
+    --gray-text: #E0E0E0;
     --border: #2A2D3A;
     --shadow: 0 4px 14px rgba(0, 0, 0, 0.55);
     --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.65);
   }
 
   [data-theme="dark"] html,
-  [data-theme="dark"] body { background: #0F1117; color: #F0F0F0; }
+  [data-theme="dark"] body { background: #0F1117; color: #F5F5F5; }
 
   /* Card-like surfaces (was background: white) */
   [data-theme="dark"] .agent-card,
