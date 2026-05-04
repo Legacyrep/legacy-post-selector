@@ -10163,6 +10163,47 @@
   cleanupOldDrafts();
   renderHome();
   showPage("homePage");
+
+  /* ============================================================
+     THEME TOGGLE WIRING (home page only)
+     The data-theme attribute is set very early via an inline script
+     in <head> so the page never flashes the wrong mode. Here we
+     just sync the toggle UI and wire the click handlers.
+  ============================================================ */
+  (function wireThemeToggle() {
+    const THEME_KEY  = "legacy_theme_preference";
+    const lightBtn   = document.getElementById("themeToggleLight");
+    const darkBtn    = document.getElementById("themeToggleDark");
+    if (!lightBtn || !darkBtn) return;
+
+    function getCurrentTheme() {
+      const v = document.documentElement.getAttribute("data-theme");
+      return (v === "dark") ? "dark" : "light";
+    }
+    function syncToggleUi() {
+      const t = getCurrentTheme();
+      if (t === "dark") {
+        darkBtn.classList.add("active");
+        darkBtn.setAttribute("aria-pressed", "true");
+        lightBtn.classList.remove("active");
+        lightBtn.setAttribute("aria-pressed", "false");
+      } else {
+        lightBtn.classList.add("active");
+        lightBtn.setAttribute("aria-pressed", "true");
+        darkBtn.classList.remove("active");
+        darkBtn.setAttribute("aria-pressed", "false");
+      }
+    }
+    function applyTheme(theme) {
+      const next = (theme === "dark") ? "dark" : "light";
+      document.documentElement.setAttribute("data-theme", next);
+      try { localStorage.setItem(THEME_KEY, next); } catch (e) { /* ignore */ }
+      syncToggleUi();
+    }
+    lightBtn.addEventListener("click", function () { applyTheme("light"); });
+    darkBtn .addEventListener("click", function () { applyTheme("dark");  });
+    syncToggleUi();
+  })();
 </script>
 
 </body>
