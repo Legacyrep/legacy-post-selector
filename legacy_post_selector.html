@@ -10751,9 +10751,32 @@
       empty.textContent = "No templates uploaded to this folder yet.";
       wrap.appendChild(empty);
     } else {
+      /* Bulk-select toolbar + action bar above this holiday folder's
+         grid. Selection is scoped per holiday folder. */
+      const ctx = "seasonal:" + folder.id;
+      tpls.sort(function (a, b) { return (b.uploadedAt || 0) - (a.uploadedAt || 0); });
+      const visibleIds = tpls.map(function (t) { return t.id; });
+      wrap.appendChild(buildTplSelectToolbar(ctx, visibleIds, function () { renderSeasonalFolders(); }));
+      const ab = buildTplActionBar(
+        ctx,
+        function () { return !!seasonalBulkConfirm[ctx]; },
+        function (v) { seasonalBulkConfirm[ctx] = !!v; },
+        function () {
+          const ids = Array.from(getTplSelection(ctx));
+          const n = permanentlyDeleteTemplates(ids);
+          clearTplSelection(ctx);
+          if (typeof showTassToast === "function") showTassToast(n + " template" + (n === 1 ? "" : "s") + " deleted successfully.");
+          renderSeasonalFolders();
+          if (typeof renderATM === "function") renderATM();
+          if (typeof renderTemplateFolders === "function") renderTemplateFolders();
+          if (typeof renderTemplateAssignments === "function") renderTemplateAssignments();
+        },
+        function () { renderSeasonalFolders(); }
+      );
+      if (ab) wrap.appendChild(ab);
+
       const grid = document.createElement("div");
       grid.className = "seasonal-thumb-grid";
-      tpls.sort(function (a, b) { return (b.uploadedAt || 0) - (a.uploadedAt || 0); });
       tpls.forEach(function (tpl) {
         const thumb = document.createElement("div");
         thumb.className = "seasonal-thumb";
@@ -10761,7 +10784,9 @@
           '<button type="button" class="seasonal-thumb-remove" title="Remove">&times;</button>' +
           '<img class="seasonal-thumb-img" src="' + tpl.image + '" alt="">' +
           '<div class="seasonal-thumb-name">' + escapeHtml(tpl.name || tpl.id) + '</div>';
-        thumb.querySelector(".seasonal-thumb-remove").addEventListener("click", function () {
+        wireTplSelectableThumb(thumb, ctx, tpl.id, function () { renderSeasonalFolders(); });
+        thumb.querySelector(".seasonal-thumb-remove").addEventListener("click", function (e) {
+          e.stopPropagation();
           seasonalPendingThumbRemoval = { folderId: folder.id, tplId: tpl.id };
           renderSeasonalFolders();
         });
