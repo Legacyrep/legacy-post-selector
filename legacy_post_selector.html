@@ -10219,7 +10219,7 @@
       if (pendingRemoval && pendingRemoval.folderId === folder.id) {
         const tpl = (folder.templates || []).find(function (t) { return t.id === pendingRemoval.tplId; });
         if (tpl) {
-          const confirmEl = buildPasswordConfirmPanel({
+          const confirmEl = buildSimpleConfirmPanel({
             messageHtml:
               'Remove <strong>' + escapeHtml(tpl.name || tpl.id) + '</strong> from <strong>' +
               escapeHtml(folder.name) + '</strong>? The template will be deleted permanently.',
