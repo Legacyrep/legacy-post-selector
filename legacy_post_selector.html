@@ -3754,6 +3754,292 @@
     font-style: italic;
     margin-bottom: 8px;
   }
+
+  /* ============================================================
+     THEME TOGGLE (home page top-right pill)
+  ============================================================ */
+  .theme-toggle-wrap {
+    display: flex;
+    justify-content: flex-end;
+    margin: 0 0 8px;
+  }
+  .theme-toggle {
+    display: inline-flex;
+    background: white;
+    border: 2px solid var(--navy);
+    border-radius: 999px;
+    padding: 3px;
+    box-shadow: var(--shadow);
+    transition: background 0.25s ease, border-color 0.25s ease;
+  }
+  .theme-toggle-btn {
+    background: transparent;
+    border: none;
+    width: 40px;
+    height: 32px;
+    border-radius: 999px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gray-muted);
+    transition: background 0.2s ease, color 0.2s ease;
+    padding: 0;
+    font-family: inherit;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .theme-toggle-btn:focus { outline: none; }
+  .theme-toggle-btn.active {
+    background: var(--gold);
+    color: var(--navy);
+  }
+  .theme-toggle-btn svg {
+    width: 18px;
+    height: 18px;
+    display: block;
+  }
+
+  /* ============================================================
+     DARK MODE — applies site-wide via [data-theme="dark"] on <html>
+     Smooth transitions on background and color, with surface,
+     border, input, and text overrides for every page.
+  ============================================================ */
+  html, body { transition: background-color 0.25s ease, color 0.25s ease; }
+
+  :root[data-theme="dark"] {
+    --cream: #0F1117;
+    --gray-bg: #1A1D27;
+    --gray-muted: #A0A3B1;
+    --gray-text: #A0A3B1;
+    --border: #2A2D3A;
+    --shadow: 0 4px 14px rgba(0, 0, 0, 0.55);
+    --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.65);
+  }
+
+  [data-theme="dark"] html,
+  [data-theme="dark"] body { background: #0F1117; color: #F0F0F0; }
+
+  /* Card-like surfaces (was background: white) */
+  [data-theme="dark"] .agent-card,
+  [data-theme="dark"] .agent-pin-card,
+  [data-theme="dark"] .day-card,
+  [data-theme="dark"] .admin-section,
+  [data-theme="dark"] .admin-password-card,
+  [data-theme="dark"] .template-preview-card,
+  [data-theme="dark"] .subm-section,
+  [data-theme="dark"] .settings-placeholder,
+  [data-theme="dark"] .ap-modal,
+  [data-theme="dark"] .uc-agent-card,
+  [data-theme="dark"] .ap-card {
+    background: #1A1D27;
+    border-color: #2A2D3A;
+  }
+
+  /* Agent card hover */
+  [data-theme="dark"] .agent-card:hover,
+  [data-theme="dark"] .agent-card:focus { background: #22263A; }
+
+  /* Quick Questions pills (unselected) */
+  [data-theme="dark"] .qq-pill {
+    background: #2A2D3A;
+    border-color: #2A2D3A;
+    color: #F0F0F0;
+  }
+  [data-theme="dark"] .qq-pill.selected,
+  [data-theme="dark"] .qq-pill[aria-pressed="true"] {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: var(--navy);
+  }
+
+  /* Inputs / selects / textareas */
+  [data-theme="dark"] input[type="text"],
+  [data-theme="dark"] input[type="password"],
+  [data-theme="dark"] input[type="number"],
+  [data-theme="dark"] input[type="email"],
+  [data-theme="dark"] input[type="url"],
+  [data-theme="dark"] input[type="search"],
+  [data-theme="dark"] input[type="date"],
+  [data-theme="dark"] input[type="tel"],
+  [data-theme="dark"] textarea,
+  [data-theme="dark"] select,
+  [data-theme="dark"] .pin-input,
+  [data-theme="dark"] .dn-input,
+  [data-theme="dark"] .pwd-confirm-input {
+    background: #1E2130 !important;
+    color: #F0F0F0 !important;
+    border-color: #3A3D4A !important;
+  }
+  [data-theme="dark"] input::placeholder,
+  [data-theme="dark"] textarea::placeholder { color: #6B6F80; }
+  [data-theme="dark"] select option { background: #1E2130; color: #F0F0F0; }
+
+  /* Show/Hide toggles next to password inputs */
+  [data-theme="dark"] .cp-toggle,
+  [data-theme="dark"] .pwd-confirm-toggle,
+  [data-theme="dark"] .admin-pin-edit-toggle,
+  [data-theme="dark"] .admin-add-pin-toggle,
+  [data-theme="dark"] .admin-generate-pin-btn,
+  [data-theme="dark"] .admin-password-toggle,
+  [data-theme="dark"] .admin-confirm-cancel,
+  [data-theme="dark"] .ap-btn-remove,
+  [data-theme="dark"] .ap-confirm-no,
+  [data-theme="dark"] .ap-modal-cancel {
+    background: #1E2130;
+    color: #F0F0F0;
+    border-color: #3A3D4A;
+  }
+  [data-theme="dark"] .admin-confirm-cancel:hover,
+  [data-theme="dark"] .ap-confirm-no:hover,
+  [data-theme="dark"] .ap-modal-cancel:hover {
+    background: #2A2D3A;
+    color: #F0F0F0;
+    border-color: var(--gold);
+  }
+
+  /* Text colors: titles/headings/labels were navy — go light in dark mode */
+  [data-theme="dark"] h1, [data-theme="dark"] h2, [data-theme="dark"] h3,
+  [data-theme="dark"] h4, [data-theme="dark"] h5,
+  [data-theme="dark"] .home-title,
+  [data-theme="dark"] .agent-name,
+  [data-theme="dark"] .field-label,
+  [data-theme="dark"] .admin-section-title,
+  [data-theme="dark"] .admin-agent-name-cell,
+  [data-theme="dark"] .day-title,
+  [data-theme="dark"] .ap-name,
+  [data-theme="dark"] .ap-modal-title,
+  [data-theme="dark"] .dn-name,
+  [data-theme="dark"] label,
+  [data-theme="dark"] .home-subtitle,
+  [data-theme="dark"] .ap-help,
+  [data-theme="dark"] .agent-cta { color: #F0F0F0; }
+  [data-theme="dark"] .home-subtitle,
+  [data-theme="dark"] .ap-help,
+  [data-theme="dark"] .agent-cta { color: #A0A3B1; }
+
+  /* Admin tabs */
+  [data-theme="dark"] .admin-tab {
+    background: #2A2D3A;
+    color: #F0F0F0;
+    border-color: #2A2D3A;
+  }
+  [data-theme="dark"] .admin-tab.active {
+    background: var(--navy);
+    color: var(--gold);
+    border-color: var(--navy);
+  }
+
+  /* Day tabs (form page) */
+  [data-theme="dark"] .day-tab {
+    background: #2A2D3A;
+    color: #F0F0F0;
+    border-color: #2A2D3A;
+  }
+  [data-theme="dark"] .day-tab.active {
+    background: var(--navy);
+    color: var(--gold);
+    border-color: var(--navy);
+  }
+
+  /* Header bar stays navy, but ensure contrast */
+  [data-theme="dark"] header { background: #0a2540; }
+
+  /* Back button outline variant */
+  [data-theme="dark"] .back-btn {
+    background: transparent;
+    border-color: #3A3D4A;
+    color: #F0F0F0;
+  }
+  [data-theme="dark"] .back-btn:hover {
+    background: #2A2D3A;
+    color: #F0F0F0;
+    border-color: var(--gold);
+  }
+
+  /* Success / error / warning blocks */
+  [data-theme="dark"] .cp-success-block,
+  [data-theme="dark"] .dn-success {
+    background: #0D2B1A;
+    color: #4CAF7D;
+    border-color: #1E5C38;
+  }
+  [data-theme="dark"] .cp-success-block strong,
+  [data-theme="dark"] .dn-success strong { color: #4CAF7D; }
+  [data-theme="dark"] .admin-error,
+  [data-theme="dark"] .pwd-confirm-error,
+  [data-theme="dark"] .input-error-msg {
+    background: transparent;
+    color: #F07070;
+  }
+  [data-theme="dark"] .admin-confirm-row,
+  [data-theme="dark"] .ap-confirm {
+    background: #2B0D0D;
+    border-color: #5C1E1E;
+  }
+  [data-theme="dark"] .admin-confirm-message,
+  [data-theme="dark"] .ap-confirm-msg { color: #F07070; }
+
+  /* Inactivity / warning banners */
+  [data-theme="dark"] .inactivity-banner,
+  [data-theme="dark"] .warning-banner {
+    background: #2B1A0D;
+    color: #F0A050;
+    border-color: #5C3A1E;
+  }
+
+  /* Template picker / template cards */
+  [data-theme="dark"] .template-picker,
+  [data-theme="dark"] .tpl-picker,
+  [data-theme="dark"] .template-grid,
+  [data-theme="dark"] .tpl-grid { background: #1A1D27; }
+  [data-theme="dark"] .template-card,
+  [data-theme="dark"] .tpl-card,
+  [data-theme="dark"] .template-thumb,
+  [data-theme="dark"] .tpl-thumb {
+    background: #22263A;
+    border-color: #2A2D3A;
+    color: #C0C3D0;
+  }
+  [data-theme="dark"] .template-name,
+  [data-theme="dark"] .tpl-name { color: #C0C3D0; }
+
+  /* Admin agent rows: alternating */
+  [data-theme="dark"] .admin-agent-row { border-color: #2A2D3A; }
+  [data-theme="dark"] .admin-agent-row:nth-child(odd) { background: #1A1D27; }
+  [data-theme="dark"] .admin-agent-row:nth-child(even) { background: #22263A; }
+
+  /* Display-name + photo dividers */
+  [data-theme="dark"] .dn-row { border-color: #2A2D3A; }
+
+  /* Modal overlays */
+  [data-theme="dark"] .ap-modal-backdrop { background: rgba(0, 0, 0, 0.75); }
+  [data-theme="dark"] .template-preview-overlay { background: rgba(0, 0, 0, 0.85); }
+
+  /* Scrollbars (WebKit) */
+  [data-theme="dark"] ::-webkit-scrollbar { width: 12px; height: 12px; }
+  [data-theme="dark"] ::-webkit-scrollbar-track { background: #1A1D27; }
+  [data-theme="dark"] ::-webkit-scrollbar-thumb {
+    background: #3A3D4A;
+    border-radius: 6px;
+    border: 2px solid #1A1D27;
+  }
+  [data-theme="dark"] ::-webkit-scrollbar-thumb:hover { background: #4A4D5A; }
+  /* Firefox */
+  [data-theme="dark"] * { scrollbar-color: #3A3D4A #1A1D27; }
+
+  /* Toggle pill itself in dark mode */
+  [data-theme="dark"] .theme-toggle {
+    background: #1A1D27;
+    border-color: var(--gold);
+  }
+  [data-theme="dark"] .theme-toggle-btn { color: #A0A3B1; }
+  [data-theme="dark"] .theme-toggle-btn.active {
+    background: var(--gold);
+    color: var(--navy);
+  }
+
+  /* Avatars: ap-circle background stays navy (good), but on dark cards
+     the gold border still pops, so leave it alone. */
 </style>
 </head>
 <body>
