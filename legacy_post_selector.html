@@ -9674,11 +9674,11 @@
       });
       wrap.appendChild(grid);
 
-      /* Inline password-gated confirm for thumbnail deletion in this folder */
+      /* Inline simple confirm for thumbnail deletion in this folder */
       if (seasonalPendingThumbRemoval && seasonalPendingThumbRemoval.folderId === folder.id) {
         const tpl = tpls.find(function (t) { return t.id === seasonalPendingThumbRemoval.tplId; });
         if (tpl) {
-          const confirmEl = buildPasswordConfirmPanel({
+          const confirmEl = buildSimpleConfirmPanel({
             messageHtml:
               'Remove <strong>' + escapeHtml(tpl.name || tpl.id) + '</strong> from <strong>' +
               escapeHtml(folder.name) + '</strong>? The template will be deleted permanently.',
