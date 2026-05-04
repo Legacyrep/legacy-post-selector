@@ -11292,9 +11292,32 @@
       empty.textContent = "No templates uploaded to this folder yet.";
       wrap.appendChild(empty);
     } else {
+      /* Bulk-select toolbar + action bar above this folder's grid.
+         Selection is scoped per folder ("tf:" + folder.id). */
+      const ctx = "tf:" + folder.id;
+      tpls.sort(function (a, b) { return (b.uploadedAt || 0) - (a.uploadedAt || 0); });
+      const visibleIds = tpls.map(function (t) { return t.id; });
+      wrap.appendChild(buildTplSelectToolbar(ctx, visibleIds, function () { renderTemplateFolders(); }));
+      const ab = buildTplActionBar(
+        ctx,
+        function () { return !!tfState.bulkConfirm[ctx]; },
+        function (v) { tfState.bulkConfirm[ctx] = !!v; },
+        function () {
+          const ids = Array.from(getTplSelection(ctx));
+          const n = permanentlyDeleteTemplates(ids);
+          clearTplSelection(ctx);
+          if (typeof showTassToast === "function") showTassToast(n + " template" + (n === 1 ? "" : "s") + " deleted successfully.");
+          renderTemplateFolders();
+          if (typeof renderATM === "function") renderATM();
+          if (typeof renderSeasonalFolders === "function") renderSeasonalFolders();
+          if (typeof renderTemplateAssignments === "function") renderTemplateAssignments();
+        },
+        function () { renderTemplateFolders(); }
+      );
+      if (ab) wrap.appendChild(ab);
+
       const grid = document.createElement("div");
       grid.className = "tf-thumb-grid";
-      tpls.sort(function (a, b) { return (b.uploadedAt || 0) - (a.uploadedAt || 0); });
 
       const pendingRemoval = tfState.pendingThumbRemoval;
       tpls.forEach(function (tpl) {
@@ -11304,7 +11327,9 @@
           '<button type="button" class="tf-thumb-remove" title="Remove">&times;</button>' +
           '<img class="tf-thumb-img" src="' + tpl.image + '" alt="">' +
           '<div class="tf-thumb-name">' + escapeHtml(tpl.name || tpl.id) + '</div>';
-        thumb.querySelector(".tf-thumb-remove").addEventListener("click", function () {
+        wireTplSelectableThumb(thumb, ctx, tpl.id, function () { renderTemplateFolders(); });
+        thumb.querySelector(".tf-thumb-remove").addEventListener("click", function (e) {
+          e.stopPropagation();
           tfState.pendingThumbRemoval = { folderId: folder.id, tplId: tpl.id };
           renderTemplateFolders();
         });
