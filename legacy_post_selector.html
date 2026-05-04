@@ -8692,6 +8692,335 @@
   document.getElementById("templateSubtabBtnSeasonal").addEventListener("click", function () { switchTemplateSubtab("seasonal"); });
   document.getElementById("templateSubtabBtnAssignments").addEventListener("click", function () { switchTemplateSubtab("assignments"); });
 
+  /* ============================================================
+     MANAGE TEMPLATE ASSIGNMENTS (Templates → Assignments subtab)
+     Operates on the general-pool customTemplates store. Each template
+     has an `assignedTo` array of agent slugs; this UI lets the admin
+     view, add, and remove agents for any template, plus quick "all
+     agents" bulk actions. No password gates anywhere in this flow.
+  ============================================================ */
+  /* In-memory UI state for the Assignments subtab. Persists across
+     re-renders within a session; resets on full page reload. */
+  const tassState = {
+    searchText: "",
+    filterMode: "all",      // "all" | "assigned" | "unassigned"
+    openTplId: null,        // which template's manage panel is open
+    pendingRemoveSlug: null,// agent slug currently showing remove confirm
+    pendingRemoveAll: false // showing the "remove from all" confirm
+  };
+
+  /* Show a brief green toast confirmation message at the bottom of
+     the screen. Auto-dismisses after ~2.2 seconds. */
+  let tassToastTimer = null;
+  function showTassToast(msg) {
+    const el = document.getElementById("tassToast");
+    if (!el) return;
+    el.textContent = msg;
+    el.classList.add("visible");
+    if (tassToastTimer) clearTimeout(tassToastTimer);
+    tassToastTimer = setTimeout(function () {
+      el.classList.remove("visible");
+    }, 2200);
+  }
+
+  /* Set assignedTo on a template directly (replaces the array).
+     Skips the auto-delete that removeTemplateFromAgent does — useful
+     for "Remove from all agents" where we want to keep the template
+     in storage with an empty assignedTo. */
+  function setTemplateAssignedAgents(tplId, slugArray) {
+    const all = loadCustomTemplates();
+    const tpl = all.find(function (t) { return t.id === tplId; });
+    if (!tpl) return;
+    tpl.assignedTo = Array.isArray(slugArray) ? slugArray.slice() : [];
+    /* Drop timesSelected entries for agents no longer assigned */
+    if (tpl.timesSelected) {
+      const keep = {};
+      tpl.assignedTo.forEach(function (s) {
+        if (tpl.timesSelected[s] != null) keep[s] = tpl.timesSelected[s];
+      });
+      tpl.timesSelected = keep;
+    }
+    saveCustomTemplates(all);
+    if (typeof refreshUCAgentList === "function") refreshUCAgentList();
+  }
+
+  /* Add an agent to a template's assignedTo (no-op if already there). */
+  function addTemplateToAgent(tplId, agentSlug) {
+    const all = loadCustomTemplates();
+    const tpl = all.find(function (t) { return t.id === tplId; });
+    if (!tpl) return;
+    if (!Array.isArray(tpl.assignedTo)) tpl.assignedTo = [];
+    if (tpl.assignedTo.indexOf(agentSlug) === -1) tpl.assignedTo.push(agentSlug);
+    saveCustomTemplates(all);
+    if (typeof refreshUCAgentList === "function") refreshUCAgentList();
+  }
+
+  /* Remove an agent from a template's assignedTo, but DO NOT auto-
+     delete the template if assignedTo becomes empty (the existing
+     removeTemplateFromAgent does that — we want non-destructive here
+     so the Manage panel can still show the template afterwards). */
+  function removeTemplateFromAgentNonDestructive(tplId, agentSlug) {
+    const all = loadCustomTemplates();
+    const tpl = all.find(function (t) { return t.id === tplId; });
+    if (!tpl) return;
+    tpl.assignedTo = (tpl.assignedTo || []).filter(function (s) { return s !== agentSlug; });
+    if (tpl.timesSelected) delete tpl.timesSelected[agentSlug];
+    saveCustomTemplates(all);
+    if (typeof refreshUCAgentList === "function") refreshUCAgentList();
+  }
+
+  /* Filter the templates list according to search + filter mode. */
+  function tassFilterTemplates(all) {
+    const q = (tassState.searchText || "").trim().toLowerCase();
+    return all.filter(function (t) {
+      const name = String(t.name || t.id || "").toLowerCase();
+      if (q && name.indexOf(q) === -1) return false;
+      const assigned = Array.isArray(t.assignedTo) && t.assignedTo.length > 0;
+      if (tassState.filterMode === "assigned"   && !assigned) return false;
+      if (tassState.filterMode === "unassigned" &&  assigned) return false;
+      return true;
+    });
+  }
+
+  function renderTemplateAssignments() {
+    const grid = document.getElementById("tassGrid");
+    if (!grid) return;
+    grid.innerHTML = "";
+
+    /* Wire up search + filter listeners once, on first render */
+    const searchInput  = document.getElementById("tassSearchInput");
+    const filterSelect = document.getElementById("tassFilterSelect");
+    if (searchInput && !searchInput.dataset.wired) {
+      searchInput.dataset.wired = "1";
+      searchInput.addEventListener("input", function () {
+        tassState.searchText = searchInput.value || "";
+        renderTemplateAssignments();
+      });
+    }
+    if (filterSelect && !filterSelect.dataset.wired) {
+      filterSelect.dataset.wired = "1";
+      filterSelect.addEventListener("change", function () {
+        tassState.filterMode = filterSelect.value || "all";
+        renderTemplateAssignments();
+      });
+    }
+    /* Keep inputs in sync if state was changed elsewhere */
+    if (searchInput  && searchInput.value  !== tassState.searchText)  searchInput.value  = tassState.searchText;
+    if (filterSelect && filterSelect.value !== tassState.filterMode)  filterSelect.value = tassState.filterMode;
+
+    const all = loadCustomTemplates().slice().sort(function (a, b) {
+      const na = String(a.name || a.id || "").toLowerCase();
+      const nb = String(b.name || b.id || "").toLowerCase();
+      if (na < nb) return -1;
+      if (na > nb) return 1;
+      return 0;
+    });
+    const visible = tassFilterTemplates(all);
+
+    if (visible.length === 0) {
+      const empty = document.createElement("div");
+      empty.className = "tass-empty";
+      if (all.length === 0) {
+        empty.innerHTML = "<strong>No templates uploaded yet.</strong><br>Upload templates from the Upload Center subtab to manage their agent assignments here.";
+      } else {
+        empty.innerHTML = "No templates match your search or filter.";
+      }
+      grid.appendChild(empty);
+      return;
+    }
+
+    visible.forEach(function (tpl) {
+      const card = document.createElement("div");
+      card.className = "tass-card" + (tassState.openTplId === tpl.id ? " open" : "");
+      const assigned = Array.isArray(tpl.assignedTo) ? tpl.assignedTo : [];
+      const cnt = assigned.length;
+      card.innerHTML =
+        '<img class="tass-card-img" src="' + tpl.image + '" alt="' + escapeHtml(tpl.name || tpl.id) + '">' +
+        '<div class="tass-card-name">' + escapeHtml(tpl.name || tpl.id) + '</div>' +
+        '<div class="tass-card-count">' + cnt + (cnt === 1 ? ' agent' : ' agents') + '</div>' +
+        '<button type="button" class="tass-card-manage">Manage</button>';
+      card.querySelector(".tass-card-manage").addEventListener("click", function () {
+        if (tassState.openTplId === tpl.id) {
+          tassState.openTplId = null;
+        } else {
+          tassState.openTplId = tpl.id;
+        }
+        tassState.pendingRemoveSlug = null;
+        tassState.pendingRemoveAll = false;
+        renderTemplateAssignments();
+      });
+      grid.appendChild(card);
+
+      /* If this card is the open one, drop the manage panel below it
+         spanning the full grid width (CSS grid-column: 1 / -1). */
+      if (tassState.openTplId === tpl.id) {
+        grid.appendChild(buildTassManagePanel(tpl));
+      }
+    });
+  }
+
+  function buildTassManagePanel(tpl) {
+    const panel = document.createElement("div");
+    panel.className = "tass-panel";
+
+    const head = document.createElement("div");
+    head.className = "tass-panel-head";
+    head.innerHTML =
+      '<h4 class="tass-panel-title">Manage: ' + escapeHtml(tpl.name || tpl.id) + '</h4>' +
+      '<button type="button" class="tass-panel-close">Done</button>';
+    head.querySelector(".tass-panel-close").addEventListener("click", function () {
+      tassState.openTplId = null;
+      tassState.pendingRemoveSlug = null;
+      tassState.pendingRemoveAll = false;
+      renderTemplateAssignments();
+    });
+    panel.appendChild(head);
+
+    /* Quick action buttons */
+    const quick = document.createElement("div");
+    quick.className = "tass-panel-quick";
+    const addAllBtn = document.createElement("button");
+    addAllBtn.type = "button";
+    addAllBtn.className = "tass-quick-btn tass-quick-add";
+    addAllBtn.textContent = "Add to All Agents";
+    addAllBtn.addEventListener("click", function () {
+      /* No confirmation per spec — add immediately */
+      const slugs = AGENTS.map(function (a) { return agentPrefsSlug(a); });
+      setTemplateAssignedAgents(tpl.id, slugs);
+      showTassToast("Added to all agents");
+      renderTemplateAssignments();
+    });
+    const removeAllBtn = document.createElement("button");
+    removeAllBtn.type = "button";
+    removeAllBtn.className = "tass-quick-btn tass-quick-remove";
+    removeAllBtn.textContent = "Remove from All Agents";
+    removeAllBtn.addEventListener("click", function () {
+      /* Show inline confirmation */
+      tassState.pendingRemoveAll = true;
+      tassState.pendingRemoveSlug = null;
+      renderTemplateAssignments();
+    });
+    quick.appendChild(addAllBtn);
+    quick.appendChild(removeAllBtn);
+    panel.appendChild(quick);
+
+    /* Inline confirm for "Remove from All Agents" */
+    if (tassState.pendingRemoveAll) {
+      const confirm = document.createElement("div");
+      confirm.className = "tass-confirm";
+      confirm.innerHTML =
+        '<div class="tass-confirm-msg">Remove ' + escapeHtml(tpl.name || tpl.id) + ' from all agents?</div>' +
+        '<div class="tass-confirm-actions">' +
+          '<button type="button" class="tass-confirm-yes">Yes, Remove All</button>' +
+          '<button type="button" class="tass-confirm-no">Cancel</button>' +
+        '</div>';
+      confirm.querySelector(".tass-confirm-yes").addEventListener("click", function () {
+        setTemplateAssignedAgents(tpl.id, []);
+        tassState.pendingRemoveAll = false;
+        showTassToast("Removed from all agents");
+        renderTemplateAssignments();
+      });
+      confirm.querySelector(".tass-confirm-no").addEventListener("click", function () {
+        tassState.pendingRemoveAll = false;
+        renderTemplateAssignments();
+      });
+      panel.appendChild(confirm);
+    }
+
+    /* Compute assigned vs not-assigned splits */
+    const assignedSet = new Set(Array.isArray(tpl.assignedTo) ? tpl.assignedTo : []);
+    const assignedAgents = AGENTS.filter(function (a) { return  assignedSet.has(agentPrefsSlug(a)); });
+    const otherAgents    = AGENTS.filter(function (a) { return !assignedSet.has(agentPrefsSlug(a)); });
+
+    /* ASSIGNED TO section */
+    const assignedSec = document.createElement("div");
+    assignedSec.className = "tass-section";
+    assignedSec.appendChild(buildTassSectionTitle("Assigned To (" + assignedAgents.length + ")"));
+    if (assignedAgents.length === 0) {
+      const empty = document.createElement("div");
+      empty.className = "tass-row-empty";
+      empty.textContent = "No agents currently have this template.";
+      assignedSec.appendChild(empty);
+    } else {
+      assignedAgents.forEach(function (agent) {
+        const slug = agentPrefsSlug(agent);
+        const row = document.createElement("div");
+        row.className = "tass-row";
+        row.innerHTML =
+          '<div class="tass-row-name">' + escapeHtml(agent.name) + '</div>' +
+          '<button type="button" class="tass-row-remove">Remove</button>';
+        row.querySelector(".tass-row-remove").addEventListener("click", function () {
+          tassState.pendingRemoveSlug = slug;
+          tassState.pendingRemoveAll = false;
+          renderTemplateAssignments();
+        });
+        assignedSec.appendChild(row);
+
+        /* Inline confirm directly below this row */
+        if (tassState.pendingRemoveSlug === slug) {
+          const confirm = document.createElement("div");
+          confirm.className = "tass-confirm";
+          confirm.innerHTML =
+            '<div class="tass-confirm-msg">Remove ' + escapeHtml(tpl.name || tpl.id) +
+              ' from ' + escapeHtml(agent.name) + '?</div>' +
+            '<div class="tass-confirm-actions">' +
+              '<button type="button" class="tass-confirm-yes">Yes, Remove</button>' +
+              '<button type="button" class="tass-confirm-no">Cancel</button>' +
+            '</div>';
+          confirm.querySelector(".tass-confirm-yes").addEventListener("click", function () {
+            removeTemplateFromAgentNonDestructive(tpl.id, slug);
+            tassState.pendingRemoveSlug = null;
+            showTassToast("Removed from " + agent.name);
+            renderTemplateAssignments();
+          });
+          confirm.querySelector(".tass-confirm-no").addEventListener("click", function () {
+            tassState.pendingRemoveSlug = null;
+            renderTemplateAssignments();
+          });
+          assignedSec.appendChild(confirm);
+        }
+      });
+    }
+    panel.appendChild(assignedSec);
+
+    /* NOT ASSIGNED TO section */
+    const otherSec = document.createElement("div");
+    otherSec.className = "tass-section";
+    otherSec.appendChild(buildTassSectionTitle("Not Assigned To (" + otherAgents.length + ")"));
+    if (otherAgents.length === 0) {
+      const empty = document.createElement("div");
+      empty.className = "tass-row-empty";
+      empty.textContent = "Every agent already has this template.";
+      otherSec.appendChild(empty);
+    } else {
+      otherAgents.forEach(function (agent) {
+        const slug = agentPrefsSlug(agent);
+        const row = document.createElement("div");
+        row.className = "tass-row";
+        row.innerHTML =
+          '<div class="tass-row-name">' + escapeHtml(agent.name) + '</div>' +
+          '<button type="button" class="tass-row-add">Add</button>';
+        row.querySelector(".tass-row-add").addEventListener("click", function () {
+          /* No confirmation per spec — add immediately */
+          addTemplateToAgent(tpl.id, slug);
+          showTassToast("Added to " + agent.name);
+          renderTemplateAssignments();
+        });
+        otherSec.appendChild(row);
+      });
+    }
+    panel.appendChild(otherSec);
+
+    return panel;
+  }
+
+  function buildTassSectionTitle(text) {
+    const h = document.createElement("h5");
+    h.className = "tass-section-title";
+    h.textContent = text;
+    return h;
+  }
+
   /* ===== Render Post Types list ===== */
   function renderPostTypeList() {
     const list = document.getElementById("postTypeList");
