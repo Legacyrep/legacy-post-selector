@@ -4367,6 +4367,78 @@
   }
 
   /* ============================================================
+     AGENT PHOTOS + DISPLAY NAMES (per-agent localStorage overrides)
+     Photos are stored as base64 data URLs at:
+       legacy_agent_photo_<agent-slug>
+     Display names are stored as plain strings at:
+       legacy_agent_displayname_<agent-slug>
+  ============================================================ */
+  const AGENT_PHOTO_KEY_PREFIX       = "legacy_agent_photo_";
+  const AGENT_DISPLAYNAME_KEY_PREFIX = "legacy_agent_displayname_";
+
+  function getAgentPhoto(slug) {
+    if (!slug) return "";
+    try { return localStorage.getItem(AGENT_PHOTO_KEY_PREFIX + slug) || ""; }
+    catch (e) { return ""; }
+  }
+  function setAgentPhoto(slug, dataUrl) {
+    if (!slug) return false;
+    try { localStorage.setItem(AGENT_PHOTO_KEY_PREFIX + slug, dataUrl); return true; }
+    catch (e) { return false; }
+  }
+  function removeAgentPhotoStorage(slug) {
+    if (!slug) return;
+    try { localStorage.removeItem(AGENT_PHOTO_KEY_PREFIX + slug); } catch (e) {}
+  }
+  function getAgentDisplayNameOverride(slug) {
+    if (!slug) return "";
+    try {
+      const v = localStorage.getItem(AGENT_DISPLAYNAME_KEY_PREFIX + slug);
+      return (v && v.trim()) ? v.trim() : "";
+    } catch (e) { return ""; }
+  }
+  function setAgentDisplayNameOverride(slug, value) {
+    if (!slug) return;
+    try {
+      const v = (value || "").trim();
+      if (v) localStorage.setItem(AGENT_DISPLAYNAME_KEY_PREFIX + slug, v);
+      else   localStorage.removeItem(AGENT_DISPLAYNAME_KEY_PREFIX + slug);
+    } catch (e) {}
+  }
+  /* Resolve the display name with proper precedence:
+     1. localStorage override set by admin
+     2. agent.displayName (hardcoded in AGENTS array)
+     3. first name from agent.name
+     4. agent.name (full name) as final fallback */
+  function resolveDisplayName(agent) {
+    if (!agent) return "";
+    const override = getAgentDisplayNameOverride(agent.id);
+    if (override) return override;
+    if (agent.displayName && String(agent.displayName).trim()) return String(agent.displayName).trim();
+    const first = firstNameOf(agent.name);
+    return first || (agent.name || "");
+  }
+
+  /* Crop the given Image element to a centered square and return a JPEG
+     dataURL at the given output size. Used by the photo upload flow. */
+  function cropImageToSquareDataUrl(img, outSize) {
+    outSize = outSize || 256;
+    const w = img.naturalWidth || img.width;
+    const h = img.naturalHeight || img.height;
+    const side = Math.min(w, h);
+    const sx = Math.floor((w - side) / 2);
+    const sy = Math.floor((h - side) / 2);
+    const canvas = document.createElement("canvas");
+    canvas.width  = outSize;
+    canvas.height = outSize;
+    const ctx = canvas.getContext("2d");
+    ctx.fillStyle = "#fff";
+    ctx.fillRect(0, 0, outSize, outSize);
+    ctx.drawImage(img, sx, sy, side, side, 0, 0, outSize, outSize);
+    return canvas.toDataURL("image/jpeg", 0.85);
+  }
+
+  /* ============================================================
      BROKERAGE / CONTACT SETTINGS
   ============================================================ */
   const BROKERAGE_NAME = "Legacy Real Estate Partners";
