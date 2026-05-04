@@ -7208,6 +7208,35 @@
   }
 
   /* ============================================================
+     buildSimpleConfirmPanel({...}) — same red inline confirmation
+     UI as buildPasswordConfirmPanel, but with NO password field.
+     Used for delete/remove actions that don't need re-auth (template
+     management, folder cleanup, agent assignments). Agent and post-type
+     deletions still go through buildPasswordConfirmPanel.
+  ============================================================ */
+  function buildSimpleConfirmPanel(opts) {
+    const messageHtml  = opts.messageHtml || "";
+    const confirmText  = opts.confirmText || "Yes, Delete";
+    const cancelText   = opts.cancelText  || "Cancel";
+    const confirmClass = opts.confirmClass || "admin-confirm-yes";
+    const onConfirm    = opts.onConfirm   || function () {};
+    const onCancel     = opts.onCancel    || function () {};
+
+    const wrap = document.createElement("div");
+    wrap.className = "admin-confirm-row";
+    wrap.innerHTML =
+      '<div class="admin-confirm-message">' + messageHtml + '</div>' +
+      '<div class="admin-confirm-actions">' +
+        '<button type="button" class="' + confirmClass + ' simple-confirm-yes">' + escapeHtml(confirmText) + '</button>' +
+        '<button type="button" class="admin-confirm-cancel simple-confirm-no">' + escapeHtml(cancelText) + '</button>' +
+      '</div>';
+
+    wrap.querySelector(".simple-confirm-yes").addEventListener("click", function () { onConfirm(); });
+    wrap.querySelector(".simple-confirm-no") .addEventListener("click", function () { onCancel(); });
+    return wrap;
+  }
+
+  /* ============================================================
      CHANGE ADMIN PASSWORD (Settings tab)
   ============================================================ */
   (function wireChangePasswordForm() {
