@@ -1,0 +1,1829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LLC Financial Tracker</title>
+<style>
+  :root {
+    --navy: #0a1f44;
+    --navy-deep: #061533;
+    --navy-light: #14305f;
+    --gold: #c9a14a;
+    --gold-bright: #e6c068;
+    --gold-soft: #f3e2b6;
+    --bg: #f5f3ee;
+    --panel: #ffffff;
+    --text: #0a1f44;
+    --muted: #5a6478;
+    --border: #d8d2c4;
+    --good: #1f7a4d;
+    --bad: #b03030;
+    --shadow: 0 2px 10px rgba(10, 31, 68, 0.08);
+  }
+  body.dark {
+    --navy: #0a1f44;
+    --navy-deep: #04102a;
+    --navy-light: #14305f;
+    --gold: #d6b25c;
+    --gold-bright: #f0cd72;
+    --gold-soft: #4a3c1a;
+    --bg: #0a1326;
+    --panel: #122046;
+    --text: #f1ecdc;
+    --muted: #9aa6c2;
+    --border: #1f3162;
+    --good: #4ec48a;
+    --bad: #ff6b6b;
+    --shadow: 0 2px 14px rgba(0, 0, 0, 0.45);
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  header {
+    background: linear-gradient(135deg, var(--navy-deep), var(--navy-light));
+    color: var(--gold-soft);
+    padding: 18px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--gold);
+  }
+  header h1 {
+    margin: 0;
+    font-size: 22px;
+    letter-spacing: 0.5px;
+    color: var(--gold-bright);
+    font-weight: 600;
+  }
+  header h1 .accent { color: #fff; }
+  .header-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  nav {
+    background: var(--panel);
+    border-bottom: 1px solid var(--border);
+    padding: 0 28px;
+    display: flex;
+    gap: 4px;
+  }
+  nav button {
+    background: none;
+    border: none;
+    padding: 14px 18px;
+    font-size: 14px;
+    color: var(--muted);
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    font-weight: 500;
+  }
+  nav button:hover { color: var(--text); }
+  nav button.active {
+    color: var(--navy);
+    border-bottom-color: var(--gold);
+    font-weight: 600;
+  }
+  body.dark nav button.active { color: var(--gold-bright); }
+  main { padding: 24px 28px 60px; max-width: 1300px; margin: 0 auto; }
+
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* Cards / panels */
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .panel h2 {
+    margin: 0 0 14px;
+    font-size: 16px;
+    color: var(--navy);
+    border-left: 3px solid var(--gold);
+    padding-left: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  body.dark .panel h2 { color: var(--gold-bright); }
+  .panel h3 {
+    margin: 0 0 10px;
+    font-size: 14px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* Dashboard tiles */
+  .tile-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 14px;
+  }
+  .tile {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--gold);
+    border-radius: 8px;
+    padding: 16px 18px;
+    box-shadow: var(--shadow);
+  }
+  .tile .label {
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+  .tile .value {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--navy);
+  }
+  body.dark .tile .value { color: var(--gold-bright); }
+  .tile.balance { border-left-color: var(--navy); }
+  .tile.balance .value { color: var(--navy); }
+  body.dark .tile.balance { border-left-color: var(--gold-bright); }
+  body.dark .tile.balance .value { color: #fff; }
+  .tile.good .value { color: var(--good); }
+  .tile.bad .value { color: var(--bad); }
+
+  /* Forms */
+  .form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    align-items: end;
+  }
+  label {
+    display: block;
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  input[type="text"],
+  input[type="number"],
+  input[type="date"],
+  input[type="file"],
+  select,
+  textarea {
+    width: 100%;
+    padding: 9px 11px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    font-family: inherit;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201, 161, 74, 0.18);
+  }
+  textarea { min-height: 60px; resize: vertical; }
+
+  button.btn {
+    background: var(--navy);
+    color: var(--gold-bright);
+    border: 1px solid var(--navy);
+    padding: 10px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+  }
+  button.btn:hover { background: var(--navy-light); }
+  button.btn.gold {
+    background: var(--gold);
+    color: var(--navy-deep);
+    border-color: var(--gold);
+    font-weight: 600;
+  }
+  button.btn.gold:hover { background: var(--gold-bright); }
+  button.btn.ghost {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  button.btn.ghost:hover { border-color: var(--gold); color: var(--gold); }
+  button.btn.danger {
+    background: transparent;
+    color: var(--bad);
+    border: 1px solid var(--bad);
+  }
+  button.btn.danger:hover { background: var(--bad); color: #fff; }
+  button.btn.small { padding: 5px 10px; font-size: 12px; }
+
+  /* Ledger table */
+  .ledger-controls {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+    align-items: center;
+  }
+  .ledger-controls input, .ledger-controls select {
+    width: auto;
+    flex: 0 1 200px;
+  }
+  table.ledger {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  table.ledger thead th {
+    background: var(--navy);
+    color: var(--gold-bright);
+    text-align: left;
+    padding: 10px 12px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+  }
+  table.ledger tbody td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  table.ledger tbody tr:hover { background: rgba(201, 161, 74, 0.07); }
+
+  /* Excel-style zebra-striped tables (used for Mileage & Write Offs) */
+  table.excel {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    border: 1px solid var(--border);
+  }
+  table.excel thead th {
+    background: var(--navy);
+    color: var(--gold-bright);
+    text-align: left;
+    padding: 10px 12px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    font-weight: 700;
+    border-bottom: 2px solid var(--gold);
+  }
+  table.excel tbody td {
+    padding: 9px 12px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  table.excel tbody tr:nth-child(odd) { background: var(--bg); }
+  table.excel tbody tr:nth-child(even) { background: var(--panel); }
+  table.excel tbody tr:hover { background: rgba(201, 161, 74, 0.10); }
+  table.excel tbody td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  table.excel input.inline {
+    width: 100%;
+    padding: 5px 7px;
+    border: 1px solid var(--gold);
+    border-radius: 4px;
+    background: var(--panel);
+    color: var(--text);
+    font-size: 13px;
+  }
+  table.excel select.inline {
+    width: 100%;
+    padding: 5px 7px;
+    border: 1px solid var(--gold);
+    border-radius: 4px;
+    background: var(--panel);
+    color: var(--text);
+    font-size: 13px;
+  }
+
+  .totals-box {
+    background: linear-gradient(135deg, var(--navy-deep), var(--navy-light));
+    color: var(--gold-soft);
+    border: 1px solid var(--gold);
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin-top: 18px;
+    box-shadow: var(--shadow);
+  }
+  .totals-box h3 {
+    margin: 0 0 12px;
+    color: var(--gold-bright);
+    font-size: 13px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .totals-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+  }
+  .totals-grid .item .lbl {
+    font-size: 11px;
+    color: var(--gold-soft);
+    opacity: 0.85;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-bottom: 4px;
+  }
+  .totals-grid .item .val {
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+  }
+  .totals-grid .item .val.gold { color: var(--gold-bright); }
+
+  .rate-banner {
+    background: rgba(201, 161, 74, 0.12);
+    border: 1px solid var(--gold);
+    border-left-width: 4px;
+    border-radius: 6px;
+    padding: 10px 14px;
+    color: var(--text);
+    font-size: 13px;
+    margin-bottom: 14px;
+  }
+  .rate-banner strong { color: var(--navy); font-size: 15px; }
+  body.dark .rate-banner strong { color: var(--gold-bright); }
+  .rate-banner .sub { color: var(--muted); font-size: 12px; margin-left: 6px; }
+
+  .page-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .pill {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    font-weight: 600;
+    border: 1px solid transparent;
+  }
+  .pill.income { background: rgba(31,122,77,0.12); color: var(--good); border-color: rgba(31,122,77,0.3); }
+  .pill.expense { background: rgba(176,48,48,0.12); color: var(--bad); border-color: rgba(176,48,48,0.3); }
+  .pill.draw { background: rgba(10,31,68,0.10); color: var(--navy); border-color: rgba(10,31,68,0.3); }
+  body.dark .pill.draw { background: rgba(255,255,255,0.08); color: #cfd6e8; border-color: rgba(255,255,255,0.18); }
+  .pill.tax { background: rgba(201,161,74,0.18); color: #8a6c20; border-color: rgba(201,161,74,0.45); }
+  body.dark .pill.tax { color: var(--gold-bright); }
+  .amount.pos { color: var(--good); font-weight: 600; }
+  .amount.neg { color: var(--bad); font-weight: 600; }
+  .running { font-weight: 600; color: var(--navy); }
+  body.dark .running { color: var(--gold-bright); }
+
+  .empty {
+    text-align: center;
+    color: var(--muted);
+    padding: 30px;
+    font-style: italic;
+  }
+
+  /* Receipts / folders */
+  .folder-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px;
+    margin-top: 12px;
+  }
+  .folder-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+    cursor: pointer;
+    transition: border-color 0.15s, transform 0.15s;
+    position: relative;
+  }
+  .folder-card:hover {
+    border-color: var(--gold);
+    transform: translateY(-1px);
+  }
+  .folder-card.active {
+    border-color: var(--gold);
+    background: rgba(201,161,74,0.08);
+  }
+  .folder-card .icon {
+    font-size: 28px;
+    margin-bottom: 6px;
+    color: var(--gold);
+  }
+  .folder-card .fname { font-weight: 600; font-size: 14px; word-break: break-word; }
+  .folder-card .fcount { font-size: 11px; color: var(--muted); margin-top: 4px; }
+  .folder-card .fdel {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 14px;
+    padding: 4px 6px;
+    border-radius: 4px;
+  }
+  .folder-card .fdel:hover { color: var(--bad); background: rgba(176,48,48,0.1); }
+
+  .image-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px;
+    margin-top: 12px;
+  }
+  .image-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+  }
+  .image-card img {
+    width: 100%;
+    height: 130px;
+    object-fit: cover;
+    display: block;
+    cursor: pointer;
+  }
+  .image-card .meta {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+  .image-card .meta .desc { font-weight: 600; color: var(--text); margin-bottom: 2px; word-break: break-word; }
+  .image-card .meta .sub { color: var(--muted); font-size: 11px; }
+
+  /* Upload area */
+  .upload-zone {
+    border: 2px dashed var(--border);
+    border-radius: 10px;
+    padding: 30px;
+    text-align: center;
+    cursor: pointer;
+    color: var(--muted);
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .upload-zone:hover, .upload-zone.dragover {
+    border-color: var(--gold);
+    background: rgba(201,161,74,0.06);
+    color: var(--gold);
+  }
+  .upload-zone .big { font-size: 30px; margin-bottom: 6px; }
+  #receiptPreview {
+    max-width: 100%;
+    max-height: 280px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    margin-top: 10px;
+    display: none;
+  }
+
+  /* Modal */
+  .modal-bg {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(4,16,42,0.7);
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+  }
+  .modal-bg.show { display: flex; }
+  .modal {
+    background: var(--panel);
+    border-radius: 12px;
+    padding: 24px;
+    max-width: 700px;
+    width: 100%;
+    max-height: 90vh;
+    overflow: auto;
+    border: 1px solid var(--border);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  }
+  .modal h3 { margin: 0 0 14px; color: var(--navy); }
+  body.dark .modal h3 { color: var(--gold-bright); }
+  .modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 16px;
+  }
+  #imageViewerImg {
+    max-width: 100%;
+    max-height: 70vh;
+    border-radius: 6px;
+  }
+
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--navy);
+    color: var(--gold-bright);
+    padding: 12px 20px;
+    border-radius: 8px;
+    border: 1px solid var(--gold);
+    box-shadow: var(--shadow);
+    z-index: 2000;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.25s, transform 0.25s;
+    pointer-events: none;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+
+  .disclaimer {
+    font-size: 12px;
+    color: var(--muted);
+    font-style: italic;
+    margin-top: 10px;
+    padding: 8px 12px;
+    background: rgba(201,161,74,0.08);
+    border-left: 3px solid var(--gold);
+    border-radius: 4px;
+  }
+
+  .toggle {
+    background: transparent;
+    color: var(--gold-bright);
+    border: 1px solid var(--gold);
+    padding: 6px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 12px;
+  }
+  .toggle:hover { background: rgba(201,161,74,0.15); }
+
+  .row-actions { display: flex; gap: 6px; }
+
+  @media (max-width: 700px) {
+    main { padding: 16px; }
+    nav { padding: 0 16px; overflow-x: auto; }
+    table.ledger { font-size: 12px; }
+    table.ledger thead th, table.ledger tbody td { padding: 6px 8px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1><span class="accent">LLC</span> Financial Tracker</h1>
+  <div class="header-actions">
+    <button class="toggle" id="darkToggle">Dark Mode</button>
+    <button class="toggle" id="exportBtn">Export Data</button>
+  </div>
+</header>
+
+<nav>
+  <button class="tab-btn active" data-view="dashboard">Dashboard</button>
+  <button class="tab-btn" data-view="ledger">Ledger</button>
+  <button class="tab-btn" data-view="add">Add Transaction</button>
+  <button class="tab-btn" data-view="receipts">Receipts &amp; Uploads</button>
+  <button class="tab-btn" data-view="folders">Folders</button>
+  <button class="tab-btn" data-view="taxes">Tax Summary</button>
+  <button class="tab-btn" data-view="mileage">Mileage Tracker</button>
+  <button class="tab-btn" data-view="writeoffs">Write Offs</button>
+</nav>
+
+<main>
+
+  <!-- DASHBOARD -->
+  <section class="view active" id="view-dashboard">
+    <div class="panel">
+      <h2>Dashboard</h2>
+      <div class="tile-grid" id="dashTiles"></div>
+    </div>
+    <div class="panel">
+      <h2>Recent Activity</h2>
+      <div id="recentLedger"></div>
+    </div>
+    <div class="panel">
+      <h2>Tax Summary</h2>
+      <div class="tile-grid" id="taxTiles"></div>
+      <div class="disclaimer">These are estimates only. Consult a tax professional for exact figures.</div>
+    </div>
+  </section>
+
+  <!-- LEDGER -->
+  <section class="view" id="view-ledger">
+    <div class="panel">
+      <h2>Ledger</h2>
+      <div class="ledger-controls">
+        <input type="text" id="searchInput" placeholder="Search description..." />
+        <select id="filterCategory">
+          <option value="">All categories</option>
+          <option value="Income">Income</option>
+          <option value="Expense">Expense</option>
+          <option value="Owner Draw">Owner Draw</option>
+          <option value="Tax Set Aside">Tax Set Aside</option>
+        </select>
+        <button class="btn ghost small" id="clearFilters">Clear</button>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="ledger">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Description</th>
+              <th>Category</th>
+              <th style="text-align:right">Amount</th>
+              <th style="text-align:right">Running Balance</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="ledgerBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ADD TRANSACTION -->
+  <section class="view" id="view-add">
+    <div class="panel">
+      <h2>Add Transaction</h2>
+      <form id="txForm">
+        <div class="form-row">
+          <div>
+            <label for="txDate">Date</label>
+            <input type="date" id="txDate" required />
+          </div>
+          <div>
+            <label for="txCategory">Category</label>
+            <select id="txCategory" required>
+              <option value="Income">Income</option>
+              <option value="Expense">Expense</option>
+              <option value="Owner Draw">Owner Draw</option>
+            </select>
+          </div>
+          <div>
+            <label for="txAmount">Amount ($)</label>
+            <input type="number" id="txAmount" step="0.01" min="0.01" required />
+          </div>
+        </div>
+        <div style="margin-top:12px">
+          <label for="txDesc">Description</label>
+          <input type="text" id="txDesc" placeholder="e.g. Client invoice #4023, Office supplies, etc." required />
+        </div>
+        <div style="margin-top:14px; display:flex; gap:10px; align-items:center;">
+          <button type="submit" class="btn gold">Save Transaction</button>
+          <span class="disclaimer" style="margin:0; padding:6px 10px;">Income entries automatically generate a Tax Set Aside line at 42.55%.</span>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- RECEIPTS -->
+  <section class="view" id="view-receipts">
+    <div class="panel">
+      <h2>Upload Receipt or Check</h2>
+      <div class="upload-zone" id="uploadZone">
+        <div class="big">📷</div>
+        <div><strong>Click to choose a photo</strong> or drag and drop</div>
+        <div style="font-size:12px; margin-top:4px;">Receipts, checks, invoices — JPG / PNG</div>
+        <input type="file" id="fileInput" accept="image/*" style="display:none" />
+      </div>
+      <img id="receiptPreview" alt="preview" />
+      <form id="receiptForm" style="margin-top:16px; display:none;">
+        <div class="form-row">
+          <div>
+            <label for="rDate">Date</label>
+            <input type="date" id="rDate" required />
+          </div>
+          <div>
+            <label for="rCategory">Category</label>
+            <select id="rCategory" required>
+              <option value="Income">Income</option>
+              <option value="Expense">Expense</option>
+            </select>
+          </div>
+          <div>
+            <label for="rAmount">Amount ($)</label>
+            <input type="number" id="rAmount" step="0.01" min="0.01" required />
+          </div>
+          <div>
+            <label for="rFolder">Folder</label>
+            <select id="rFolder" required></select>
+          </div>
+        </div>
+        <div style="margin-top:12px">
+          <label for="rDesc">Description</label>
+          <input type="text" id="rDesc" placeholder="e.g. Home Depot receipt, Check from Smith LLC" required />
+        </div>
+        <div style="margin-top:14px; display:flex; gap:10px;">
+          <button type="submit" class="btn gold">Save Receipt &amp; Add to Ledger</button>
+          <button type="button" class="btn ghost" id="cancelReceipt">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- FOLDERS -->
+  <section class="view" id="view-folders">
+    <div class="panel">
+      <h2>Folders</h2>
+      <form id="folderForm" style="display:flex; gap:10px; align-items:end; flex-wrap:wrap;">
+        <div style="flex:1; min-width:200px;">
+          <label for="folderName">New Folder Name</label>
+          <input type="text" id="folderName" placeholder="e.g. January Receipts, Vendor Invoices" required />
+        </div>
+        <button type="submit" class="btn gold">Create Folder</button>
+      </form>
+      <div class="folder-grid" id="folderGrid"></div>
+    </div>
+    <div class="panel" id="folderContents" style="display:none;">
+      <h2 id="folderContentsTitle">Folder Contents</h2>
+      <div class="image-grid" id="imageGrid"></div>
+    </div>
+  </section>
+
+  <!-- MILEAGE TRACKER -->
+  <section class="view" id="view-mileage">
+    <div class="panel">
+      <div class="page-actions">
+        <h2 style="margin:0">Mileage Tracker</h2>
+        <button class="btn ghost" id="exportMileageBtn">Download CSV</button>
+      </div>
+      <div class="rate-banner">
+        <strong>Current IRS mileage rate: $0.725 per mile</strong>
+        <span class="sub">Updated January 1, 2026</span>
+      </div>
+      <h3>Add New Trip</h3>
+      <form id="mileageForm">
+        <div class="form-row">
+          <div>
+            <label for="mDate">Date</label>
+            <input type="date" id="mDate" required />
+          </div>
+          <div>
+            <label for="mStart">Starting Address</label>
+            <input type="text" id="mStart" placeholder="123 Main St, Muskegon MI" required />
+          </div>
+          <div>
+            <label for="mDest">Destination Address</label>
+            <input type="text" id="mDest" placeholder="456 Oak Ave, Grand Rapids MI" required />
+          </div>
+        </div>
+        <div class="form-row" style="margin-top:12px">
+          <div style="flex:2">
+            <label for="mPurpose">Purpose</label>
+            <input type="text" id="mPurpose" placeholder="Client meeting, supply pickup, etc." required />
+          </div>
+          <div>
+            <label for="mMiles">Miles Driven</label>
+            <input type="number" id="mMiles" step="0.1" min="0" required />
+          </div>
+          <div>
+            <label for="mReimb">Reimbursement Value</label>
+            <input type="text" id="mReimb" readonly placeholder="$0.00" />
+          </div>
+        </div>
+        <div style="margin-top:14px; display:flex; gap:10px;">
+          <button type="button" class="btn ghost" id="mCalcBtn">Calculate</button>
+          <button type="submit" class="btn gold">Add to Log</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="panel">
+      <h2>Mileage Log</h2>
+      <div style="overflow-x:auto">
+        <table class="excel" id="mileageTable">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Starting Address</th>
+              <th>Destination Address</th>
+              <th>Purpose</th>
+              <th style="text-align:right">Miles</th>
+              <th style="text-align:right">Reimbursement</th>
+              <th style="width:140px"></th>
+            </tr>
+          </thead>
+          <tbody id="mileageBody"></tbody>
+        </table>
+      </div>
+      <div class="totals-box">
+        <h3>Mileage Totals</h3>
+        <div class="totals-grid" id="mileageTotals"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WRITE OFFS -->
+  <section class="view" id="view-writeoffs">
+    <div class="panel">
+      <div class="page-actions">
+        <h2 style="margin:0">Write Offs</h2>
+        <button class="btn ghost" id="exportWriteOffBtn">Download CSV</button>
+      </div>
+      <h3>Add New Write Off</h3>
+      <form id="writeOffForm">
+        <div class="form-row">
+          <div>
+            <label for="wDate">Date</label>
+            <input type="date" id="wDate" required />
+          </div>
+          <div style="flex:2">
+            <label for="wDesc">Description</label>
+            <input type="text" id="wDesc" placeholder="e.g. New laptop, Client lunch" required />
+          </div>
+          <div>
+            <label for="wCategory">Category</label>
+            <select id="wCategory" required>
+              <option value="Home Office">Home Office</option>
+              <option value="Vehicle and Mileage">Vehicle and Mileage</option>
+              <option value="Equipment and Technology">Equipment and Technology</option>
+              <option value="Software and Subscriptions">Software and Subscriptions</option>
+              <option value="Marketing and Advertising">Marketing and Advertising</option>
+              <option value="Professional Services">Professional Services</option>
+              <option value="Education and Training">Education and Training</option>
+              <option value="Meals">Meals (50% deductible)</option>
+              <option value="Travel">Travel</option>
+              <option value="Health Insurance">Health Insurance</option>
+              <option value="Retirement Contributions">Retirement Contributions</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row" style="margin-top:12px">
+          <div>
+            <label for="wAmount">Amount ($)</label>
+            <input type="number" id="wAmount" step="0.01" min="0" required />
+          </div>
+          <div>
+            <label for="wPct">Deductible %</label>
+            <input type="number" id="wPct" step="1" min="0" max="100" value="100" required />
+          </div>
+          <div>
+            <label for="wDeduct">Deductible Amount</label>
+            <input type="text" id="wDeduct" readonly placeholder="$0.00" />
+          </div>
+        </div>
+        <div style="margin-top:14px;">
+          <button type="submit" class="btn gold">Add Write Off</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="panel">
+      <h2>Write Offs Log</h2>
+      <div style="overflow-x:auto">
+        <table class="excel" id="writeOffTable">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Description</th>
+              <th>Category</th>
+              <th style="text-align:right">Amount</th>
+              <th style="text-align:right">Deduct %</th>
+              <th style="text-align:right">Deductible</th>
+              <th style="width:140px"></th>
+            </tr>
+          </thead>
+          <tbody id="writeOffBody"></tbody>
+        </table>
+      </div>
+      <div class="totals-box">
+        <h3>Write Off Totals</h3>
+        <div class="totals-grid" id="writeOffTotals"></div>
+        <div class="disclaimer" style="margin-top:14px; background:rgba(255,255,255,0.06); border-left-color:var(--gold-bright); color:var(--gold-soft);">
+          Estimated tax savings is based on 22% federal rate only. Actual savings may vary. Consult a tax professional.
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Category Breakdown</h2>
+      <div id="categoryBreakdown"></div>
+    </div>
+  </section>
+
+  <!-- TAXES -->
+  <section class="view" id="view-taxes">
+    <div class="panel">
+      <h2>Tax Summary</h2>
+      <div class="tile-grid" id="taxTilesFull"></div>
+      <div class="disclaimer">These are estimates only. Consult a tax professional for exact figures.</div>
+    </div>
+    <div class="panel">
+      <h2>Tax Rates Used</h2>
+      <table class="ledger">
+        <thead><tr><th>Tax</th><th style="text-align:right">Rate</th></tr></thead>
+        <tbody>
+          <tr><td>Federal income tax</td><td style="text-align:right">22.00%</td></tr>
+          <tr><td>Self-employment tax</td><td style="text-align:right">15.30%</td></tr>
+          <tr><td>Michigan state income tax</td><td style="text-align:right">4.25%</td></tr>
+          <tr><td>City of Muskegon income tax</td><td style="text-align:right">1.00%</td></tr>
+          <tr><td><strong>Total set-aside rate</strong></td><td style="text-align:right"><strong>42.55%</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<!-- Image viewer modal -->
+<div class="modal-bg" id="imageModal">
+  <div class="modal" style="text-align:center;">
+    <h3 id="imageModalTitle">Receipt</h3>
+    <img id="imageViewerImg" alt="receipt" />
+    <div id="imageViewerMeta" style="margin-top:10px; color:var(--muted); font-size:13px;"></div>
+    <div class="modal-actions">
+      <button class="btn danger" id="imageDeleteBtn">Delete</button>
+      <button class="btn ghost" id="imageCloseBtn">Close</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   LLC Financial Tracker - all data in localStorage
+============================================================ */
+
+const RATES = {
+  federal: 0.22,
+  selfEmployment: 0.153,
+  michigan: 0.0425,
+  muskegon: 0.01
+};
+const TOTAL_RATE = RATES.federal + RATES.selfEmployment + RATES.michigan + RATES.muskegon; // 0.4255
+const IRS_MILEAGE_RATE = 0.725; // 2026 IRS rate
+
+const STORAGE_KEY = 'llc_tracker_v1';
+
+let state = {
+  transactions: [], // {id, date, description, category, amount, folderId?, imageId?, linkedIncomeId?, autoTax?}
+  folders: [],      // {id, name}
+  images: [],       // {id, dataUrl, folderId, transactionId}
+  mileage: [],      // {id, date, start, dest, purpose, miles, reimb}
+  writeoffs: [],    // {id, date, description, category, amount, pct, deductible}
+  darkMode: false,
+  selectedFolderId: null
+};
+
+let pendingImageDataUrl = null;
+
+/* ---------- persistence ---------- */
+function save() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch (e) {
+    alert('Could not save data — storage may be full. ' + e.message);
+  }
+}
+function load() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      state = Object.assign(state, parsed);
+    }
+  } catch (e) { console.warn('load failed', e); }
+  if (state.folders.length === 0) {
+    state.folders.push({ id: uid(), name: 'General' });
+    save();
+  }
+}
+
+function uid() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+}
+
+function fmt(n) {
+  const num = Number(n) || 0;
+  return num.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+}
+
+function todayISO() {
+  const d = new Date();
+  return d.toISOString().slice(0, 10);
+}
+
+/* ---------- core: transactions ---------- */
+function addTransaction(tx) {
+  tx.id = tx.id || uid();
+  state.transactions.push(tx);
+  if (tx.category === 'Income') {
+    const taxAmount = +(tx.amount * TOTAL_RATE).toFixed(2);
+    const taxTx = {
+      id: uid(),
+      date: tx.date,
+      description: 'Tax set aside for: ' + tx.description,
+      category: 'Tax Set Aside',
+      amount: taxAmount,
+      linkedIncomeId: tx.id,
+      autoTax: true
+    };
+    state.transactions.push(taxTx);
+  }
+  save();
+}
+
+function deleteTransaction(id) {
+  const tx = state.transactions.find(t => t.id === id);
+  if (!tx) return;
+  if (!confirm('Delete this transaction? ' + (tx.category === 'Income' ? 'The linked Tax Set Aside line will also be removed.' : ''))) return;
+  state.transactions = state.transactions.filter(t => t.id !== id && t.linkedIncomeId !== id);
+  if (tx.imageId) {
+    state.images = state.images.filter(i => i.id !== tx.imageId);
+  }
+  save();
+  renderAll();
+  toast('Transaction deleted');
+}
+
+/* sorted ascending by date for running balance, then descending for display */
+function sortedAsc() {
+  return [...state.transactions].sort((a, b) => {
+    if (a.date === b.date) return a.id.localeCompare(b.id);
+    return a.date.localeCompare(b.date);
+  });
+}
+
+function withRunningBalance() {
+  let bal = 0;
+  const asc = sortedAsc().map(t => {
+    if (t.category === 'Income') bal += t.amount;
+    else bal -= t.amount; // Expense, Owner Draw, Tax Set Aside all reduce available
+    return { ...t, running: bal };
+  });
+  return asc;
+}
+
+/* ---------- totals ---------- */
+function totals() {
+  let income = 0, expense = 0, draw = 0, taxSet = 0;
+  for (const t of state.transactions) {
+    if (t.category === 'Income') income += t.amount;
+    else if (t.category === 'Expense') expense += t.amount;
+    else if (t.category === 'Owner Draw') draw += t.amount;
+    else if (t.category === 'Tax Set Aside') taxSet += t.amount;
+  }
+  return {
+    income, expense, draw, taxSet,
+    balance: income - expense - draw - taxSet,
+    federal: income * RATES.federal,
+    selfEmp: income * RATES.selfEmployment,
+    michigan: income * RATES.michigan,
+    muskegon: income * RATES.muskegon,
+    totalTaxOwed: income * TOTAL_RATE
+  };
+}
+
+/* ---------- rendering ---------- */
+function renderAll() {
+  renderDashboard();
+  renderLedger();
+  renderFolders();
+  renderImages();
+  renderFolderSelect();
+  renderTaxes();
+  renderMileage();
+  renderWriteOffs();
+}
+
+function renderDashboard() {
+  const t = totals();
+  const tiles = [
+    { label: 'Total Income', value: fmt(t.income), cls: 'good' },
+    { label: 'Total Expenses', value: fmt(t.expense), cls: 'bad' },
+    { label: 'Owner Draws', value: fmt(t.draw), cls: '' },
+    { label: 'Taxes Set Aside', value: fmt(t.taxSet), cls: '' },
+    { label: 'Current Balance', value: fmt(t.balance), cls: 'balance' }
+  ];
+  document.getElementById('dashTiles').innerHTML = tiles.map(x =>
+    `<div class="tile ${x.cls}"><div class="label">${x.label}</div><div class="value">${x.value}</div></div>`
+  ).join('');
+
+  // tax tiles on dashboard (compact)
+  const remaining = t.totalTaxOwed - t.taxSet;
+  const taxTiles = [
+    { label: 'Total Income', value: fmt(t.income) },
+    { label: 'Federal (22%)', value: fmt(t.federal) },
+    { label: 'Self-Emp (15.3%)', value: fmt(t.selfEmp) },
+    { label: 'Michigan (4.25%)', value: fmt(t.michigan) },
+    { label: 'Muskegon (1%)', value: fmt(t.muskegon) },
+    { label: 'Set Aside', value: fmt(t.taxSet), cls: 'good' },
+    { label: 'Remaining Liability', value: fmt(remaining), cls: remaining > 0.01 ? 'bad' : 'good' }
+  ];
+  document.getElementById('taxTiles').innerHTML = taxTiles.map(x =>
+    `<div class="tile ${x.cls || ''}"><div class="label">${x.label}</div><div class="value">${x.value}</div></div>`
+  ).join('');
+
+  // recent activity (5 most recent)
+  const recent = withRunningBalance().slice(-6).reverse();
+  if (recent.length === 0) {
+    document.getElementById('recentLedger').innerHTML = '<div class="empty">No transactions yet. Add one to get started.</div>';
+  } else {
+    document.getElementById('recentLedger').innerHTML = `
+      <div style="overflow-x:auto"><table class="ledger">
+        <thead><tr><th>Date</th><th>Description</th><th>Category</th><th style="text-align:right">Amount</th><th style="text-align:right">Balance</th></tr></thead>
+        <tbody>${recent.map(rowHtml).join('')}</tbody>
+      </table></div>`;
+  }
+}
+
+function renderTaxes() {
+  const t = totals();
+  const remaining = t.totalTaxOwed - t.taxSet;
+  const taxTiles = [
+    { label: 'Total Income', value: fmt(t.income) },
+    { label: 'Federal Tax (22%)', value: fmt(t.federal) },
+    { label: 'Self-Employment (15.3%)', value: fmt(t.selfEmp) },
+    { label: 'Michigan State (4.25%)', value: fmt(t.michigan) },
+    { label: 'Muskegon City (1%)', value: fmt(t.muskegon) },
+    { label: 'Total Estimated Tax', value: fmt(t.totalTaxOwed) },
+    { label: 'Set Aside So Far', value: fmt(t.taxSet), cls: 'good' },
+    { label: 'Remaining Liability', value: fmt(remaining), cls: remaining > 0.01 ? 'bad' : 'good' }
+  ];
+  document.getElementById('taxTilesFull').innerHTML = taxTiles.map(x =>
+    `<div class="tile ${x.cls || ''}"><div class="label">${x.label}</div><div class="value">${x.value}</div></div>`
+  ).join('');
+}
+
+function pillFor(cat) {
+  if (cat === 'Income') return '<span class="pill income">Income</span>';
+  if (cat === 'Expense') return '<span class="pill expense">Expense</span>';
+  if (cat === 'Owner Draw') return '<span class="pill draw">Owner Draw</span>';
+  if (cat === 'Tax Set Aside') return '<span class="pill tax">Tax Set Aside</span>';
+  return cat;
+}
+
+function rowHtml(tx) {
+  const sign = tx.category === 'Income' ? '+' : '-';
+  const cls = tx.category === 'Income' ? 'pos' : 'neg';
+  const imgIcon = tx.imageId ? ' 📎' : '';
+  return `<tr>
+    <td>${tx.date}</td>
+    <td>${escapeHtml(tx.description)}${imgIcon}</td>
+    <td>${pillFor(tx.category)}</td>
+    <td style="text-align:right" class="amount ${cls}">${sign}${fmt(tx.amount)}</td>
+    <td style="text-align:right" class="running">${fmt(tx.running)}</td>
+    <td class="row-actions">${tx.autoTax ? '<span style="font-size:11px;color:var(--muted)">auto</span>' : `<button class="btn ghost small" onclick="deleteTransaction('${tx.id}')">Delete</button>`}</td>
+  </tr>`;
+}
+
+function renderLedger() {
+  const search = (document.getElementById('searchInput').value || '').toLowerCase();
+  const cat = document.getElementById('filterCategory').value;
+  const all = withRunningBalance();
+  const filtered = all.filter(t => {
+    if (cat && t.category !== cat) return false;
+    if (search && !t.description.toLowerCase().includes(search)) return false;
+    return true;
+  }).reverse();
+  const body = document.getElementById('ledgerBody');
+  if (filtered.length === 0) {
+    body.innerHTML = '<tr><td colspan="6" class="empty">No transactions match.</td></tr>';
+    return;
+  }
+  body.innerHTML = filtered.map(rowHtml).join('');
+}
+
+function renderFolders() {
+  const grid = document.getElementById('folderGrid');
+  if (state.folders.length === 0) {
+    grid.innerHTML = '<div class="empty">No folders yet.</div>';
+    return;
+  }
+  grid.innerHTML = state.folders.map(f => {
+    const count = state.images.filter(i => i.folderId === f.id).length;
+    const active = state.selectedFolderId === f.id ? 'active' : '';
+    return `<div class="folder-card ${active}" onclick="selectFolder('${f.id}')">
+      <button class="fdel" onclick="event.stopPropagation();deleteFolder('${f.id}')" title="Delete folder">✕</button>
+      <div class="icon">📁</div>
+      <div class="fname">${escapeHtml(f.name)}</div>
+      <div class="fcount">${count} item${count === 1 ? '' : 's'}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderImages() {
+  const wrap = document.getElementById('folderContents');
+  const title = document.getElementById('folderContentsTitle');
+  const grid = document.getElementById('imageGrid');
+  if (!state.selectedFolderId) {
+    wrap.style.display = 'none';
+    return;
+  }
+  const folder = state.folders.find(f => f.id === state.selectedFolderId);
+  if (!folder) { wrap.style.display = 'none'; return; }
+  wrap.style.display = 'block';
+  title.textContent = 'Folder: ' + folder.name;
+  const imgs = state.images.filter(i => i.folderId === state.selectedFolderId);
+  if (imgs.length === 0) {
+    grid.innerHTML = '<div class="empty">No images in this folder yet.</div>';
+    return;
+  }
+  grid.innerHTML = imgs.map(img => {
+    const tx = state.transactions.find(t => t.id === img.transactionId);
+    const desc = tx ? tx.description : '(no transaction)';
+    const sub = tx ? `${tx.date} • ${tx.category} • ${fmt(tx.amount)}` : '';
+    return `<div class="image-card">
+      <img src="${img.dataUrl}" alt="receipt" onclick="viewImage('${img.id}')" />
+      <div class="meta"><div class="desc">${escapeHtml(desc)}</div><div class="sub">${sub}</div></div>
+    </div>`;
+  }).join('');
+}
+
+function renderFolderSelect() {
+  const sel = document.getElementById('rFolder');
+  if (!sel) return;
+  const current = sel.value;
+  sel.innerHTML = state.folders.map(f =>
+    `<option value="${f.id}">${escapeHtml(f.name)}</option>`
+  ).join('');
+  if (current && state.folders.find(f => f.id === current)) sel.value = current;
+}
+
+/* ---------- folder actions ---------- */
+function selectFolder(id) {
+  state.selectedFolderId = id;
+  save();
+  renderFolders();
+  renderImages();
+}
+function deleteFolder(id) {
+  const f = state.folders.find(x => x.id === id);
+  if (!f) return;
+  const count = state.images.filter(i => i.folderId === id).length;
+  let msg = `Delete folder "${f.name}"?`;
+  if (count > 0) msg += ` It contains ${count} image(s) — they will be deleted too.`;
+  if (!confirm(msg)) return;
+  state.folders = state.folders.filter(x => x.id !== id);
+  state.images = state.images.filter(i => i.folderId !== id);
+  if (state.selectedFolderId === id) state.selectedFolderId = null;
+  if (state.folders.length === 0) state.folders.push({ id: uid(), name: 'General' });
+  save();
+  renderAll();
+  toast('Folder deleted');
+}
+
+/* ---------- image viewer ---------- */
+let currentViewImageId = null;
+function viewImage(id) {
+  const img = state.images.find(i => i.id === id);
+  if (!img) return;
+  currentViewImageId = id;
+  const tx = state.transactions.find(t => t.id === img.transactionId);
+  document.getElementById('imageViewerImg').src = img.dataUrl;
+  document.getElementById('imageModalTitle').textContent = tx ? tx.description : 'Receipt';
+  document.getElementById('imageViewerMeta').textContent = tx
+    ? `${tx.date} • ${tx.category} • ${fmt(tx.amount)}`
+    : '';
+  document.getElementById('imageModal').classList.add('show');
+}
+function closeImage() {
+  document.getElementById('imageModal').classList.remove('show');
+  currentViewImageId = null;
+}
+function deleteCurrentImage() {
+  if (!currentViewImageId) return;
+  if (!confirm('Delete this image and its linked transaction?')) return;
+  const img = state.images.find(i => i.id === currentViewImageId);
+  if (img) {
+    state.transactions = state.transactions.filter(t => t.id !== img.transactionId && t.linkedIncomeId !== img.transactionId);
+    state.images = state.images.filter(i => i.id !== currentViewImageId);
+    save();
+  }
+  closeImage();
+  renderAll();
+  toast('Receipt deleted');
+}
+
+/* ---------- toast ---------- */
+let toastTimer = null;
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
+}
+
+/* ---------- helpers ---------- */
+function escapeHtml(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+/* ============================================================
+   MILEAGE TRACKER
+============================================================ */
+let editingMileageId = null;
+
+function calcReimb(miles) {
+  return +(Number(miles || 0) * IRS_MILEAGE_RATE).toFixed(2);
+}
+
+function renderMileage() {
+  const tbody = document.getElementById('mileageBody');
+  if (!tbody) return;
+  const rows = [...state.mileage].sort((a, b) => b.date.localeCompare(a.date) || b.id.localeCompare(a.id));
+  if (rows.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" class="empty">No mileage entries yet. Add a trip above.</td></tr>';
+  } else {
+    tbody.innerHTML = rows.map(m => {
+      if (editingMileageId === m.id) {
+        return `<tr data-id="${m.id}">
+          <td><input class="inline" type="date" id="em_date_${m.id}" value="${m.date}" /></td>
+          <td><input class="inline" type="text" id="em_start_${m.id}" value="${escapeHtml(m.start)}" /></td>
+          <td><input class="inline" type="text" id="em_dest_${m.id}" value="${escapeHtml(m.dest)}" /></td>
+          <td><input class="inline" type="text" id="em_purpose_${m.id}" value="${escapeHtml(m.purpose)}" /></td>
+          <td class="num"><input class="inline" type="number" step="0.1" id="em_miles_${m.id}" value="${m.miles}" style="text-align:right" /></td>
+          <td class="num">${fmt(m.reimb)}</td>
+          <td>
+            <button class="btn gold small" onclick="saveMileageEdit('${m.id}')">Save</button>
+            <button class="btn ghost small" onclick="cancelMileageEdit()">Cancel</button>
+          </td>
+        </tr>`;
+      }
+      return `<tr data-id="${m.id}">
+        <td>${m.date}</td>
+        <td>${escapeHtml(m.start)}</td>
+        <td>${escapeHtml(m.dest)}</td>
+        <td>${escapeHtml(m.purpose)}</td>
+        <td class="num">${Number(m.miles).toFixed(1)}</td>
+        <td class="num">${fmt(m.reimb)}</td>
+        <td>
+          <button class="btn ghost small" onclick="editMileage('${m.id}')">Edit</button>
+          <button class="btn ghost small" onclick="deleteMileage('${m.id}')">Delete</button>
+        </td>
+      </tr>`;
+    }).join('');
+  }
+
+  const totalTrips = state.mileage.length;
+  const totalMiles = state.mileage.reduce((s, m) => s + Number(m.miles || 0), 0);
+  const totalReimb = state.mileage.reduce((s, m) => s + Number(m.reimb || 0), 0);
+  document.getElementById('mileageTotals').innerHTML = `
+    <div class="item"><div class="lbl">Total Trips</div><div class="val gold">${totalTrips}</div></div>
+    <div class="item"><div class="lbl">Total Miles</div><div class="val gold">${totalMiles.toFixed(1)}</div></div>
+    <div class="item"><div class="lbl">Total Reimbursement</div><div class="val">${fmt(totalReimb)}</div></div>
+  `;
+}
+
+function editMileage(id) {
+  editingMileageId = id;
+  renderMileage();
+}
+function cancelMileageEdit() {
+  editingMileageId = null;
+  renderMileage();
+}
+function saveMileageEdit(id) {
+  const m = state.mileage.find(x => x.id === id);
+  if (!m) return;
+  m.date = document.getElementById('em_date_' + id).value;
+  m.start = document.getElementById('em_start_' + id).value.trim();
+  m.dest = document.getElementById('em_dest_' + id).value.trim();
+  m.purpose = document.getElementById('em_purpose_' + id).value.trim();
+  m.miles = parseFloat(document.getElementById('em_miles_' + id).value) || 0;
+  m.reimb = calcReimb(m.miles);
+  editingMileageId = null;
+  save();
+  renderMileage();
+  toast('Mileage entry updated');
+}
+function deleteMileage(id) {
+  if (!confirm('Delete this mileage entry?')) return;
+  state.mileage = state.mileage.filter(m => m.id !== id);
+  save();
+  renderMileage();
+  toast('Mileage entry deleted');
+}
+
+function exportMileageCSV() {
+  if (state.mileage.length === 0) { toast('No mileage entries to export'); return; }
+  const header = ['Date', 'Starting Address', 'Destination Address', 'Purpose', 'Miles Driven', 'Reimbursement Value'];
+  const rows = [...state.mileage]
+    .sort((a, b) => a.date.localeCompare(b.date))
+    .map(m => [m.date, m.start, m.dest, m.purpose, Number(m.miles).toFixed(1), Number(m.reimb).toFixed(2)]);
+  downloadCSV('mileage_log_' + todayISO() + '.csv', [header, ...rows]);
+}
+
+/* ============================================================
+   WRITE OFFS
+============================================================ */
+let editingWriteOffId = null;
+
+const WRITE_OFF_CATEGORIES = [
+  'Home Office',
+  'Vehicle and Mileage',
+  'Equipment and Technology',
+  'Software and Subscriptions',
+  'Marketing and Advertising',
+  'Professional Services',
+  'Education and Training',
+  'Meals',
+  'Travel',
+  'Health Insurance',
+  'Retirement Contributions',
+  'Other'
+];
+
+function renderWriteOffs() {
+  const tbody = document.getElementById('writeOffBody');
+  if (!tbody) return;
+  const rows = [...state.writeoffs].sort((a, b) => b.date.localeCompare(a.date) || b.id.localeCompare(a.id));
+  if (rows.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" class="empty">No write offs yet. Add one above.</td></tr>';
+  } else {
+    tbody.innerHTML = rows.map(w => {
+      if (editingWriteOffId === w.id) {
+        const opts = WRITE_OFF_CATEGORIES.map(c =>
+          `<option value="${c}" ${c === w.category ? 'selected' : ''}>${c === 'Meals' ? 'Meals (50% deductible)' : c}</option>`
+        ).join('');
+        return `<tr data-id="${w.id}">
+          <td><input class="inline" type="date" id="ew_date_${w.id}" value="${w.date}" /></td>
+          <td><input class="inline" type="text" id="ew_desc_${w.id}" value="${escapeHtml(w.description)}" /></td>
+          <td><select class="inline" id="ew_cat_${w.id}" onchange="onEditCategoryChange('${w.id}')">${opts}</select></td>
+          <td class="num"><input class="inline" type="number" step="0.01" id="ew_amount_${w.id}" value="${w.amount}" style="text-align:right" /></td>
+          <td class="num"><input class="inline" type="number" step="1" min="0" max="100" id="ew_pct_${w.id}" value="${w.pct}" style="text-align:right" /></td>
+          <td class="num">${fmt(w.deductible)}</td>
+          <td>
+            <button class="btn gold small" onclick="saveWriteOffEdit('${w.id}')">Save</button>
+            <button class="btn ghost small" onclick="cancelWriteOffEdit()">Cancel</button>
+          </td>
+        </tr>`;
+      }
+      return `<tr data-id="${w.id}">
+        <td>${w.date}</td>
+        <td>${escapeHtml(w.description)}</td>
+        <td>${escapeHtml(w.category)}</td>
+        <td class="num">${fmt(w.amount)}</td>
+        <td class="num">${w.pct}%</td>
+        <td class="num">${fmt(w.deductible)}</td>
+        <td>
+          <button class="btn ghost small" onclick="editWriteOff('${w.id}')">Edit</button>
+          <button class="btn ghost small" onclick="deleteWriteOff('${w.id}')">Delete</button>
+        </td>
+      </tr>`;
+    }).join('');
+  }
+
+  const count = state.writeoffs.length;
+  const totalAmount = state.writeoffs.reduce((s, w) => s + Number(w.amount || 0), 0);
+  const totalDeductible = state.writeoffs.reduce((s, w) => s + Number(w.deductible || 0), 0);
+  const taxSavings = totalDeductible * RATES.federal;
+  document.getElementById('writeOffTotals').innerHTML = `
+    <div class="item"><div class="lbl">Total Write Offs</div><div class="val gold">${count}</div></div>
+    <div class="item"><div class="lbl">Total Amount</div><div class="val">${fmt(totalAmount)}</div></div>
+    <div class="item"><div class="lbl">Total Deductible</div><div class="val gold">${fmt(totalDeductible)}</div></div>
+    <div class="item"><div class="lbl">Estimated Tax Savings (22%)</div><div class="val">${fmt(taxSavings)}</div></div>
+  `;
+
+  // category breakdown
+  const breakdown = {};
+  for (const w of state.writeoffs) {
+    if (!breakdown[w.category]) breakdown[w.category] = { count: 0, deductible: 0 };
+    breakdown[w.category].count += 1;
+    breakdown[w.category].deductible += Number(w.deductible || 0);
+  }
+  const cbEl = document.getElementById('categoryBreakdown');
+  const cats = Object.keys(breakdown);
+  if (cats.length === 0) {
+    cbEl.innerHTML = '<div class="empty">No write offs yet — add some to see a breakdown by category.</div>';
+  } else {
+    const ordered = cats.sort((a, b) => breakdown[b].deductible - breakdown[a].deductible);
+    cbEl.innerHTML = `
+      <div style="overflow-x:auto"><table class="excel">
+        <thead><tr><th>Category</th><th style="text-align:right">Entries</th><th style="text-align:right">Total Deductible</th></tr></thead>
+        <tbody>
+          ${ordered.map(c => `<tr><td>${escapeHtml(c)}</td><td class="num">${breakdown[c].count}</td><td class="num">${fmt(breakdown[c].deductible)}</td></tr>`).join('')}
+        </tbody>
+      </table></div>`;
+  }
+}
+
+function onEditCategoryChange(id) {
+  const sel = document.getElementById('ew_cat_' + id);
+  const pct = document.getElementById('ew_pct_' + id);
+  if (sel.value === 'Meals') pct.value = 50;
+  else if (Number(pct.value) === 50) pct.value = 100;
+}
+
+function editWriteOff(id) {
+  editingWriteOffId = id;
+  renderWriteOffs();
+}
+function cancelWriteOffEdit() {
+  editingWriteOffId = null;
+  renderWriteOffs();
+}
+function saveWriteOffEdit(id) {
+  const w = state.writeoffs.find(x => x.id === id);
+  if (!w) return;
+  w.date = document.getElementById('ew_date_' + id).value;
+  w.description = document.getElementById('ew_desc_' + id).value.trim();
+  w.category = document.getElementById('ew_cat_' + id).value;
+  w.amount = parseFloat(document.getElementById('ew_amount_' + id).value) || 0;
+  w.pct = parseFloat(document.getElementById('ew_pct_' + id).value) || 0;
+  w.deductible = +(w.amount * (w.pct / 100)).toFixed(2);
+  editingWriteOffId = null;
+  save();
+  renderWriteOffs();
+  toast('Write off updated');
+}
+function deleteWriteOff(id) {
+  if (!confirm('Delete this write off?')) return;
+  state.writeoffs = state.writeoffs.filter(w => w.id !== id);
+  save();
+  renderWriteOffs();
+  toast('Write off deleted');
+}
+
+function exportWriteOffCSV() {
+  if (state.writeoffs.length === 0) { toast('No write offs to export'); return; }
+  const header = ['Date', 'Description', 'Category', 'Amount', 'Deductible Percentage', 'Deductible Amount'];
+  const rows = [...state.writeoffs]
+    .sort((a, b) => a.date.localeCompare(b.date))
+    .map(w => [w.date, w.description, w.category, Number(w.amount).toFixed(2), w.pct + '%', Number(w.deductible).toFixed(2)]);
+  downloadCSV('write_offs_' + todayISO() + '.csv', [header, ...rows]);
+}
+
+/* ---------- CSV helper ---------- */
+function csvEscape(v) {
+  const s = String(v == null ? '' : v);
+  if (/[",\n\r]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
+  return s;
+}
+function downloadCSV(filename, rows) {
+  const csv = rows.map(r => r.map(csvEscape).join(',')).join('\r\n');
+  const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('CSV downloaded');
+}
+
+/* ---------- tabs ---------- */
+function showView(name) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('view-' + name).classList.add('active');
+  document.querySelector(`.tab-btn[data-view="${name}"]`).classList.add('active');
+}
+
+/* ---------- event wiring ---------- */
+document.addEventListener('DOMContentLoaded', () => {
+  load();
+  if (state.darkMode) document.body.classList.add('dark');
+  document.getElementById('darkToggle').textContent = state.darkMode ? 'Light Mode' : 'Dark Mode';
+
+  // tabs
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => showView(btn.dataset.view));
+  });
+
+  // dark mode
+  document.getElementById('darkToggle').addEventListener('click', () => {
+    state.darkMode = !state.darkMode;
+    document.body.classList.toggle('dark', state.darkMode);
+    document.getElementById('darkToggle').textContent = state.darkMode ? 'Light Mode' : 'Dark Mode';
+    save();
+  });
+
+  // export
+  document.getElementById('exportBtn').addEventListener('click', () => {
+    const data = JSON.stringify(state, null, 2);
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'llc_tracker_backup_' + todayISO() + '.json';
+    a.click();
+    URL.revokeObjectURL(url);
+    toast('Backup downloaded');
+  });
+
+  // ledger filter
+  document.getElementById('searchInput').addEventListener('input', renderLedger);
+  document.getElementById('filterCategory').addEventListener('change', renderLedger);
+  document.getElementById('clearFilters').addEventListener('click', () => {
+    document.getElementById('searchInput').value = '';
+    document.getElementById('filterCategory').value = '';
+    renderLedger();
+  });
+
+  // tx form
+  document.getElementById('txDate').value = todayISO();
+  document.getElementById('txForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const tx = {
+      date: document.getElementById('txDate').value,
+      category: document.getElementById('txCategory').value,
+      amount: parseFloat(document.getElementById('txAmount').value),
+      description: document.getElementById('txDesc').value.trim()
+    };
+    if (!tx.date || !tx.description || !(tx.amount > 0)) return;
+    addTransaction(tx);
+    e.target.reset();
+    document.getElementById('txDate').value = todayISO();
+    renderAll();
+    toast(tx.category === 'Income'
+      ? `Income added — ${fmt(tx.amount * TOTAL_RATE)} set aside for taxes`
+      : 'Transaction added');
+    showView('ledger');
+  });
+
+  // folder form
+  document.getElementById('folderForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = document.getElementById('folderName').value.trim();
+    if (!name) return;
+    state.folders.push({ id: uid(), name });
+    save();
+    document.getElementById('folderName').value = '';
+    renderAll();
+    toast('Folder created');
+  });
+
+  // upload zone
+  const uploadZone = document.getElementById('uploadZone');
+  const fileInput = document.getElementById('fileInput');
+  uploadZone.addEventListener('click', () => fileInput.click());
+  uploadZone.addEventListener('dragover', (e) => { e.preventDefault(); uploadZone.classList.add('dragover'); });
+  uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
+  uploadZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadZone.classList.remove('dragover');
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+  });
+  fileInput.addEventListener('change', (e) => {
+    if (e.target.files && e.target.files[0]) handleFile(e.target.files[0]);
+  });
+
+  function handleFile(file) {
+    if (!file.type.startsWith('image/')) {
+      alert('Please choose an image file.');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      pendingImageDataUrl = ev.target.result;
+      const prev = document.getElementById('receiptPreview');
+      prev.src = pendingImageDataUrl;
+      prev.style.display = 'block';
+      document.getElementById('receiptForm').style.display = 'block';
+      document.getElementById('rDate').value = todayISO();
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // receipt form
+  document.getElementById('receiptForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!pendingImageDataUrl) return;
+    const folderId = document.getElementById('rFolder').value;
+    const tx = {
+      id: uid(),
+      date: document.getElementById('rDate').value,
+      description: document.getElementById('rDesc').value.trim(),
+      category: document.getElementById('rCategory').value,
+      amount: parseFloat(document.getElementById('rAmount').value)
+    };
+    const imageId = uid();
+    tx.imageId = imageId;
+    state.images.push({
+      id: imageId,
+      dataUrl: pendingImageDataUrl,
+      folderId: folderId,
+      transactionId: tx.id
+    });
+    addTransaction(tx);
+    pendingImageDataUrl = null;
+    document.getElementById('receiptPreview').style.display = 'none';
+    document.getElementById('receiptForm').reset();
+    document.getElementById('receiptForm').style.display = 'none';
+    document.getElementById('fileInput').value = '';
+    renderAll();
+    toast(tx.category === 'Income'
+      ? `Receipt saved — ${fmt(tx.amount * TOTAL_RATE)} set aside for taxes`
+      : 'Receipt saved');
+  });
+  document.getElementById('cancelReceipt').addEventListener('click', () => {
+    pendingImageDataUrl = null;
+    document.getElementById('receiptPreview').style.display = 'none';
+    document.getElementById('receiptForm').reset();
+    document.getElementById('receiptForm').style.display = 'none';
+    document.getElementById('fileInput').value = '';
+  });
+
+  // image modal
+  document.getElementById('imageCloseBtn').addEventListener('click', closeImage);
+  document.getElementById('imageDeleteBtn').addEventListener('click', deleteCurrentImage);
+  document.getElementById('imageModal').addEventListener('click', (e) => {
+    if (e.target.id === 'imageModal') closeImage();
+  });
+
+  /* ---------- mileage tracker wiring ---------- */
+  document.getElementById('mDate').value = todayISO();
+  const mMiles = document.getElementById('mMiles');
+  const mReimb = document.getElementById('mReimb');
+  function refreshReimbPreview() {
+    const miles = parseFloat(mMiles.value);
+    mReimb.value = isNaN(miles) || miles <= 0 ? '' : fmt(calcReimb(miles));
+  }
+  mMiles.addEventListener('input', refreshReimbPreview);
+  document.getElementById('mCalcBtn').addEventListener('click', refreshReimbPreview);
+
+  document.getElementById('mileageForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const miles = parseFloat(mMiles.value);
+    if (!(miles > 0)) return;
+    const entry = {
+      id: uid(),
+      date: document.getElementById('mDate').value,
+      start: document.getElementById('mStart').value.trim(),
+      dest: document.getElementById('mDest').value.trim(),
+      purpose: document.getElementById('mPurpose').value.trim(),
+      miles: miles,
+      reimb: calcReimb(miles)
+    };
+    state.mileage.push(entry);
+    save();
+    e.target.reset();
+    document.getElementById('mDate').value = todayISO();
+    mReimb.value = '';
+    renderMileage();
+    toast(`Trip added — ${fmt(entry.reimb)} reimbursement`);
+  });
+
+  document.getElementById('exportMileageBtn').addEventListener('click', exportMileageCSV);
+
+  /* ---------- write offs wiring ---------- */
+  document.getElementById('wDate').value = todayISO();
+  const wAmount = document.getElementById('wAmount');
+  const wPct = document.getElementById('wPct');
+  const wDeduct = document.getElementById('wDeduct');
+  const wCategory = document.getElementById('wCategory');
+  function refreshDeductPreview() {
+    const amt = parseFloat(wAmount.value);
+    const pct = parseFloat(wPct.value);
+    if (isNaN(amt) || amt < 0 || isNaN(pct)) { wDeduct.value = ''; return; }
+    wDeduct.value = fmt(+(amt * (pct / 100)).toFixed(2));
+  }
+  wAmount.addEventListener('input', refreshDeductPreview);
+  wPct.addEventListener('input', refreshDeductPreview);
+  wCategory.addEventListener('change', () => {
+    if (wCategory.value === 'Meals') wPct.value = 50;
+    else if (Number(wPct.value) === 50) wPct.value = 100;
+    refreshDeductPreview();
+  });
+
+  document.getElementById('writeOffForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const amt = parseFloat(wAmount.value);
+    const pct = parseFloat(wPct.value);
+    if (!(amt > 0) || isNaN(pct)) return;
+    const entry = {
+      id: uid(),
+      date: document.getElementById('wDate').value,
+      description: document.getElementById('wDesc').value.trim(),
+      category: wCategory.value,
+      amount: amt,
+      pct: pct,
+      deductible: +(amt * (pct / 100)).toFixed(2)
+    };
+    state.writeoffs.push(entry);
+    save();
+    e.target.reset();
+    document.getElementById('wDate').value = todayISO();
+    wPct.value = 100;
+    wDeduct.value = '';
+    renderWriteOffs();
+    toast(`Write off added — ${fmt(entry.deductible)} deductible`);
+  });
+
+  document.getElementById('exportWriteOffBtn').addEventListener('click', exportWriteOffCSV);
+
+  renderAll();
+});
+</script>
+</body>
+</html>
